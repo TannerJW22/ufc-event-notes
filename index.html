@@ -1670,6 +1670,15 @@
       const parsed = typeof value === "number" ? value : parseAmericanOdds(value);
       return parsed === null || Number.isNaN(parsed) ? "-" : fmt(parsed);
     };
+    const betResultValue = (risk, market, status) => {
+      const resultStatus = normalizeBetResultStatus(status);
+      const riskAmount = parseCurrencyAmount(risk);
+      const odds = typeof market === "number" ? market : parseAmericanOdds(market);
+      if(resultStatus === "loss") return riskAmount ? -riskAmount : 0;
+      if(resultStatus !== "win" || !riskAmount || !Number.isFinite(odds) || odds === 0) return 0;
+      const profit = odds > 0 ? riskAmount * odds / 100 : riskAmount * 100 / Math.abs(odds);
+      return Math.round(profit * 100) / 100;
+    };
     const commitAmericanOddsInput = input => {
       const parsed = parseAmericanOdds(input.value);
       input.classList.toggle("invalid", Number.isNaN(parsed) || parsed === 0);
@@ -1742,7 +1751,10 @@
       f.portfolio = Array.isArray(f.portfolio) ? f.portfolio.map(p=>{
         const numericResult = Number(p?.result) || 0;
         const inferredStatus = p?.resultStatus ?? p?.status ?? (numericResult > 0 ? "win" : numericResult < 0 ? "loss" : "active");
-        return {notes:String(p?.notes || ""),stage:normalizeBetStage(p?.stage),risk:parseCurrencyAmount(p?.risk),market:p?.market ?? "-",result:numericResult,resultStatus:normalizeBetResultStatus(inferredStatus)};
+        const resultStatus = normalizeBetResultStatus(inferredStatus);
+        const risk = parseCurrencyAmount(p?.risk);
+        const market = p?.market ?? "-";
+        return {notes:String(p?.notes || ""),stage:normalizeBetStage(p?.stage),risk,market,result:betResultValue(risk, market, resultStatus),resultStatus};
       }) : [];
       delete f["activeBet"];
       f.tagIds = Array.isArray(f.tagIds) ? f.tagIds.map(String) : [];
@@ -1761,16 +1773,22 @@
       return f;
     }
     const parlayId = () => `parlay-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;
-    const normalizeParlay = p => ({
-      id:String(p?.id || parlayId()),
-      fightIds:Array.isArray(p?.fightIds) ? p.fightIds.map(Number).filter(id=>activeFightIds.has(id)) : [],
-      notes:String(p?.notes || ""),
-      stage:normalizeBetStage(p?.stage),
-      risk:parseCurrencyAmount(p?.risk),
-      market:p?.market ?? "-",
-      result:Number(p?.result) || 0,
-      resultStatus:normalizeBetResultStatus(p?.resultStatus ?? p?.status)
-    });
+    const normalizeParlay = p => {
+      const numericResult = Number(p?.result) || 0;
+      const resultStatus = normalizeBetResultStatus(p?.resultStatus ?? p?.status ?? (numericResult > 0 ? "win" : numericResult < 0 ? "loss" : "active"));
+      const risk = parseCurrencyAmount(p?.risk);
+      const market = p?.market ?? "-";
+      return {
+        id:String(p?.id || parlayId()),
+        fightIds:Array.isArray(p?.fightIds) ? p.fightIds.map(Number).filter(id=>activeFightIds.has(id)) : [],
+        notes:String(p?.notes || ""),
+        stage:normalizeBetStage(p?.stage),
+        risk,
+        market,
+        result:betResultValue(risk, market, resultStatus),
+        resultStatus
+      };
+    };
     const normalizeParlays = () => { parlays = (Array.isArray(parlays) ? parlays : []).map(normalizeParlay); saveParlays(); };
     function seedDemoAnalystReadsOnce(){
       if(localStorage.getItem(analystDemoKey)) return;
@@ -1834,9 +1852,17 @@
     const tagBlob = f => fightTags(f).map(t=>t.name).join(" ");
     const blob = f => `${f.time} ${f.cardSection} ${f.weightClass} ${f.headline} ${f.fighterA} ${f.fighterB} ${f.betSummary} ${tagBlob(f)} ${analystBlob(f)} ${f.portfolio.map(p=>p.notes).join(" ")}`.toLowerCase();
     const refreshFightMeta = f => { normalizeFight(f); f.risk = f.portfolio.reduce((a,p)=>a+parseCurrencyAmount(p.risk),0); };
-    const money = value => `$${Number(value || 0).toLocaleString("en-US")}`;
+    const money = value => {
+      const amount = Number(value || 0);
+      const formatted = `$${Math.abs(amount).toLocaleString("en-US")}`;
+      return amount < 0 ? `-${formatted}` : formatted;
+    };
     const roi = (result, volume) => volume ? `${((result / volume) * 100).toFixed(1)}%` : "0%";
-    const allBets = () => fights.flatMap(f => (f.portfolio || []).map(p => ({...p, fightId:f.id})));
+    const normalizedBet = p => ({...p, risk:parseCurrencyAmount(p.risk), result:betResultValue(p.risk, p.market, p.resultStatus), resultStatus:normalizeBetResultStatus(p.resultStatus)});
+    const allBets = () => [
+      ...fights.flatMap(f => (f.portfolio || []).map(p => ({...normalizedBet(p), fightId:f.id}))),
+      ...parlays.map(p => ({...normalizedBet(normalizeParlay(p)), parlay:true}))
+    ];
     const betStats = stage => {
       const bets = allBets().filter(p => normalizeBetStage(p.stage) === stage);
       const volume = bets.reduce((sum,p)=>sum + parseCurrencyAmount(p.risk), 0);
@@ -2072,7 +2098,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
         stage:normalizeBetStage(row.querySelector('[data-field="stage"]').value),
         risk:parseCurrencyAmount(row.querySelector('[data-field="risk"]').value),
         market:commitAmericanOddsInput(row.querySelector('[data-field="market"]')),
-        result:0,
+        result:betResultValue(row.querySelector('[data-field="risk"]').value, row.querySelector('[data-field="market"]').value, row.querySelector('[data-field="resultStatus"]').value),
         resultStatus:normalizeBetResultStatus(row.querySelector('[data-field="resultStatus"]').value)
       }));
       const parlayDrafts = $$("[data-parlay-row]").map(row => ({
@@ -2082,7 +2108,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
         stage:normalizeBetStage(row.querySelector('[data-field="stage"]').value),
         risk:parseCurrencyAmount(row.querySelector('[data-field="risk"]').value),
         market:commitAmericanOddsInput(row.querySelector('[data-field="market"]')),
-        result:0,
+        result:betResultValue(row.querySelector('[data-field="risk"]').value, row.querySelector('[data-field="market"]').value, row.querySelector('[data-field="resultStatus"]').value),
         resultStatus:normalizeBetResultStatus(row.querySelector('[data-field="resultStatus"]').value)
       }));
       return {straights, parlays:parlayDrafts};
@@ -2404,13 +2430,26 @@ ${snapshotCss()}</style>
         const parsed = typeof value === "number" ? value : parseAmericanOdds(value);
         return parsed === null || Number.isNaN(parsed) ? "-" : fmt(parsed);
       };
+      const betResultValue = (risk, market, status) => {
+        const resultStatus = normalizeBetResultStatus(status);
+        const riskAmount = parseCurrencyAmount(risk);
+        const odds = typeof market === "number" ? market : parseAmericanOdds(market);
+        if(resultStatus === "loss") return riskAmount ? -riskAmount : 0;
+        if(resultStatus !== "win" || !riskAmount || !Number.isFinite(odds) || odds === 0) return 0;
+        const profit = odds > 0 ? riskAmount * odds / 100 : riskAmount * 100 / Math.abs(odds);
+        return Math.round(profit * 100) / 100;
+      };
       const parseCurrencyAmount = value => {
         const raw = String(value ?? "").trim();
         if(!raw) return 0;
         const cleaned = raw.replace(/[$,\s]/g,"");
         return /^\d+(?:\.\d+)?$/.test(cleaned) ? Number(cleaned) || 0 : 0;
       };
-      const money = value => `$${Number(value || 0).toLocaleString("en-US")}`;
+      const money = value => {
+        const amount = Number(value || 0);
+        const formatted = `$${Math.abs(amount).toLocaleString("en-US")}`;
+        return amount < 0 ? `-${formatted}` : formatted;
+      };
       const roi = (result, volume) => volume ? `${((result / volume) * 100).toFixed(1)}%` : "0%";
       const normalizeBetStage = value => String(value || "").toLowerCase() === "live" ? "live" : "prefight";
       const betStageLabel = value => normalizeBetStage(value) === "live" ? "L" : "P";
@@ -2457,7 +2496,7 @@ ${snapshotCss()}</style>
       const betStats = stage => {
         const bets = allBets().filter(p => normalizeBetStage(p.stage) === stage);
         const volume = bets.reduce((sum,p)=>sum + parseCurrencyAmount(p.risk), 0);
-        const result = bets.reduce((sum,p)=>sum + (Number(p.result) || 0), 0);
+        const result = bets.reduce((sum,p)=>sum + betResultValue(p.risk, p.market, p.resultStatus), 0);
         return {bets:bets.length, volume, result, roi:roi(result, volume)};
       };
       const kpiHeader = () => '<div class="kpiHeaderRow"><div class="kpiCorner"></div><div class="kpiColHead">Bets</div><div class="kpiColHead">Volume</div><div class="kpiColHead">Result</div><div class="kpiColHead">ROI%</div></div>';
@@ -2600,7 +2639,7 @@ $("#betForm").onsubmit=e=>{e.preventDefault(); const draft=refreshPortfolioDraft
 $("#parlayForm").onsubmit=e=>{e.preventDefault(); const market=commitAmericanOddsInput($("#parlayOdds")); if(Number.isNaN(market)){ alert("Odds must use American odds format, like +105 or -120."); return; } const draft=refreshPortfolioDraftFromDom(); const next=normalizeParlay({id:state.editingParlayId || parlayId(),fightIds:$$('#parlayFightList input[type="checkbox"]:checked').map(input=>Number(input.value)),notes:$("#parlayDescription").value.trim(),stage:$("#parlayStage").value,risk:parseCurrencyAmount($("#parlayRisk").value),market,resultStatus:$("#parlayResult").value}); const index=draft.parlays.findIndex(p=>p.id===next.id); if(index>=0) draft.parlays[index]=next; else draft.parlays.push(next); setPortfolioTabActive("parlay", true); renderPortfolioRows(draft); $("#parlayModal").classList.remove("open"); $("#betModal").classList.add("open");};
     $("#oddsForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id===state.editingOdds.id), arr=state.editingOdds.side==="A"?f.fighterAOdds:f.fighterBOdds; const odds=commitAmericanOddsInput($("#oddsValue")); if(Number.isNaN(odds)){ alert("Odds must use American odds format, like +105 or -120."); return; } arr[state.editingOdds.index]=odds===null?"-":odds; save(); $("#oddsModal").classList.remove("open"); render();};
     $("#fightForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id===state.selected); f.headline=$("#fightHeadline").value.trim() || "Placeholder."; f.fighterA=$("#fighterA").value.trim(); f.fighterB=$("#fighterB").value.trim(); f.tagIds=selectedFightTagIds(); save(); $("#fightModal").classList.remove("open"); render();};
-$("#activeBetForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id===state.selected); const rows=[]; let valid=true; $$("[data-active-bet-row]").forEach(row=>{ const notes=row.querySelector('[data-field="notes"]').value.trim(); const stage=normalizeBetStage(row.querySelector('[data-field="stage"]').value); const risk=parseCurrencyAmount(row.querySelector('[data-field="risk"]').value); const market=commitAmericanOddsInput(row.querySelector('[data-field="market"]')); const resultStatus=normalizeBetResultStatus(row.querySelector('[data-field="resultStatus"]').value); if(Number.isNaN(market)){valid=false; return;} if(notes||risk||market) rows.push({notes,stage,risk,market,result:0,resultStatus}); }); if(!valid){ alert("Odds must use American odds format, like +105 or -120."); return; } f.betSummary=$("#activeFightThesis").value.trim(); f.portfolio=rows; refreshFightMeta(f); save(); $("#activeBetModal").classList.remove("open"); render();};
+$("#activeBetForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id===state.selected); const rows=[]; let valid=true; $$("[data-active-bet-row]").forEach(row=>{ const notes=row.querySelector('[data-field="notes"]').value.trim(); const stage=normalizeBetStage(row.querySelector('[data-field="stage"]').value); const risk=parseCurrencyAmount(row.querySelector('[data-field="risk"]').value); const market=commitAmericanOddsInput(row.querySelector('[data-field="market"]')); const resultStatus=normalizeBetResultStatus(row.querySelector('[data-field="resultStatus"]').value); if(Number.isNaN(market)){valid=false; return;} if(notes||risk||market) rows.push({notes,stage,risk,market,result:betResultValue(risk,market,resultStatus),resultStatus}); }); if(!valid){ alert("Odds must use American odds format, like +105 or -120."); return; } f.betSummary=$("#activeFightThesis").value.trim(); f.portfolio=rows; refreshFightMeta(f); save(); $("#activeBetModal").classList.remove("open"); render();};
     $("#analystForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id===state.selected); f.analystReads=$$("[data-analyst-row]").map((row,i)=>({name:analystReadLabel(i), notes:row.querySelector('[data-field="notes"]').value.trim()})); state.analystReadOpen[f.id]=[]; save(); $("#analystModal").classList.remove("open"); render();};
     $("#eventForm").onsubmit=e=>{e.preventDefault(); eventMeta=normalizeEventMeta({...eventMeta,name:$("#eventName").value.trim(),headline:$("#eventHeadlineInput").value.trim(),day:$("#eventDay").value.trim(),location:$("#eventLocation").value.trim()}); saveEvent(); $("#eventModal").classList.remove("open"); render();};
     $("#tagForm").onsubmit=e=>{e.preventDefault(); const manual=[]; $$("[data-tag-row]:not([data-auto-tag])").forEach(row=>{ const name=row.querySelector('[data-tag-field="name"]').value.trim(); const color=row.querySelector('[data-tag-field="color"]').value; if(name) manual.push({id:row.dataset.tagId || tagId(), name, color:normalizeTagColor(color), logic:""}); }); const auto=tags.filter(t=>t.logic); tags=[...manual, ...auto].map(normalizeTag); const manualIds=new Set(tags.filter(t=>!t.logic).map(t=>t.id)); fights.forEach(f=>{ f.tagIds=(Array.isArray(f.tagIds)?f.tagIds:[]).filter(id=>manualIds.has(id)); }); saveTags(); save(); $("#tagModal").classList.remove("open"); render(); };
