@@ -2184,6 +2184,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       return options.map(x=>`<option value="${esc(x)}" ${x===selected?"selected":""}>${esc(x)}</option>`).join("");
     }
     const iconChevronsDown = () => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 6 5 5 5-5"/><path d="m7 13 5 5 5-5"/></svg>';
+    const iconChevronsUp = () => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m17 18-5-5-5 5"/><path d="m17 11-5-5-5 5"/></svg>';
     function scheduleMetaText(f){ return [f.time || "TBD", f.cardSection || "Prelim", f.weightClass || "Catchweight"].join(" | "); }
     function scheduleItemHtml(f, selected){
       if(state.scheduleEditing){
@@ -2191,8 +2192,8 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       }
       const completed = isFightCompleted(f);
       const timeHtml = completed ? "" : `<span class="time">${esc(f.time || "TBD")}</span>`;
-      const actionLabel = completed ? "Fight completed" : `Move ${f.fighterA} vs ${f.fighterB} to completed fights`;
-      return `<div class="scheduleItem ${f.id===selected.id?'active':''} ${completed?'completed':''}" data-schedule-card="${f.id}"><button type="button" class="scheduleCardPick" data-select="${f.id}">${timeHtml}<div class="fight-name">${esc(f.fighterA)} vs ${esc(f.fighterB)}</div><div class="scheduleMeta">${esc(f.cardSection || "Prelim")} | ${esc(f.weightClass || "Catchweight")}</div></button><button type="button" class="scheduleCompleteBtn" data-complete-fight="${f.id}" title="${esc(actionLabel)}" aria-label="${esc(actionLabel)}">${iconChevronsDown()}</button></div>`;
+      const actionLabel = completed ? `Restore ${f.fighterA} vs ${f.fighterB} to schedule` : `Move ${f.fighterA} vs ${f.fighterB} to completed fights`;
+      return `<div class="scheduleItem ${f.id===selected.id?'active':''} ${completed?'completed':''}" data-schedule-card="${f.id}"><button type="button" class="scheduleCardPick" data-select="${f.id}">${timeHtml}<div class="fight-name">${esc(f.fighterA)} vs ${esc(f.fighterB)}</div><div class="scheduleMeta">${esc(f.cardSection || "Prelim")} | ${esc(f.weightClass || "Catchweight")}</div></button><button type="button" class="scheduleCompleteBtn" data-toggle-complete-fight="${f.id}" title="${esc(actionLabel)}" aria-label="${esc(actionLabel)}">${completed ? iconChevronsUp() : iconChevronsDown()}</button></div>`;
     }
     function render(){
       fights.forEach(refreshFightMeta); const items = visible(); const selected = (state.selected ? items.find(f=>f.id===state.selected) || fights.find(f=>f.id===state.selected) : null) || defaultActiveFight(items) || items[0] || fights[0]; state.selected = selected.id;
@@ -2223,7 +2224,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       $("#scheduleToggle").onclick=()=>{ if(matchMedia("(max-width: 820px)").matches){ state.scheduleCollapsed=!state.scheduleCollapsed; render(); } };
       $("#scheduleEdit").onclick=()=>{ state.scheduleEditing=!state.scheduleEditing; if(state.scheduleEditing) state.scheduleCollapsed=false; render(); };
       $$("[data-schedule-field]").forEach(el=>el.onchange=()=>{ const f=fights.find(x=>x.id===Number(el.dataset.fight)); if(f){ f[el.dataset.scheduleField]=el.value; save(); render(); } });
-      $$("[data-complete-fight]").forEach(button=>button.onclick=e=>{ e.stopPropagation(); completeScheduledFight(Number(button.dataset.completeFight)); });
+      $$("[data-toggle-complete-fight]").forEach(button=>button.onclick=e=>{ e.stopPropagation(); toggleScheduledFightComplete(Number(button.dataset.toggleCompleteFight)); });
       const editFightTop = $("#editFightTop"); if(editFightTop) editFightTop.onclick=openFight;
       const editActiveBets = $("#editActiveBets"); if(editActiveBets) editActiveBets.onclick=openActiveBets;
       const editActiveBetsThesis = $("#editActiveBetsThesis"); if(editActiveBetsThesis) editActiveBetsThesis.onclick=openActiveBets;
@@ -2234,11 +2235,12 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       wireAmericanOddsInputs();
       wireCurrencyInputs();
     }
-    function completeScheduledFight(id){
+    function toggleScheduledFightComplete(id){
       const f = fights.find(x=>Number(x.id)===Number(id));
-      if(!f || isFightCompleted(f)) return;
-      f.completedAt = new Date().toISOString();
-      if(Number(state.selected) === Number(id)){
+      if(!f) return;
+      const completed = isFightCompleted(f);
+      f.completedAt = completed ? "" : new Date().toISOString();
+      if(!completed && Number(state.selected) === Number(id)){
         state.selected = defaultActiveFight(fights.filter(x=>Number(x.id)!==Number(id)))?.id || null;
       }
       save();
