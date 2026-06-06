@@ -2184,7 +2184,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       return options.map(x=>`<option value="${esc(x)}" ${x===selected?"selected":""}>${esc(x)}</option>`).join("");
     }
     const iconChevronsDown = () => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 6 5 5 5-5"/><path d="m7 13 5 5 5-5"/></svg>';
-    const iconChevronsUp = () => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m17 18-5-5-5 5"/><path d="m17 11-5-5-5 5"/></svg>';
+    const iconReset = () => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>';
     function scheduleMetaText(f){ return [f.time || "TBD", f.cardSection || "Prelim", f.weightClass || "Catchweight"].join(" | "); }
     function scheduleItemHtml(f, selected){
       if(state.scheduleEditing){
@@ -2193,7 +2193,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       const completed = isFightCompleted(f);
       const timeHtml = completed ? "" : `<span class="time">${esc(f.time || "TBD")}</span>`;
       const actionLabel = completed ? `Restore ${f.fighterA} vs ${f.fighterB} to schedule` : `Move ${f.fighterA} vs ${f.fighterB} to completed fights`;
-      return `<div class="scheduleItem ${f.id===selected.id?'active':''} ${completed?'completed':''}" data-schedule-card="${f.id}"><button type="button" class="scheduleCardPick" data-select="${f.id}">${timeHtml}<div class="fight-name">${esc(f.fighterA)} vs ${esc(f.fighterB)}</div><div class="scheduleMeta">${esc(f.cardSection || "Prelim")} | ${esc(f.weightClass || "Catchweight")}</div></button><button type="button" class="scheduleCompleteBtn" data-toggle-complete-fight="${f.id}" title="${esc(actionLabel)}" aria-label="${esc(actionLabel)}">${completed ? iconChevronsUp() : iconChevronsDown()}</button></div>`;
+      return `<div class="scheduleItem ${f.id===selected.id?'active':''} ${completed?'completed':''}" data-schedule-card="${f.id}"><button type="button" class="scheduleCardPick" data-select="${f.id}">${timeHtml}<div class="fight-name">${esc(f.fighterA)} vs ${esc(f.fighterB)}</div><div class="scheduleMeta">${esc(f.cardSection || "Prelim")} | ${esc(f.weightClass || "Catchweight")}</div></button><button type="button" class="scheduleCompleteBtn" data-toggle-complete-fight="${f.id}" title="${esc(actionLabel)}" aria-label="${esc(actionLabel)}">${completed ? iconReset() : iconChevronsDown()}</button></div>`;
     }
     function render(){
       fights.forEach(refreshFightMeta); const items = visible(); const selected = (state.selected ? items.find(f=>f.id===state.selected) || fights.find(f=>f.id===state.selected) : null) || defaultActiveFight(items) || items[0] || fights[0]; state.selected = selected.id;
