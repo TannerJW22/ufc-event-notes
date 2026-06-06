@@ -1939,7 +1939,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     function analystOpenSet(f){
       const stored = state.analystReadOpen[f.id];
       const validIndexes = new Set(f.analystReads.map((_,i)=>i));
-      const open = Array.isArray(stored) ? new Set(stored.map(Number).filter(i=>validIndexes.has(i))) : new Set(f.analystReads.map((_,i)=>i));
+      const open = Array.isArray(stored) ? new Set(stored.map(Number).filter(i=>validIndexes.has(i))) : new Set();
       state.analystReadOpen[f.id] = [...open].sort((a,b)=>a-b);
       return open;
     }
@@ -1972,11 +1972,11 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       if(state.detailTab==="clips"){
         const clips = Array.isArray(f.videoSources) ? f.videoSources : [];
         if(!clips.length) return `${tabs}${noneBox()}`;
-        const activeIndex = Math.min(state.clipIndex, clips.length - 1);
-        const clip = clips[activeIndex] || clips[0];
+        const activeIndex = Number.isInteger(state.clipIndex) ? Math.min(state.clipIndex, clips.length - 1) : -1;
+        const clip = activeIndex >= 0 ? clips[activeIndex] : null;
         const list = clips.map((c,i)=>clipAccordion(c,i,activeIndex,f.id)).join("");
-        const src = youtubeSrc(clip);
-        const video = src ? `<iframe src="${src}" title="${esc(clip.title || "Video source")}" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>` : `<div class="videoFallback">Video source needs a YouTube URL or video ID.</div>`;
+        const src = clip ? youtubeSrc(clip) : "";
+        const video = clip ? (src ? `<iframe src="${src}" title="${esc(clip.title || "Video source")}" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>` : `<div class="videoFallback">Video source needs a YouTube URL or video ID.</div>`) : `<div class="videoFallback">Select a video source.</div>`;
         return `${tabs}<div class="clipsView"><div class="clipList">${list}</div><div class="videoFrame">${video}</div></div>`;
       }
       if(state.detailTab==="analyst") return `${tabs}${analystTab(f)}`;
@@ -2206,7 +2206,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       $("#editEvent").onclick=openEvent;
       const editAnalystReads = $("#editAnalystReads"); if(editAnalystReads) editAnalystReads.onclick=openAnalystReads;
       $$("[data-tab]").forEach(b=>b.onclick=()=>{state.detailTab=b.dataset.tab;render();});
-      $$("[data-clip]").forEach(b=>b.onclick=()=>{state.clipIndex=Number(b.dataset.clip);render();});
+      $$("[data-clip]").forEach(b=>b.onclick=()=>{ const index=Number(b.dataset.clip); state.clipIndex=state.clipIndex===index ? null : index; render(); });
       wireAmericanOddsInputs();
       wireCurrencyInputs();
     }
@@ -2481,7 +2481,7 @@ ${snapshotCss()}</style>
       function analystOpenSet(f){
         const stored = state.analystReadOpen[f.id];
         const validIndexes = new Set(f.analystReads.map((_,i)=>i));
-        const open = Array.isArray(stored) ? new Set(stored.map(Number).filter(i=>validIndexes.has(i))) : new Set(f.analystReads.map((_,i)=>i));
+        const open = Array.isArray(stored) ? new Set(stored.map(Number).filter(i=>validIndexes.has(i))) : new Set();
         state.analystReadOpen[f.id] = [...open].sort((a,b)=>a-b);
         return open;
       }
@@ -2551,7 +2551,7 @@ $("#parlayForm").onsubmit=e=>{e.preventDefault(); const market=commitAmericanOdd
     $("#oddsForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id===state.editingOdds.id), arr=state.editingOdds.side==="A"?f.fighterAOdds:f.fighterBOdds; const odds=commitAmericanOddsInput($("#oddsValue")); if(Number.isNaN(odds)){ alert("Odds must use American odds format, like +105 or -120."); return; } arr[state.editingOdds.index]=odds===null?"-":odds; save(); $("#oddsModal").classList.remove("open"); render();};
     $("#fightForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id===state.selected); f.headline=$("#fightHeadline").value.trim() || "Placeholder."; f.fighterA=$("#fighterA").value.trim(); f.fighterB=$("#fighterB").value.trim(); f.tagIds=selectedFightTagIds(); save(); $("#fightModal").classList.remove("open"); render();};
 $("#activeBetForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id===state.selected); const rows=[]; let valid=true; $$("[data-active-bet-row]").forEach(row=>{ const notes=row.querySelector('[data-field="notes"]').value.trim(); const stage=normalizeBetStage(row.querySelector('[data-field="stage"]').value); const risk=parseCurrencyAmount(row.querySelector('[data-field="risk"]').value); const market=commitAmericanOddsInput(row.querySelector('[data-field="market"]')); const resultStatus=normalizeBetResultStatus(row.querySelector('[data-field="resultStatus"]').value); if(Number.isNaN(market)){valid=false; return;} if(notes||risk||market) rows.push({notes,stage,risk,market,result:0,resultStatus}); }); if(!valid){ alert("Odds must use American odds format, like +105 or -120."); return; } f.betSummary=$("#activeFightThesis").value.trim(); f.portfolio=rows; refreshFightMeta(f); save(); $("#activeBetModal").classList.remove("open"); render();};
-    $("#analystForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id===state.selected); f.analystReads=$$("[data-analyst-row]").map((row,i)=>({name:analystReadLabel(i), notes:row.querySelector('[data-field="notes"]').value.trim()})); state.analystReadOpen[f.id]=f.analystReads.map((_,i)=>i); save(); $("#analystModal").classList.remove("open"); render();};
+    $("#analystForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id===state.selected); f.analystReads=$$("[data-analyst-row]").map((row,i)=>({name:analystReadLabel(i), notes:row.querySelector('[data-field="notes"]').value.trim()})); state.analystReadOpen[f.id]=[]; save(); $("#analystModal").classList.remove("open"); render();};
     $("#eventForm").onsubmit=e=>{e.preventDefault(); eventMeta=normalizeEventMeta({...eventMeta,name:$("#eventName").value.trim(),headline:$("#eventHeadlineInput").value.trim(),day:$("#eventDay").value.trim(),location:$("#eventLocation").value.trim()}); saveEvent(); $("#eventModal").classList.remove("open"); render();};
     $("#tagForm").onsubmit=e=>{e.preventDefault(); const manual=[]; $$("[data-tag-row]:not([data-auto-tag])").forEach(row=>{ const name=row.querySelector('[data-tag-field="name"]').value.trim(); const color=row.querySelector('[data-tag-field="color"]').value; if(name) manual.push({id:row.dataset.tagId || tagId(), name, color:normalizeTagColor(color), logic:""}); }); const auto=tags.filter(t=>t.logic); tags=[...manual, ...auto].map(normalizeTag); const manualIds=new Set(tags.filter(t=>!t.logic).map(t=>t.id)); fights.forEach(f=>{ f.tagIds=(Array.isArray(f.tagIds)?f.tagIds:[]).filter(id=>manualIds.has(id)); }); saveTags(); save(); $("#tagModal").classList.remove("open"); render(); };
     function resetData(){ if(confirm("Are you sure you want to clear all UFC event-notes data and start from scratch?")){ localStorage.removeItem(key); localStorage.removeItem(eventKey); localStorage.removeItem(parlayKey); localStorage.removeItem(analystDemoKey); fights=hydrateFightList(pruneFightList(JSON.parse(JSON.stringify(seed)))); parlays=[]; tags=defaultTags.map(({id,name,color,logic})=>({id,name,color,logic:logic || ""})); localStorage.setItem(tagMigrationKey, "7"); saveTags(); saveParlays(); fights.forEach(f=>applyMoneylineSnapshotOdds(normalizeFight(f))); sortFightList(fights); seedDemoAnalystReadsOnce(); applyResearchDataFromDoc(true); save(); eventMeta=defaultEventMeta; render(); } }
