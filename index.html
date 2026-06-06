@@ -1878,7 +1878,8 @@
       return amount < 0 ? `-${formatted}` : formatted;
     };
     const signedMoney = value => {
-      const amount = Number(value || 0);
+      const raw = Number(value || 0);
+      const amount = raw < 0 ? -Math.round(Math.abs(raw)) : Math.round(raw);
       const formatted = `$${Math.abs(amount).toLocaleString("en-US")}`;
       if (amount > 0) return `+${formatted}`;
       if (amount < 0) return `-${formatted}`;
@@ -2529,7 +2530,8 @@ ${snapshotCss()}</style>
         return amount < 0 ? `-${formatted}` : formatted;
       };
       const signedMoney = value => {
-        const amount = Number(value || 0);
+        const raw = Number(value || 0);
+        const amount = raw < 0 ? -Math.round(Math.abs(raw)) : Math.round(raw);
         const formatted = `$${Math.abs(amount).toLocaleString("en-US")}`;
         if (amount > 0) return `+${formatted}`;
         if (amount < 0) return `-${formatted}`;
