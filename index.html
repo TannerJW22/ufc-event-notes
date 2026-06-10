@@ -270,11 +270,25 @@
       fightSeed(6,"9:40pm","Co-Main Event","Heavyweight","Placeholder.","Alex Pereira","Ciryl Gane"),
       fightSeed(7,"10:00pm","Main Event","Lightweight","Placeholder.","Ilia Topuria","Justin Gaethje")
     ];
+    seed[0].fighterAOdds = ["-","?",-150,-161,-167,-167];
+    seed[0].fighterBOdds = ["-","?",150,146,136,136];
+    seed[1].fighterAOdds = ["-","?",-300,-322,-345,-345];
+    seed[1].fighterBOdds = ["-","?",300,305,265,265];
+    seed[2].fighterAOdds = ["-","?",-525,-641,-702,-702];
+    seed[2].fighterBOdds = ["-","?",525,510,478,478];
+    seed[3].fighterAOdds = ["-","?",317,348,315,315];
+    seed[3].fighterBOdds = ["-","?",-317,-388,-418,-418];
+    seed[4].fighterAOdds = ["-","?",-376,-408,-441,-441];
+    seed[4].fighterBOdds = ["-","?",376,344,327,327];
+    seed[5].fighterAOdds = ["-","?",100,-106,-111,-111];
+    seed[5].fighterBOdds = ["-","?",100,-104,-111,-111];
+    seed[6].fighterAOdds = ["-","?","?",-452,-543,-543];
+    seed[6].fighterBOdds = ["-","?","?",432,392,392];
     const analystHeaderLabels = ["Topside MMA","DFS Wheezy","Chris DPG"];
     const analystReadLabel = index => analystHeaderLabels[index] || `Read ${index + 1}`;
     const iconChevronDown = () => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
     const researchDataVersionKey = "ufc-event-notes-research-freedom250-sync-version";
-    const researchDataVersion = "2026-06-14-freedom250-scaffold-v1";
+    const researchDataVersion = "2026-06-14-freedom250-scaffold-v2";
     const researchAnalystReadsByFightId = {};
     const researchVideoSourcesByFightId = {};
     const demoAnalystReads = [];
@@ -285,14 +299,14 @@
       return chronologicalFightIds.map(id => byId.get(id) || JSON.parse(JSON.stringify(seed.find(f => f.id === id)))).filter(Boolean);
     };
     const moneylineSnapshotOdds = {};
-    const key = "ufc-event-notes-dashboard-freedom250-topuria-gaethje-20260614-v1";
-    const eventKey = "ufc-event-notes-event-freedom250-topuria-gaethje-20260614-v1";
-    const tagsKey = "ufc-event-notes-tags-freedom250-topuria-gaethje-20260614-v1";
-    const parlayKey = "ufc-event-notes-parlays-freedom250-topuria-gaethje-20260614-v1";
-    const portfolioRestoreKey = "ufc-event-notes-portfolio-restored-freedom250-20260614-v1";
-    const parlayRestoreKey = "ufc-event-notes-parlay-restored-freedom250-20260614-v1";
-    const analystDemoKey = "ufc-event-notes-analyst-demo-seeded-freedom250-v1";
-    const tagMigrationKey = "ufc-event-notes-tags-migrated-freedom250-v1";
+    const key = "ufc-event-notes-dashboard-freedom250-topuria-gaethje-20260614-v2";
+    const eventKey = "ufc-event-notes-event-freedom250-topuria-gaethje-20260614-v2";
+    const tagsKey = "ufc-event-notes-tags-freedom250-topuria-gaethje-20260614-v2";
+    const parlayKey = "ufc-event-notes-parlays-freedom250-topuria-gaethje-20260614-v2";
+    const portfolioRestoreKey = "ufc-event-notes-portfolio-restored-freedom250-20260614-v2";
+    const parlayRestoreKey = "ufc-event-notes-parlay-restored-freedom250-20260614-v2";
+    const analystDemoKey = "ufc-event-notes-analyst-demo-seeded-freedom250-v2";
+    const tagMigrationKey = "ufc-event-notes-tags-migrated-freedom250-v2";
     const realPortfolioRestoreSeed = [];
     const restoredParlaySeed = null;
     const defaultEventMeta = {
