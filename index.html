@@ -118,7 +118,7 @@
       <div class="dialogHead"><h2 id="resetTitle">Reset Data</h2><button type="button" class="closeIcon" data-close title="Close" aria-label="Close"></button></div>
       <div class="dialogBody resetChoiceGrid">
         <button type="button" class="resetChoice" data-reset-choice="portfolio"><span class="resetChoiceTitle">Portfolio Reset</span><span class="resetChoiceCopy">Clears straight bets, parlays, exposure, and results. Keeps odds, notes, tags, and event details.</span></button>
-        <button type="button" class="resetChoice danger" data-reset-choice="full"><span class="resetChoiceTitle">Full Reset</span><span class="resetChoiceCopy">Clears portfolio, odds, notes, video sources, tags, fight details, and event details.</span></button>
+        <button type="button" class="resetChoice danger" data-reset-choice="full"><span class="resetChoiceTitle">Full Reset</span><span class="resetChoiceCopy">Clears portfolio, odds, notes, video sources, tags, and replaces fight/event details with placeholders.</span></button>
       </div>
     </div>
   </div>
@@ -317,6 +317,15 @@
       mainCardTime:"8:00pm",
       dateTime:"Sunday Jun 14, 2026 | Main Card 8:00 PM ET"
     };
+    const fullResetEventMeta = {
+      name:"{Event Name}",
+      headline:"{Fighter Name} vs. {Fighter Name}",
+      day:"{Event Date}",
+      location:"{Event Location}",
+      prelimsTime:"{Prelims Time}",
+      mainCardTime:"{Main Card Time}",
+      dateTime:"{Event Date} | Main Card {Main Card Time}"
+    };
     const savedFightData = localStorage.getItem(key);
     let fights = hydrateFightList(pruneFightList(JSON.parse(savedFightData || "null") || seed));
     let eventMeta = JSON.parse(localStorage.getItem(eventKey) || "null") || defaultEventMeta;
@@ -395,7 +404,11 @@
     seedLegacyTags();
     syncAutoTagDefaults();
     normalizeTags();
-    const eventLabel = s => /^ufc\b/i.test(String(s || "").trim()) ? String(s).trim() : `UFC ${String(s || "Fight Night").trim()}`;
+    const eventLabel = s => {
+      const value = String(s || "").trim();
+      if(/^\{[^}]+\}$/.test(value)) return value;
+      return /^ufc\b/i.test(value) ? value : `UFC ${value || "Fight Night"}`;
+    };
     const normalizeClock = value => {
       const raw = String(value || "").trim();
       if(!raw) return "";
@@ -521,7 +534,9 @@
     const fighterLastName = name => String(name || "").trim().split(/\s+/).filter(Boolean).pop() || "TBD";
     const fightOptionText = f => `${fighterLastName(f.fighterA)} vs ${fighterLastName(f.fighterB)}`;
     const closestChoice = (choices, value, fallback) => choices.find(x => x.toLowerCase() === String(value || "").trim().toLowerCase()) || fallback;
+    const isPlaceholderResetFight = f => f?.placeholderReset === true;
     function migrateScheduleFields(f){
+      const preservePlaceholders = isPlaceholderResetFight(f);
       const headline = String(f.headline || "");
       const parts = headline.split("|").map(x=>x.trim()).filter(Boolean);
       if((!f.cardSection || !f.weightClass) && parts.length >= 2){
@@ -529,9 +544,9 @@
         f.weightClass = f.weightClass || parts[1];
         f.headline = "";
       }
-      f.cardSection = closestChoice(cardSectionChoices, f.cardSection, "Prelim");
-      f.weightClass = closestChoice(weightClassChoices, f.weightClass, "Catchweight");
-      f.time = String(f.time || "TBD");
+      f.cardSection = preservePlaceholders ? String(f.cardSection || "{Card Section}") : closestChoice(cardSectionChoices, f.cardSection, "Prelim");
+      f.weightClass = preservePlaceholders ? String(f.weightClass || "{Weight Class}") : closestChoice(weightClassChoices, f.weightClass, "Catchweight");
+      f.time = String(f.time || (preservePlaceholders ? "{Time}" : "TBD"));
       f.completedAt = String(f.completedAt || "");
       if(!f.headline || f.headline.includes("|")) f.headline = "";
       return f;
@@ -539,7 +554,7 @@
     function normalizeFight(f){
       migrateScheduleFields(f);
       const scheduled = canonicalSchedule[f.id];
-      if(scheduled){
+      if(scheduled && !isPlaceholderResetFight(f)){
         f.time = scheduled.time;
         f.cardSection = scheduled.cardSection;
       }
@@ -1366,7 +1381,11 @@ ${snapshotCss()}</style>
       const betStageLabel = value => normalizeBetStage(value) === "live" ? "L" : "P";
       const normalizeBetResultStatus = value => ["win","loss","push"].includes(String(value || "").toLowerCase()) ? String(value).toLowerCase() : "active";
       const betStatusClass = status => `betStatus${normalizeBetResultStatus(status).replace(/^./, c=>c.toUpperCase())}`;
-      const eventLabel = s => /^ufc\b/i.test(String(s || "").trim()) ? String(s).trim() : `UFC ${String(s || "Fight Night").trim()}`;
+      const eventLabel = s => {
+        const value = String(s || "").trim();
+        if(/^\{[^}]+\}$/.test(value)) return value;
+        return /^ufc\b/i.test(value) ? value : `UFC ${value || "Fight Night"}`;
+      };
       const normalizeClock = value => String(value || "").replace(/\bET\b/ig,"").replace(/\s+/g," ").replace(/\s*([ap])\.?m\.?/i, "$1m").trim();
       const eventDateHtml = meta => {
         const lines = [];
@@ -1579,19 +1598,10 @@ $("#activeBetForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id
       $("#search").value = "";
     }
     function buildFullResetFights(){
-      return hydrateFightList(pruneFightList(cloneData(seed))).map(f=>{
+      return chronologicalFightIds.map(id => {
+        const f = fightSeed(id,"{Time}","{Card Section}","{Weight Class}","","{Fighter Name}","{Fighter Name}");
+        f.placeholderReset = true;
         normalizeFight(f);
-        f.oddsHeaders = [...oddsHeaders];
-        f.fighterAOdds = [...blankOdds];
-        f.fighterBOdds = [...blankOdds];
-        f.headline = "";
-        f.betSummary = "";
-        f.analystReads = [];
-        f.videoSources = [];
-        f.portfolio = [];
-        f.tagIds = [];
-        f.risk = 0;
-        f.completedAt = "";
         return f;
       });
     }
@@ -1608,11 +1618,11 @@ $("#activeBetForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id
       render();
     }
     function resetFullData(){
-      if(!confirm("Full reset will permanently clear portfolio, odds, notes, video sources, tags, fight details, and event details. Continue?")) return;
+      if(!confirm("Full reset will permanently clear portfolio, odds, notes, video sources, tags, fight details, and event details, then replace fight and event labels with placeholders. Continue?")) return;
       fights = buildFullResetFights();
       parlays = [];
       tags = defaultTagState();
-      eventMeta = cloneData(defaultEventMeta);
+      eventMeta = cloneData(fullResetEventMeta);
       markSeededResetDataHandled();
       saveTags();
       saveParlays();
