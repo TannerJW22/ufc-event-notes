@@ -261,13 +261,13 @@
       return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
     });
     const seed = [
-      fightSeed(1,"8:00pm","Main Card","Featherweight","Placeholder.","Diego Lopes","Steve Garcia"),
-      fightSeed(2,"8:20pm","Main Card","Middleweight","Placeholder.","Bo Nickal","Kyle Daukaus"),
-      fightSeed(3,"8:40pm","Main Card","Lightweight","Placeholder.","Mauricio Ruffy","Michael Chandler"),
-      fightSeed(4,"9:00pm","Main Card","Heavyweight","Placeholder.","Derrick Lewis","Josh Hokit"),
-      fightSeed(5,"9:20pm","Main Card","Bantamweight","Placeholder.","Sean O'Malley","Aiemann Zahabi"),
-      fightSeed(6,"9:40pm","Co-Main Event","Heavyweight","Placeholder.","Alex Pereira","Ciryl Gane"),
-      fightSeed(7,"10:00pm","Main Event","Lightweight","Placeholder.","Ilia Topuria","Justin Gaethje")
+      fightSeed(1,"8:00pm","Main Card","Featherweight","","Diego Lopes","Steve Garcia"),
+      fightSeed(2,"8:20pm","Main Card","Middleweight","","Bo Nickal","Kyle Daukaus"),
+      fightSeed(3,"8:40pm","Main Card","Lightweight","","Mauricio Ruffy","Michael Chandler"),
+      fightSeed(4,"9:00pm","Main Card","Heavyweight","","Derrick Lewis","Josh Hokit"),
+      fightSeed(5,"9:20pm","Main Card","Bantamweight","","Sean O'Malley","Aiemann Zahabi"),
+      fightSeed(6,"9:40pm","Co-Main Event","Heavyweight","","Alex Pereira","Ciryl Gane"),
+      fightSeed(7,"10:00pm","Main Event","Lightweight","","Ilia Topuria","Justin Gaethje")
     ];
     seed[0].fighterAOdds = ["-","?",-150,-161,-167,-167];
     seed[0].fighterBOdds = ["-","?",150,146,136,136];
@@ -527,13 +527,13 @@
       if((!f.cardSection || !f.weightClass) && parts.length >= 2){
         f.cardSection = f.cardSection || parts[0];
         f.weightClass = f.weightClass || parts[1];
-        f.headline = "Placeholder.";
+        f.headline = "";
       }
       f.cardSection = closestChoice(cardSectionChoices, f.cardSection, "Prelim");
       f.weightClass = closestChoice(weightClassChoices, f.weightClass, "Catchweight");
       f.time = String(f.time || "TBD");
       f.completedAt = String(f.completedAt || "");
-      if(!f.headline || f.headline.includes("|")) f.headline = "Placeholder.";
+      if(!f.headline || f.headline.includes("|")) f.headline = "";
       return f;
     }
     function normalizeFight(f){
@@ -557,7 +557,7 @@
       };
       f.fighterAOdds = normalizeOdds(f.fighterAOdds);
       f.fighterBOdds = normalizeOdds(f.fighterBOdds);
-      f.headline = String(f.headline || "Placeholder.");
+      f.headline = String(f.headline || "");
       f.betSummary = String(f.betSummary || "");
       const analystRows = Array.isArray(f.analystReads) ? f.analystReads : [];
       f.analystReads = analystRows.length ? analystHeaderLabels.map((name,i)=>({name,notes:String(analystRows[i]?.notes || "")})) : [];
@@ -1584,7 +1584,7 @@ $("#activeBetForm").onsubmit=e=>{e.preventDefault(); const f=fights.find(x=>x.id
         f.oddsHeaders = [...oddsHeaders];
         f.fighterAOdds = [...blankOdds];
         f.fighterBOdds = [...blankOdds];
-        f.headline = "Placeholder.";
+        f.headline = "";
         f.betSummary = "";
         f.analystReads = [];
         f.videoSources = [];
