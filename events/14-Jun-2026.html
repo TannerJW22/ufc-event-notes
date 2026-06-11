@@ -295,9 +295,375 @@
     const analystHeaderLabels = ["Topside MMA","DFS Weezy","Chris DPG"];
     const analystReadLabel = index => analystHeaderLabels[index] || `Read ${index + 1}`;
     const iconChevronDown = () => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
-    const researchDataVersion = "2026-06-14-freedom250-scaffold-v2";
-    const researchAnalystReadsByFightId = {};
-    const researchVideoSourcesByFightId = {};
+    const researchDataVersion = "2026-06-14-freedom250-research-v2";
+    const researchAnalystReadsByFightId = {
+      "1": [
+            {
+                  "name": "Topside MMA",
+                  "notes": "Garcia Lean / Method Split (Low-Med); Lopes Chin and Grappling Keep It Volatile.\n\nTopside frames this as a power-versus-durability fight with no clean side: Garcia is the cleaner distance striker and decision threat, while Lopes owns the stronger chin, grappling upside, and more varied finish/control paths.\n\nTopside flags Lopes's striking and past cardio as concerns, but he also treats Lopes's chin as one of the best in the featherweight division after surviving major damage from Jean Silva.\n\nGarcia brings major divisional knockout power, but his own durability is not in the same class; he has been dropped and hurt by lesser hitters than Lopes has recently faced.\n\nThe style split is narrow: Garcia is preferred if this stays clean at distance, while Lopes can change the fight with takedowns, control, scrambles, or club-and-sub looks.\n\nLevel of competition strongly favors Lopes because of the Volkanovski, Ortega, and Jean Silva schedule. Garcia's streak is impressive, but the opposition is a real downgrade.\n\nBetting posture is method-specific rather than moneyline: Topside floated Garcia decision-only and Lopes finish-only as cleaner expressions than forcing a side."
+            },
+            {
+                  "name": "DFS Weezy",
+                  "notes": "Lopes KO / Violence Lean (Med); Garcia Power Live; Under Interest.\n\nDFS Weezy expects a car-crash opener, trusts Lopes's durability and schedule more than Garcia's pressure, and prefers violence or Lopes knockout exposure over a pure chalk moneyline.\n\nDFS noted Lopes opened around -300 before money arrived on Garcia; the narrowed line makes the fight more playable than the original opener but still volatile.\n\nLopes was credited with sneaky jiu-jitsu and a realistic club-and-sub path, especially if Garcia pressures into bad entries or gets hurt first.\n\nGarcia's pace and power can break opponents early or mid-fight, but DFS repeatedly contrasted that with Lopes eating huge shots from Jean Silva and continuing to function.\n\nThe durability gap drives the pick: Garcia has more obvious one-shot power, but Lopes is the fighter DFS trusts more if both men trade damage.\n\nDFS liked violence and under looks, especially under 1.5 if priced fairly, and picked Lopes by first-round knockout while acknowledging Garcia knockout risk."
+            },
+            {
+                  "name": "Chris DPG",
+                  "notes": "No Current Card Transcript Located; See Appendix.\n\nNo Chris DPG fight read is included for this matchup because the supplied URL resolves to unrelated World Cup betting content and the audited prior-card source channel did not surface a UFC Freedom 250 breakdown.\n\nThe prior card mapped the Chris DPG label to Diary of a Pro Gambler; that channel was audited across videos and streams for UFC Freedom 250, White House, Topuria, and Gaethje terms.\n\nNo usable current-card UFC transcript was found, so this section is intentionally not backfilled from old-card notes or non-requested analysts.\n\nIf a valid Chris DPG UFC Freedom 250 URL appears later in fight week, run the same transcript extraction and replace this placeholder with fight-specific longform notes before condensing."
+            }
+      ],
+      "2": [
+            {
+                  "name": "Topside MMA",
+                  "notes": "Nickal Pick but No -360 (Low-Med); Wrestling Price vs Daukaus Grappling/Power.\n\nTopside picks Nickal because of the wrestling, but the line is uncomfortable because Daukaus is a legitimate grappler with improved boxing, power, and more MMA experience than the market may imply.\n\nTopside says the wide price is almost entirely a wrestling tax. If takedowns were removed from the fight, Daukaus could be close to even or even favored in a striking-only version.\n\nDaukaus is treated as a real black-belt submission threat, not a helpless striker, and his recent knockout of Michel Pereira is a meaningful warning against underrating his hands.\n\nNickal has the clearer wrestling advantage and probably the better control path, but he is still comparatively green in MMA and has shown hittable moments.\n\nTopside sees Nickal surviving, racking up control, and winning minutes if he wrestles intelligently. If he stays extended on the feet, the favorite no longer looks like a -300-plus fighter.\n\nThe conclusion is pick Nickal but pass on the current moneyline; the price is too wide for the amount of Daukaus danger."
+            },
+            {
+                  "name": "DFS Weezy",
+                  "notes": "Nickal Decision (Med); Over / Minute Winner; Daukaus Power-Sub Upside.\n\nDFS Weezy projects Nickal as the better minute winner, with decision and over paths more attractive than laying the moneyline, while Daukaus remains live through power, BJJ, and experience.\n\nDFS had Nickal around -280 to -300 and explicitly did not want to lay that price, even while agreeing Nickal should be favored.\n\nDaukaus was described as a legit BJJ black belt with improved boxing, a recent Pereira knockout, and enough submission/finish history to punish careless wrestling exchanges.\n\nDFS expects Nickal to be able to land takedowns even against strong defensive numbers, but the cleaner approach is to mix them at smart moments rather than forcing a pure grappling match.\n\nNickal is the minute winner in this handicap; Daukaus is more of a moment/finish winner, with very few decision wins relative to his total wins.\n\nThe over became a popular play as the market moved from roughly -120 toward -150/-170. DFS leaned Nickal decision, with a late finish possible if Daukaus gets reckless."
+            },
+            {
+                  "name": "Chris DPG",
+                  "notes": "No Current Card Transcript Located; See Appendix.\n\nNo Chris DPG fight read is included for this matchup because the supplied URL resolves to unrelated World Cup betting content and the audited prior-card source channel did not surface a UFC Freedom 250 breakdown.\n\nThe prior card mapped the Chris DPG label to Diary of a Pro Gambler; that channel was audited across videos and streams for UFC Freedom 250, White House, Topuria, and Gaethje terms.\n\nNo usable current-card UFC transcript was found, so this section is intentionally not backfilled from old-card notes or non-requested analysts.\n\nIf a valid Chris DPG UFC Freedom 250 URL appears later in fight week, run the same transcript extraction and replace this placeholder with fight-specific longform notes before condensing."
+            }
+      ],
+      "3": [
+            {
+                  "name": "Topside MMA",
+                  "notes": "Ruffy KO (High Side); Chandler R1 Wrestling Only; Father Time Fade.\n\nTopside sees a major career-trajectory mismatch: Ruffy is young, improving, longer, and much cleaner at range, while Chandler is forty and needs early wrestling before his cardio and durability fade.\n\nTopside questions the matchmaking after Ruffy knocked out Rafael Fiziev and then drew a forty-year-old Chandler; the side is clear even if the odds are extreme.\n\nRuffy owns major age, height, reach, and striking advantages. Topside expects the distance striking to be heavily in Ruffy's favor if Chandler cannot force extended grappling.\n\nChandler's best path is wrestling, but Topside doubts he can chain takedowns and control Ruffy for 15 minutes at this stage of his career.\n\nRuffy's work with high-level wrestlers gives Topside enough confidence that the takedown defense can hold up against this version of Chandler.\n\nThe pick is Ruffy, most likely by knockout, with the only caution being that the chalk is already massive."
+            },
+            {
+                  "name": "DFS Weezy",
+                  "notes": "Ruffy R2 KO (Med-High); Chandler R1 Wrestling; Props Too Taxed.\n\nDFS Weezy expects Chandler to wrestle early and maybe steal round one, then slow down and get picked apart; the problem is not the Ruffy side but finding a bet that is not already overtaxed.\n\nDFS tracked Ruffy from around -500 at open to roughly -600 or shorter, making him one of the largest favorites on the card behind Topuria.\n\nChandler's path is pressure into takedowns, similar in concept to what Benoit Saint Denis did to limit Ruffy's space, but Chandler's current cardio is the major flaw.\n\nDFS would not be shocked if Chandler lands multiple takedowns or wins the first round; the handicap flips once he has to keep wrestling hard into rounds two and three.\n\nStat Diggers had Ruffy moneyline, inside-distance, knockout, and fight-does-not-go all heavily juiced, making simple prop betting unattractive without a round angle.\n\nPreferred expressions were Ruffy round-two knockout, Ruffy two-or-three knockout, or under 2.5 if the number is usable. Chandler's win condition is acknowledged but priced as a tiny, aging-wrestler upset."
+            },
+            {
+                  "name": "Chris DPG",
+                  "notes": "No Current Card Transcript Located; See Appendix.\n\nNo Chris DPG fight read is included for this matchup because the supplied URL resolves to unrelated World Cup betting content and the audited prior-card source channel did not surface a UFC Freedom 250 breakdown.\n\nThe prior card mapped the Chris DPG label to Diary of a Pro Gambler; that channel was audited across videos and streams for UFC Freedom 250, White House, Topuria, and Gaethje terms.\n\nNo usable current-card UFC transcript was found, so this section is intentionally not backfilled from old-card notes or non-requested analysts.\n\nIf a valid Chris DPG UFC Freedom 250 URL appears later in fight week, run the same transcript extraction and replace this placeholder with fight-specific longform notes before condensing."
+            }
+      ],
+      "4": [
+            {
+                  "name": "Topside MMA",
+                  "notes": "Hokit Pick (Med); Lewis R1 KO Live; Live Flip After First Round.\n\nTopside picks Hokit because pace, wrestling, and youth should overwhelm Lewis, but he still treats the opening minutes as dangerous because Lewis only needs one clean heavyweight moment.\n\nHokit has the D1 wrestling base and should have takedown, ground-and-pound, and submission paths if he uses them early instead of proving a point on the feet.\n\nTopside does not expect Hokit simply to take Lewis down and coast for 14 minutes, but he does think Hokit can get the fight where Lewis is weakest.\n\nLewis owns the reach and power danger. If Hokit stands in front of him and learns the hard way, a Lewis knockout inside the first two minutes is live.\n\nIf the fight reaches round two, Topside expects Hokit's win probability to balloon because Lewis's cardio, volume, and grappling reliability all fall off.\n\nThe pick is Hokit, but the betting plan should respect early Lewis knockout risk and look for live confirmation if the pre-fight chalk feels too exposed."
+            },
+            {
+                  "name": "DFS Weezy",
+                  "notes": "Hokit R1 KO / Under 1.5 (Med); Lewis KO Hedge Only.\n\nDFS Weezy likes violence more than the Hokit moneyline: Hokit's pace and pressure can break a forty-one-year-old Lewis quickly, while Lewis remains a pure knockout dog with real historical upset equity.\n\nDFS had Hokit around -330 early and Stat Diggers later discussed even steeper prices, with Lewis in the +270 to +350 range depending on book and timing.\n\nHokit's pace against Curtis Blaydes was the key reference point. DFS doubts Lewis can survive that kind of pressure as long as Blaydes did.\n\nLewis is a poor minute winner because of low volume, cardio, grappling, and durability concerns, but DFS and Weezy both emphasized that his power and dog ROI cannot be ignored.\n\nThe preferred betting angles are under 1.5, fight will not start round two or round three, and Hokit knockout if plus money or otherwise playable.\n\nIf taking Lewis, DFS says the bet should be knockout, especially round-one knockout. Lewis decision is not a serious path."
+            },
+            {
+                  "name": "Chris DPG",
+                  "notes": "No Current Card Transcript Located; See Appendix.\n\nNo Chris DPG fight read is included for this matchup because the supplied URL resolves to unrelated World Cup betting content and the audited prior-card source channel did not surface a UFC Freedom 250 breakdown.\n\nThe prior card mapped the Chris DPG label to Diary of a Pro Gambler; that channel was audited across videos and streams for UFC Freedom 250, White House, Topuria, and Gaethje terms.\n\nNo usable current-card UFC transcript was found, so this section is intentionally not backfilled from old-card notes or non-requested analysts.\n\nIf a valid Chris DPG UFC Freedom 250 URL appears later in fight week, run the same transcript extraction and replace this placeholder with fight-specific longform notes before condensing."
+            }
+      ],
+      "5": [
+            {
+                  "name": "Topside MMA",
+                  "notes": "O'Malley KO (Med-High); Zahabi LoC/Volume Step-Up Problem.\n\nTopside sees a striker-versus-striker matchup where O'Malley owns the speed, power, durability, athleticism, and level-of-competition edges, while Zahabi lacks the wrestling volume to change the terms.\n\nTopside asks where Zahabi has a clear advantage and does not find one: the grappling numbers are too thin, and this should mostly stay standing.\n\nZahabi's streak is respected but treated as a lower-level run. The Marlon Vera split decision is not enough to prove he can handle a sharp O'Malley at this price.\n\nO'Malley is younger, faster, more explosive, more powerful, and more durable. Zahabi being thirty-eight is a real concern in a high-speed bantamweight striking fight.\n\nTopside expects Zahabi to face a much larger step up in tools and level than he has handled recently.\n\nThe pick is O'Malley by knockout; the line makes sense even if the market is not cheap."
+            },
+            {
+                  "name": "DFS Weezy",
+                  "notes": "O'Malley Decision / Parlay Piece (Med); Zahabi Improved but Low-Volume History.\n\nDFS Weezy respects Zahabi's late-career improvement but still makes O'Malley the clear side because Zahabi will not wrestle and is unlikely to match the favorite's volume, speed, or tools over 15 minutes.\n\nDFS tracked O'Malley from around -250 at open to roughly -400, with Zahabi near +300, and generally agreed the favorite should be wide.\n\nZahabi historically had severe low-volume stretches, including distance striking fights where his output was not enough for a modern bantamweight pace, even though his recent work rate has improved.\n\nThe wrestling path is not there: DFS noted Zahabi has barely landed takedowns in the UFC and is expected to strike rather than grapple.\n\nOn the feet, DFS favors O'Malley's volume, work rate, speed, and weapon variety. Zahabi can land a big shot, but he is unlikely to outwork O'Malley round over round.\n\nDFS picked O'Malley by decision because Zahabi is tough, while acknowledging knockout is live. Possible bet expressions include parlay use, O'Malley KO/decision, or O'Malley plus over 1.5 to improve price."
+            },
+            {
+                  "name": "Chris DPG",
+                  "notes": "No Current Card Transcript Located; See Appendix.\n\nNo Chris DPG fight read is included for this matchup because the supplied URL resolves to unrelated World Cup betting content and the audited prior-card source channel did not surface a UFC Freedom 250 breakdown.\n\nThe prior card mapped the Chris DPG label to Diary of a Pro Gambler; that channel was audited across videos and streams for UFC Freedom 250, White House, Topuria, and Gaethje terms.\n\nNo usable current-card UFC transcript was found, so this section is intentionally not backfilled from old-card notes or non-requested analysts.\n\nIf a valid Chris DPG UFC Freedom 250 URL appears later in fight week, run the same transcript extraction and replace this placeholder with fight-specific longform notes before condensing."
+            }
+      ],
+      "6": [
+            {
+                  "name": "Topside MMA",
+                  "notes": "Pereira Lean (Low); Gane Minute Winner Risk; Heavyweight Translation Unknown.\n\nTopside slightly leans Pereira, but the fight is fragile because Gane has the cardio, durability, footwork, and volume to win minutes if Pereira's light-heavyweight power does not fully translate up.\n\nTopside treats Gane as a real heavyweight minute winner: he wants to strike, has good cardio, decent durability, and is more volume-oriented than pure knockout-oriented.\n\nThe biggest Pereira questions are age and weight-class translation. At thirty-eight, moving up raises questions about speed, durability, and whether the left-hook power carries the same way.\n\nTopside compares the move-up power question to other fighters whose power looked different after changing divisions; Pereira should still hit harder than Gane, but the gap is not automatic.\n\nGane can win if he keeps range, uses movement, and forces Pereira to chase moments. Pereira can win if he lands the signature power shot.\n\nTopside picks Pereira narrowly and does not frame heat/cardio as a major problem because both men have gone long before."
+            },
+            {
+                  "name": "DFS Weezy",
+                  "notes": "Gane Decision / Over (Med); Pereira KO Only Clear Moment.\n\nDFS Weezy makes the uncomfortable but consistent handicap: Gane is the likely minute winner with speed, footwork, cardio, and durability, while Pereira needs the heavyweight power to show up cleanly.\n\nDFS noted Gane opened as a larger favorite near -200 before the market moved toward a pick'em, likely helped by Pereira popularity.\n\nGane is one of the few heavyweights with sustained cardio, speed, and footwork. That makes him unusually equipped to outpoint rather than brawl.\n\nPereira is a favorite fighter for DFS personally, but the move to heavyweight creates unknowns around speed, cardio, power transfer, and taking heavyweight shots.\n\nStat Diggers gave Gane the heavyweight strength-of-schedule edge, while noting some of Pereira's schedule metrics come from middleweight and light heavyweight rather than heavyweight.\n\nDFS placed an over on this card and picked Gane by decision. The practical read is Gane/over if he avoids the big left, Pereira KO if the power translates immediately."
+            },
+            {
+                  "name": "Chris DPG",
+                  "notes": "No Current Card Transcript Located; See Appendix.\n\nNo Chris DPG fight read is included for this matchup because the supplied URL resolves to unrelated World Cup betting content and the audited prior-card source channel did not surface a UFC Freedom 250 breakdown.\n\nThe prior card mapped the Chris DPG label to Diary of a Pro Gambler; that channel was audited across videos and streams for UFC Freedom 250, White House, Topuria, and Gaethje terms.\n\nNo usable current-card UFC transcript was found, so this section is intentionally not backfilled from old-card notes or non-requested analysts.\n\nIf a valid Chris DPG UFC Freedom 250 URL appears later in fight week, run the same transcript extraction and replace this placeholder with fight-specific longform notes before condensing."
+            }
+      ],
+      "7": [
+            {
+                  "name": "Topside MMA",
+                  "notes": "Topuria R1 KO (High); Gaethje KO-or-Bust; Age/Chin Gap.\n\nTopside gives Gaethje a narrow early knockout path, but otherwise sees Topuria as younger, more defensively sound, more powerful, better grappling, and far more likely to end the fight early.\n\nTopside does not see Gaethje winning a 25-minute decision, out-speeding Topuria, out-grappling him, or submitting him. The underdog case is essentially knockout only.\n\nTopuria is credited with the better chin, better defense, and more dangerous power. His chin has looked reliable even as he moved up in weight.\n\nGaethje is thirty-seven and approaching thirty-eight, with years of damage and signs of slowing. The Paddy Pimblett win did not move Topside much because it said more about Paddy's level than Gaethje beating Topuria.\n\nTopuria is twenty-nine and not yet at the far side of his physical prime, with a resume that already includes elite names and brief adversity handled well.\n\nTopside expects a first-round knockout and would be surprised if the fight gets beyond two rounds."
+            },
+            {
+                  "name": "DFS Weezy",
+                  "notes": "Topuria R1 KO / Grappling Backup (High); Gaethje Big-Shot Only.\n\nDFS Weezy respects Gaethje but sees Topuria as the rightful massive favorite, with knockout as the primary route and a hidden grappling/submission backup if Topuria chooses to wrestle.\n\nDFS tracked Topuria from a -600 opener to a much wider favorite, with Gaethje around the largest underdog price of his UFC career.\n\nGaethje's best path is catching Topuria in the first round or first round and a half. DFS does not treat a long decision path as realistic for the underdog.\n\nTopuria has already knocked out elite opponents, and Stat Diggers pointed to better knockdown rate and distance-striking differential than Gaethje.\n\nThe grappling edge matters even if the fight is expected to stand. DFS repeatedly notes Topuria's legitimate BJJ and Gaethje's history of quick submission trouble once elite grapplers get him down.\n\nDFS picked Topuria by first-round knockout, with round two also possible. Stat Diggers also discussed fight-will-not-start-round-four as a usable violence/parlay component."
+            },
+            {
+                  "name": "Chris DPG",
+                  "notes": "No Current Card Transcript Located; See Appendix.\n\nNo Chris DPG fight read is included for this matchup because the supplied URL resolves to unrelated World Cup betting content and the audited prior-card source channel did not surface a UFC Freedom 250 breakdown.\n\nThe prior card mapped the Chris DPG label to Diary of a Pro Gambler; that channel was audited across videos and streams for UFC Freedom 250, White House, Topuria, and Gaethje terms.\n\nNo usable current-card UFC transcript was found, so this section is intentionally not backfilled from old-card notes or non-requested analysts.\n\nIf a valid Chris DPG UFC Freedom 250 URL appears later in fight week, run the same transcript extraction and replace this placeholder with fight-specific longform notes before condensing."
+            }
+      ]
+};
+    const researchVideoSourcesByFightId = {
+      "1": [
+            {
+                  "title": "Topside MMA | Diego Lopes vs Steve Garcia",
+                  "meta": "Full-card source | 44:33",
+                  "source": "UFC Freedom 250 Predictions | Full Card Betting Breakdown",
+                  "channel": "Topside MMA",
+                  "video": "Eo-PO-o-c7U",
+                  "start": 0,
+                  "end": 2673
+            },
+            {
+                  "title": "DFS Weezy | Diego Lopes vs Steve Garcia",
+                  "meta": "Full-card source | 31:30",
+                  "source": "UFC Freedom 250 Full Card Breakdown & Predictions",
+                  "channel": "DFS Weezy",
+                  "video": "YFERk81PlSU",
+                  "start": 0,
+                  "end": 1890
+            },
+            {
+                  "title": "DFS Weezy / Stat Diggers | Diego Lopes vs Steve Garcia",
+                  "meta": "Deep-dive livestream context | 2:29:13",
+                  "source": "Stat Diggers: UFC Freedom 250 Deep Dive",
+                  "channel": "DFS Weezy",
+                  "video": "UzQOnVrHs7Y",
+                  "start": 0,
+                  "end": 8953
+            },
+            {
+                  "title": "DFS Weezy | Diego Lopes vs Steve Garcia",
+                  "meta": "00:00 - 10:22",
+                  "source": "UFC Freedom 250: Diego Lopes vs Steve Garcia Breakdown & Prediction",
+                  "channel": "DFS Weezy",
+                  "video": "ewGfNv_3Vws",
+                  "start": 0,
+                  "end": 622
+            }
+      ],
+      "2": [
+            {
+                  "title": "Topside MMA | Bo Nickal vs Kyle Daukaus",
+                  "meta": "Full-card source | 44:33",
+                  "source": "UFC Freedom 250 Predictions | Full Card Betting Breakdown",
+                  "channel": "Topside MMA",
+                  "video": "Eo-PO-o-c7U",
+                  "start": 0,
+                  "end": 2673
+            },
+            {
+                  "title": "DFS Weezy | Bo Nickal vs Kyle Daukaus",
+                  "meta": "Full-card source | 31:30",
+                  "source": "UFC Freedom 250 Full Card Breakdown & Predictions",
+                  "channel": "DFS Weezy",
+                  "video": "YFERk81PlSU",
+                  "start": 0,
+                  "end": 1890
+            },
+            {
+                  "title": "DFS Weezy / Stat Diggers | Bo Nickal vs Kyle Daukaus",
+                  "meta": "Deep-dive livestream context | 2:29:13",
+                  "source": "Stat Diggers: UFC Freedom 250 Deep Dive",
+                  "channel": "DFS Weezy",
+                  "video": "UzQOnVrHs7Y",
+                  "start": 0,
+                  "end": 8953
+            },
+            {
+                  "title": "DFS Weezy | Bo Nickal vs Kyle Daukaus",
+                  "meta": "00:00 - 10:05",
+                  "source": "UFC Freedom 250: Bo Nickal vs Kyle Daukaus Breakdown & Prediction",
+                  "channel": "DFS Weezy",
+                  "video": "azoQOlQImWk",
+                  "start": 0,
+                  "end": 605
+            }
+      ],
+      "3": [
+            {
+                  "title": "Topside MMA | Mauricio Ruffy vs Michael Chandler",
+                  "meta": "Full-card source | 44:33",
+                  "source": "UFC Freedom 250 Predictions | Full Card Betting Breakdown",
+                  "channel": "Topside MMA",
+                  "video": "Eo-PO-o-c7U",
+                  "start": 0,
+                  "end": 2673
+            },
+            {
+                  "title": "DFS Weezy | Mauricio Ruffy vs Michael Chandler",
+                  "meta": "Full-card source | 31:30",
+                  "source": "UFC Freedom 250 Full Card Breakdown & Predictions",
+                  "channel": "DFS Weezy",
+                  "video": "YFERk81PlSU",
+                  "start": 0,
+                  "end": 1890
+            },
+            {
+                  "title": "DFS Weezy / Stat Diggers | Mauricio Ruffy vs Michael Chandler",
+                  "meta": "Deep-dive livestream context | 2:29:13",
+                  "source": "Stat Diggers: UFC Freedom 250 Deep Dive",
+                  "channel": "DFS Weezy",
+                  "video": "UzQOnVrHs7Y",
+                  "start": 0,
+                  "end": 8953
+            },
+            {
+                  "title": "DFS Weezy | Mauricio Ruffy vs Michael Chandler",
+                  "meta": "00:00 - 10:05",
+                  "source": "UFC Freedom 250: Mauricio Ruffy vs Michael Chandler Breakdown & Prediction",
+                  "channel": "DFS Weezy",
+                  "video": "R8FOJzib3fY",
+                  "start": 0,
+                  "end": 605
+            }
+      ],
+      "4": [
+            {
+                  "title": "Topside MMA | Derrick Lewis vs Josh Hokit",
+                  "meta": "Full-card source | 44:33",
+                  "source": "UFC Freedom 250 Predictions | Full Card Betting Breakdown",
+                  "channel": "Topside MMA",
+                  "video": "Eo-PO-o-c7U",
+                  "start": 0,
+                  "end": 2673
+            },
+            {
+                  "title": "DFS Weezy | Derrick Lewis vs Josh Hokit",
+                  "meta": "Full-card source | 31:30",
+                  "source": "UFC Freedom 250 Full Card Breakdown & Predictions",
+                  "channel": "DFS Weezy",
+                  "video": "YFERk81PlSU",
+                  "start": 0,
+                  "end": 1890
+            },
+            {
+                  "title": "DFS Weezy / Stat Diggers | Derrick Lewis vs Josh Hokit",
+                  "meta": "Deep-dive livestream context | 2:29:13",
+                  "source": "Stat Diggers: UFC Freedom 250 Deep Dive",
+                  "channel": "DFS Weezy",
+                  "video": "UzQOnVrHs7Y",
+                  "start": 0,
+                  "end": 8953
+            },
+            {
+                  "title": "DFS Weezy | Josh Hokit vs Derrick Lewis",
+                  "meta": "00:00 - 10:32",
+                  "source": "UFC Freedom 250: Josh Hokit vs Derrick Lewis Breakdown & Prediction",
+                  "channel": "DFS Weezy",
+                  "video": "eANXzbOHmig",
+                  "start": 0,
+                  "end": 632
+            }
+      ],
+      "5": [
+            {
+                  "title": "Topside MMA | Sean O'Malley vs Aiemann Zahabi",
+                  "meta": "Full-card source | 44:33",
+                  "source": "UFC Freedom 250 Predictions | Full Card Betting Breakdown",
+                  "channel": "Topside MMA",
+                  "video": "Eo-PO-o-c7U",
+                  "start": 0,
+                  "end": 2673
+            },
+            {
+                  "title": "DFS Weezy | Sean O'Malley vs Aiemann Zahabi",
+                  "meta": "Full-card source | 31:30",
+                  "source": "UFC Freedom 250 Full Card Breakdown & Predictions",
+                  "channel": "DFS Weezy",
+                  "video": "YFERk81PlSU",
+                  "start": 0,
+                  "end": 1890
+            },
+            {
+                  "title": "DFS Weezy / Stat Diggers | Sean O'Malley vs Aiemann Zahabi",
+                  "meta": "Deep-dive livestream context | 2:29:13",
+                  "source": "Stat Diggers: UFC Freedom 250 Deep Dive",
+                  "channel": "DFS Weezy",
+                  "video": "UzQOnVrHs7Y",
+                  "start": 0,
+                  "end": 8953
+            },
+            {
+                  "title": "DFS Weezy | Sean O'Malley vs Aiemann Zahabi",
+                  "meta": "00:00 - 10:03",
+                  "source": "UFC Freedom 250: Sean O'Malley vs Aiemann Zahabi Breakdown & Prediction",
+                  "channel": "DFS Weezy",
+                  "video": "CSKJcGFjrlM",
+                  "start": 0,
+                  "end": 603
+            }
+      ],
+      "6": [
+            {
+                  "title": "Topside MMA | Alex Pereira vs Ciryl Gane",
+                  "meta": "Full-card source | 44:33",
+                  "source": "UFC Freedom 250 Predictions | Full Card Betting Breakdown",
+                  "channel": "Topside MMA",
+                  "video": "Eo-PO-o-c7U",
+                  "start": 0,
+                  "end": 2673
+            },
+            {
+                  "title": "DFS Weezy | Alex Pereira vs Ciryl Gane",
+                  "meta": "Full-card source | 31:30",
+                  "source": "UFC Freedom 250 Full Card Breakdown & Predictions",
+                  "channel": "DFS Weezy",
+                  "video": "YFERk81PlSU",
+                  "start": 0,
+                  "end": 1890
+            },
+            {
+                  "title": "DFS Weezy / Stat Diggers | Alex Pereira vs Ciryl Gane",
+                  "meta": "Deep-dive livestream context | 2:29:13",
+                  "source": "Stat Diggers: UFC Freedom 250 Deep Dive",
+                  "channel": "DFS Weezy",
+                  "video": "UzQOnVrHs7Y",
+                  "start": 0,
+                  "end": 8953
+            },
+            {
+                  "title": "DFS Weezy | Alex Pereira vs Ciryl Gane",
+                  "meta": "00:00 - 11:19",
+                  "source": "UFC Freedom 250: Alex Pereira vs Ciryl Gane Breakdown & Prediction",
+                  "channel": "DFS Weezy",
+                  "video": "pQa0xsCLd8c",
+                  "start": 0,
+                  "end": 679
+            }
+      ],
+      "7": [
+            {
+                  "title": "Topside MMA | Ilia Topuria vs Justin Gaethje",
+                  "meta": "Full-card source | 44:33",
+                  "source": "UFC Freedom 250 Predictions | Full Card Betting Breakdown",
+                  "channel": "Topside MMA",
+                  "video": "Eo-PO-o-c7U",
+                  "start": 0,
+                  "end": 2673
+            },
+            {
+                  "title": "DFS Weezy | Ilia Topuria vs Justin Gaethje",
+                  "meta": "Full-card source | 31:30",
+                  "source": "UFC Freedom 250 Full Card Breakdown & Predictions",
+                  "channel": "DFS Weezy",
+                  "video": "YFERk81PlSU",
+                  "start": 0,
+                  "end": 1890
+            },
+            {
+                  "title": "DFS Weezy / Stat Diggers | Ilia Topuria vs Justin Gaethje",
+                  "meta": "Deep-dive livestream context | 2:29:13",
+                  "source": "Stat Diggers: UFC Freedom 250 Deep Dive",
+                  "channel": "DFS Weezy",
+                  "video": "UzQOnVrHs7Y",
+                  "start": 0,
+                  "end": 8953
+            },
+            {
+                  "title": "DFS Weezy | Ilia Topuria vs Justin Gaethje",
+                  "meta": "00:00 - 12:10",
+                  "source": "UFC Freedom 250 Main Event Prediction: Ilia Topuria vs Justin Gaethje",
+                  "channel": "DFS Weezy",
+                  "video": "rrPB9oMkvig",
+                  "start": 0,
+                  "end": 730
+            }
+      ]
+};
     const demoAnalystReads = [];
     const demoVideoSources = [];
     const hydrateFightList = list => {
