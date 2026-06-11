@@ -2368,7 +2368,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       wire();
     }
     function wire(){
-      const homeAction = $("#homeAction"); if(homeAction) homeAction.href = location.pathname.includes("/pages/") ? "../index.html" : "index.html";
+      const homeAction = $("#homeAction"); if(homeAction) homeAction.href = location.pathname.includes("/events/") ? "../index.html" : "index.html";
       $$("[data-select]").forEach(el=>el.onclick=()=>{state.selected=Number(el.dataset.select);render();});
       $$(".oddsBtn").forEach(b=>b.onclick=e=>{e.stopPropagation(); if(!requireAdmin()) return; const [id,side,index]=b.dataset.odds.split("|"); state.editingOdds={id:Number(id),side,index:Number(index)}; openOdds();});
       $$("[data-read-toggle]").forEach(b=>b.onclick=()=>{ const [id,index]=b.dataset.readToggle.split("|").map(Number); const f=fights.find(x=>x.id===id); if(!f) return; const open=analystOpenSet(f); open.has(index) ? open.delete(index) : open.add(index); state.analystReadOpen[id]=[...open].sort((a,b)=>a-b); render(); });
