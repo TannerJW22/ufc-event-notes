@@ -5,98 +5,106 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>UFC Event Portfolio</title>
   <style>
-    :root{--bg:#020202;--panel:#1B1B1A;--panel2:#23231f;--line:#37362f;--text:#F4F1EA;--muted:#b8afa1;--green:#2E9E5D;--red:#b64a53;--amber:#DDBA5A;--cyan:#7ea5c7;--blue:#102A43;font-family:Bahnschrift,"Segoe UI",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,sans-serif}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}button,input{font:inherit}button{cursor:pointer}.app{width:min(1440px,calc(100% - 28px));margin:0 auto;padding:18px 0 36px}.top{display:grid;grid-template-columns:minmax(280px,1fr) auto;gap:18px;align-items:start;margin-bottom:16px}.eventTitleText{font-family:"Bahnschrift SemiCondensed",Bahnschrift,"Segoe UI",sans-serif;font-size:40px;line-height:.95;margin:0;color:var(--amber)}.eventHeadline{display:block;color:var(--muted);font-size:16px;margin-top:5px}.topControls{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.topAction,.cardAction,.iconAction{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:8px;padding:10px 13px;font-weight:800}.topAction:hover,.cardAction:hover,.iconAction:hover{border-color:rgba(221,186,90,.78);color:var(--amber)}.topAction.primary{background:rgba(221,186,90,.16);border-color:rgba(221,186,90,.72);color:var(--amber)}.toolbar{display:grid;grid-template-columns:minmax(220px,1fr) auto;gap:10px;margin-bottom:14px}.search{width:100%;border:1px solid var(--line);background:#11110f;color:var(--text);border-radius:8px;padding:11px 12px}.segmented{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#11110f}.segmented button{border:0;border-right:1px solid var(--line);background:transparent;color:var(--muted);padding:10px 13px;font-weight:800}.segmented button:last-child{border-right:0}.segmented button.active{background:rgba(221,186,90,.15);color:var(--amber)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}.card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:8px;padding:14px;min-height:206px;display:grid;grid-template-rows:auto 1fr auto;gap:12px}.card.current{border-color:rgba(221,186,90,.78);box-shadow:inset 3px 0 0 var(--amber)}.cardHeader{display:flex;justify-content:space-between;gap:12px;align-items:start}.card h2{font-size:25px;line-height:1;margin:0;color:var(--text)}.card.current h2{color:var(--amber)}.badge{border:1px solid var(--line);border-radius:999px;color:var(--muted);padding:4px 8px;font-size:12px;font-weight:800;white-space:nowrap}.badge.current{border-color:rgba(221,186,90,.65);color:var(--amber)}.meta{display:grid;gap:7px;color:var(--muted);font-size:14px;line-height:1.2}.meta strong{color:var(--text);font-weight:800}.actions{display:flex;flex-wrap:wrap;gap:8px}.cardAction{display:inline-flex;text-decoration:none;align-items:center;justify-content:center;min-height:38px}.cardAction.danger{color:#f09aa2}.empty{border:1px dashed var(--line);border-radius:8px;padding:28px;text-align:center;color:var(--muted);grid-column:1/-1}.modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}.modal.open{display:flex}.dialog{width:min(560px,100%);background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 20px 70px rgba(0,0,0,.5)}.dialogHead{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}.dialogHead h2{font-size:22px;margin:0;color:var(--amber)}.dialogBody{padding:16px;display:grid;gap:12px}.field{display:grid;gap:6px}.field label{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:800}.field input{border:1px solid var(--line);background:#11110f;color:var(--text);border-radius:8px;padding:11px 12px}.dialogActions{display:flex;justify-content:flex-end;gap:8px;padding:0 16px 16px}.closeIcon{width:34px;height:34px;border:1px solid var(--line);background:#11110f;color:var(--muted);border-radius:8px}.closeIcon:before{content:"x";font-weight:900}.status{min-height:18px;color:var(--muted);font-size:13px}@media(max-width:760px){.top,.toolbar{grid-template-columns:1fr}.topControls,.dialogActions{justify-content:stretch}.topAction,.cardAction{flex:1}.eventTitleText{font-size:34px}}
+    :root{--bg:#020202;--panel:#1B1B1A;--panel2:#23231f;--line:#37362f;--text:#F4F1EA;--muted:#b8afa1;--green:#2E9E5D;--red:#b64a53;--amber:#DDBA5A;--blue:#102A43;font-family:Bahnschrift,"Segoe UI",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,sans-serif}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}button,input,select{font:inherit}button{cursor:pointer}.app{width:min(1440px,calc(100% - 28px));margin:0 auto;padding:18px 0 36px}.top{display:grid;grid-template-columns:minmax(280px,1fr) minmax(360px,auto);gap:18px;align-items:start;margin-bottom:18px}.eventTitleText{font-family:"Bahnschrift SemiCondensed",Bahnschrift,"Segoe UI",sans-serif;font-size:40px;line-height:.95;margin:0;color:var(--amber);letter-spacing:0}.topRight{display:grid;gap:10px;justify-items:end}.topControls{display:flex;gap:8px;justify-content:flex-end}.iconAction,.cardAction,.filterControl,.sortButton{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:8px;font-weight:800}.iconAction{width:58px;height:50px;display:inline-grid;place-items:center;padding:0}.iconAction.primary{background:rgba(221,186,90,.16);border-color:rgba(221,186,90,.72);color:var(--amber)}.iconAction:hover,.cardAction:hover,.filterControl:hover,.sortButton:hover{border-color:rgba(221,186,90,.78);color:var(--amber)}.iconAction svg{width:24px;height:24px;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}.filterPanel{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.filterGroup{display:grid;gap:4px}.filterGroup label{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:900}.filterControl{height:42px;min-width:118px;background:#11110f;padding:0 34px 0 12px;appearance:none;background-image:linear-gradient(45deg,transparent 50%,#F4F1EA 50%),linear-gradient(135deg,#F4F1EA 50%,transparent 50%);background-position:calc(100% - 17px) 18px,calc(100% - 11px) 18px;background-size:6px 6px,6px 6px;background-repeat:no-repeat}.sortGroup{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#11110f;align-self:end}.sortButton{height:42px;border:0;border-right:1px solid var(--line);border-radius:0;background:transparent;color:var(--muted);padding:0 12px}.sortButton:last-child{border-right:0}.sortButton.active{background:rgba(221,186,90,.15);color:var(--amber)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}.card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:8px;padding:14px;min-height:206px;display:grid;grid-template-rows:auto 1fr auto;gap:12px}.card.current{border-color:rgba(221,186,90,.78);box-shadow:inset 3px 0 0 var(--amber)}.cardHeader{display:flex;justify-content:space-between;gap:12px;align-items:start}.card h2{font-size:25px;line-height:1;margin:0;color:var(--text);letter-spacing:0}.card.current h2{color:var(--amber)}.eventHeadline{display:block;color:var(--muted);font-size:16px;margin-top:5px}.badge{border:1px solid var(--line);border-radius:999px;color:var(--muted);padding:4px 8px;font-size:12px;font-weight:800;white-space:nowrap}.badge.current{border-color:rgba(221,186,90,.65);color:var(--amber)}.meta{display:grid;gap:7px;color:var(--muted);font-size:14px;line-height:1.2}.meta strong{color:var(--text);font-weight:800}.actions{display:flex;flex-wrap:wrap;gap:8px}.cardAction{display:inline-flex;text-decoration:none;align-items:center;justify-content:center;min-height:38px;padding:9px 13px}.empty{border:1px dashed var(--line);border-radius:8px;padding:28px;text-align:center;color:var(--muted);grid-column:1/-1}.modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}.modal.open{display:flex}.dialog{width:min(560px,100%);background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 20px 70px rgba(0,0,0,.5)}.dialogHead{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}.dialogHead h2{font-size:22px;margin:0;color:var(--amber)}.dialogBody{padding:16px;display:grid;gap:12px}.field{display:grid;gap:6px}.field label{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:800}.field input{border:1px solid var(--line);background:#11110f;color:var(--text);border-radius:8px;padding:11px 12px}.dialogActions{display:flex;justify-content:flex-end;gap:8px;padding:0 16px 16px}.closeIcon{width:34px;height:34px;border:1px solid var(--line);background:#11110f;color:var(--muted);border-radius:8px}.closeIcon:before{content:"x";font-weight:900}.status{min-height:18px;color:var(--muted);font-size:13px}@media(max-width:840px){.top{grid-template-columns:1fr}.topRight{justify-items:start}.filterPanel{justify-content:flex-start}.eventTitleText{font-size:34px}}@media(max-width:560px){.filterPanel{display:grid;grid-template-columns:1fr 1fr;width:100%}.filterControl,.sortGroup{width:100%;min-width:0}.sortGroup{grid-column:1/-1}.sortButton{flex:1}.iconAction{width:50px}.dialogActions{justify-content:stretch}.dialogActions .cardAction{flex:1}}
   </style>
 </head>
 <body>
   <main class="app">
     <section class="top">
-      <div><h1 class="eventTitleText">UFC Event Portfolio</h1><span class="eventHeadline">WarBoards</span></div>
-      <div class="topControls"><button class="topAction primary" id="newBoard">New WarBoard</button><a class="topAction" href="template.html">Blank Template</a></div>
+      <div><h1 class="eventTitleText">UFC Event Portfolio</h1></div>
+      <div class="topRight">
+        <div class="topControls">
+          <button class="iconAction primary" id="newBoard" title="New WarBoard" aria-label="New WarBoard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
+        </div>
+        <div class="filterPanel" aria-label="Event filters and sorting">
+          <div class="filterGroup"><label for="monthFilter">Month</label><select id="monthFilter" class="filterControl"></select></div>
+          <div class="filterGroup"><label for="yearFilter">Year</label><select id="yearFilter" class="filterControl"></select></div>
+          <div class="sortGroup" role="group" aria-label="Sort by date"><button type="button" class="sortButton active" data-sort="desc">Newest</button><button type="button" class="sortButton" data-sort="asc">Oldest</button></div>
+        </div>
+      </div>
     </section>
-    <section class="toolbar"><input id="search" class="search" placeholder="Search events" /><div class="segmented" role="tablist" aria-label="Event filters"><button type="button" class="active" data-filter="all">All</button><button type="button" data-filter="current">Current</button><button type="button" data-filter="past">Past</button><button type="button" data-filter="draft">Drafts</button></div></section>
     <section class="grid" id="eventGrid"></section>
   </main>
-  <div class="modal" id="boardModal" role="dialog" aria-modal="true" aria-labelledby="boardTitle"><form class="dialog" id="boardForm"><div class="dialogHead"><h2 id="boardTitle">New WarBoard</h2><button class="closeIcon" type="button" data-close title="Close" aria-label="Close"></button></div><div class="dialogBody"><div class="field"><label for="eventName">Event Name</label><input id="eventName" required value="{Event Name}" /></div><div class="field"><label for="eventHeadline">Headline</label><input id="eventHeadline" required value="{Fighter Name} vs. {Fighter Name}" /></div><div class="field"><label for="eventDate">Event Date</label><input id="eventDate" required value="{Event Date}" /></div><div class="field"><label for="eventLocation">Location</label><input id="eventLocation" required value="{Event Location}" /></div><div class="field"><label for="eventSlug">Page Slug</label><input id="eventSlug" required readonly value="{Event Date}" /></div><div class="status" id="modalStatus"></div></div><div class="dialogActions"><button class="topAction" type="button" data-close>Cancel</button><button class="topAction primary" type="submit">Create</button></div></form></div>
+  <div class="modal" id="boardModal" role="dialog" aria-modal="true" aria-labelledby="boardTitle"><form class="dialog" id="boardForm"><div class="dialogHead"><h2 id="boardTitle">New WarBoard</h2><button class="closeIcon" type="button" data-close title="Close" aria-label="Close"></button></div><div class="dialogBody"><div class="field"><label for="eventName">Event Name</label><input id="eventName" required value="{Event Name}" /></div><div class="field"><label for="eventHeadline">Headline</label><input id="eventHeadline" required value="{Fighter Name} vs. {Fighter Name}" /></div><div class="field"><label for="eventDate">Event Date</label><input id="eventDate" required value="{Event Date}" /></div><div class="field"><label for="eventLocation">Location</label><input id="eventLocation" required value="{Event Location}" /></div><div class="field"><label for="eventSlug">Page Slug</label><input id="eventSlug" required readonly value="{Event Date}" /></div><div class="status" id="modalStatus"></div></div><div class="dialogActions"><button class="cardAction" type="button" data-close>Cancel</button><button class="cardAction" type="submit">Download Page</button></div></form></div>
   <script>
     const builtInEvents = [
       {id:"14-Jun-2026",title:"UFC Freedom 250",headline:"Topuria vs. Gaethje",date:"Sunday Jun 14, 2026",location:"South Lawn of the White House, Washington, D.C.",href:"pages/14-Jun-2026.html",status:"current",type:"Published"},
       {id:"06-Jun-2026",title:"UFC Vegas 118",headline:"Muhammad vs. Bonfim",date:"Saturday Jun 6, 2026",location:"Las Vegas, Nevada",href:"pages/06-Jun-2026.html",status:"past",type:"Archive"}
     ];
-    const storageKey = "ufc-event-portfolio-home-warboards-v1";
-    let filter = "all";
+    const state = {month:"all",year:"all",sort:"desc"};
     const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
     const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const jsString = s => String(s ?? "").replace(/\\/g,"\\\\").replace(/"/g,'\\"');
     const slugify = value => String(value || "new-ufc-warboard").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || "new-ufc-warboard";
-    const dateSlug = value => {
-      const raw = String(value || "").trim();
-      const months = {jan:"Jan",january:"Jan",feb:"Feb",february:"Feb",mar:"Mar",march:"Mar",apr:"Apr",april:"Apr",may:"May",jun:"Jun",june:"Jun",jul:"Jul",july:"Jul",aug:"Aug",august:"Aug",sep:"Sep",sept:"Sep",september:"Sep",oct:"Oct",october:"Oct",nov:"Nov",november:"Nov",dec:"Dec",december:"Dec"};
-      const match = raw.match(/(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)?\s*([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})/i);
-      if(match){
-        const month = months[match[1].toLowerCase()];
-        if(month) return `${String(Number(match[2])).padStart(2,"0")}-${month}-${match[3]}`;
-      }
-      return slugify(raw);
+    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const parseEventDate = value => {
+      const cleaned = String(value || "").replace(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+/i,"").trim();
+      const date = new Date(cleaned);
+      return Number.isNaN(date.getTime()) ? null : date;
     };
-    const customEvents = () => JSON.parse(localStorage.getItem(storageKey) || "[]");
-    const saveCustomEvents = events => localStorage.setItem(storageKey, JSON.stringify(events));
-    const allEvents = () => builtInEvents.concat(customEvents());
+    const dateSlug = value => {
+      const date = parseEventDate(value);
+      if(date) return `${String(date.getDate()).padStart(2,"0")}-${monthNames[date.getMonth()]}-${date.getFullYear()}`;
+      return slugify(value);
+    };
+    const eventDateMeta = event => {
+      const date = parseEventDate(event.date);
+      return date ? {date,month:String(date.getMonth() + 1),year:String(date.getFullYear())} : {date:null,month:"unknown",year:"unknown"};
+    };
+    function populateFilters(){
+      const metas = builtInEvents.map(eventDateMeta);
+      const monthOptions = [...new Set(metas.map(meta=>meta.month).filter(x=>x !== "unknown"))].sort((a,b)=>Number(a)-Number(b));
+      const yearOptions = [...new Set(metas.map(meta=>meta.year).filter(x=>x !== "unknown"))].sort((a,b)=>Number(b)-Number(a));
+      $("#monthFilter").innerHTML = '<option value="all">All Months</option>' + monthOptions.map(value=>`<option value="${value}">${monthNames[Number(value)-1]}</option>`).join("");
+      $("#yearFilter").innerHTML = '<option value="all">All Years</option>' + yearOptions.map(value=>`<option value="${value}">${value}</option>`).join("");
+    }
     function card(event){
       const badgeClass = event.status === "current" ? "badge current" : "badge";
-      const isCustom = event.status === "draft";
       let html = '<article class="card ' + (event.status === "current" ? "current" : "") + '" data-id="' + esc(event.id) + '">';
       html += '<div class="cardHeader"><div><h2>' + esc(event.title) + '</h2><span class="eventHeadline">' + esc(event.headline) + '</span></div><span class="' + badgeClass + '">' + esc(event.type || event.status) + '</span></div>';
       html += '<div class="meta"><div><strong>Date</strong> ' + esc(event.date) + '</div><div><strong>Location</strong> ' + esc(event.location) + '</div></div>';
-      html += '<div class="actions"><a class="cardAction" href="' + esc(event.href || '#') + '"' + (isCustom ? ' data-open-draft="' + esc(event.id) + '"' : '') + '>View</a>';
-      if(isCustom) html += '<button class="cardAction" type="button" data-download="' + esc(event.id) + '">Download</button><button class="cardAction danger" type="button" data-delete="' + esc(event.id) + '">Delete</button>';
-      return html + '</div></article>';
+      html += '<div class="actions"><a class="cardAction" href="' + esc(event.href || '#') + '">View</a></div>';
+      return html + '</article>';
     }
     function render(){
-      const q = $("#search").value.trim().toLowerCase();
-      const items = allEvents().filter(event => (filter === "all" || event.status === filter) && [event.title,event.headline,event.date,event.location].join(" ").toLowerCase().includes(q));
-      $("#eventGrid").innerHTML = items.length ? items.map(card).join("") : '<div class="empty">No WarBoards match this view.</div>';
-      wireCards();
-    }
-    function wireCards(){
-      $$('[data-delete]').forEach(button => button.onclick = () => { const id = button.dataset.delete; saveCustomEvents(customEvents().filter(event => event.id !== id)); render(); });
-      $$('[data-download]').forEach(button => button.onclick = () => { const event = customEvents().find(item => item.id === button.dataset.download); if(event) downloadHtml(event); });
-      $$('[data-open-draft]').forEach(link => link.onclick = event => { event.preventDefault(); const item = customEvents().find(row => row.id === link.dataset.openDraft); if(item) openDraft(item); });
+      const items = builtInEvents
+        .filter(event => {
+          const meta = eventDateMeta(event);
+          return (state.month === "all" || meta.month === state.month) && (state.year === "all" || meta.year === state.year);
+        })
+        .sort((a,b) => {
+          const ad = eventDateMeta(a).date?.getTime() || 0;
+          const bd = eventDateMeta(b).date?.getTime() || 0;
+          return state.sort === "asc" ? ad - bd : bd - ad;
+        });
+      $("#eventGrid").innerHTML = items.length ? items.map(card).join("") : '<div class="empty">No events match this view.</div>';
     }
     async function loadTemplate(){ const response = await fetch('template.html', {cache:'no-store'}); if(!response.ok) throw new Error('Template unavailable'); return response.text(); }
     function customizeTemplate(html, event){
-      const keySlug = slugify(event.id);
-      const replacements = {
-        'ufc-event-notes-research-template-sync-version':'ufc-event-notes-research-' + keySlug + '-sync-version',
-        'template-scaffold-v1':keySlug + '-scaffold-v1',
-        'ufc-event-notes-dashboard-template-v1':'ufc-event-notes-dashboard-' + keySlug + '-v1',
-        'ufc-event-notes-event-template-v1':'ufc-event-notes-event-' + keySlug + '-v1',
-        'ufc-event-notes-tags-template-v1':'ufc-event-notes-tags-' + keySlug + '-v1',
-        'ufc-event-notes-parlays-template-v1':'ufc-event-notes-parlays-' + keySlug + '-v1',
-        'ufc-event-notes-portfolio-restored-template-v1':'ufc-event-notes-portfolio-restored-' + keySlug + '-v1',
-        'ufc-event-notes-parlay-restored-template-v1':'ufc-event-notes-parlay-restored-' + keySlug + '-v1',
-        'ufc-event-notes-analyst-demo-seeded-template-v1':'ufc-event-notes-analyst-demo-seeded-' + keySlug + '-v1',
-        'ufc-event-notes-tags-migrated-template-v1':'ufc-event-notes-tags-migrated-' + keySlug + '-v1'
-      };
       let out = html;
-      Object.entries(replacements).forEach(pair => { out = out.split(pair[0]).join(pair[1]); });
       out = out.replace(/<title>.*?<\/title>/, '<title>UFC Event Portfolio | ' + esc(event.title) + '</title>');
       out = out.replace(/<span class="eventTitleText" id="eventTitle">\{Event Name\}<\/span><span class="eventHeadline" id="eventHeadline">\{Fighter Name\} vs\. \{Fighter Name\}<\/span>/g, '<span class="eventTitleText" id="eventTitle">' + esc(event.title) + '</span><span class="eventHeadline" id="eventHeadline">' + esc(event.headline) + '</span>');
       out = out.replace(/{Event Name}/g, jsString(event.title)).replace(/{Event Date}/g, jsString(event.date)).replace(/{Event Location}/g, jsString(event.location));
       return out;
     }
-    async function createDraft(data){ const template = await loadTemplate(); const html = customizeTemplate(template, data); const event = Object.assign({}, data, {html:html, href:'pages/' + data.id + '.html', status:'draft', type:'Draft'}); saveCustomEvents(customEvents().filter(item => item.id !== event.id).concat([event])); render(); return event; }
-    function openDraft(event){ const blob = new Blob([event.html], {type:'text/html'}); window.open(URL.createObjectURL(blob), '_blank', 'noopener'); }
-    function downloadHtml(event){ const blob = new Blob([event.html], {type:'text/html'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = event.id + '.html'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
+    function downloadHtml(html, filename){ const blob = new Blob([html], {type:'text/html'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
     function closeModal(){ $("#boardModal").classList.remove("open"); $("#modalStatus").textContent = ""; }
     $("#newBoard").onclick = () => $("#boardModal").classList.add("open");
     $$('[data-close]').forEach(button => button.onclick = closeModal);
     $("#boardModal").addEventListener('click', event => { if(event.target.id === 'boardModal') closeModal(); });
     $("#eventDate").addEventListener('input', event => { $("#eventSlug").value = dateSlug(event.target.value); });
-    $("#boardForm").onsubmit = async event => { event.preventDefault(); const data = {id:dateSlug($("#eventDate").value),title:$("#eventName").value.trim(),headline:$("#eventHeadline").value.trim(),date:$("#eventDate").value.trim(),location:$("#eventLocation").value.trim()}; $("#eventSlug").value = data.id; try{ const draft = await createDraft(data); closeModal(); openDraft(draft); } catch(error){ $("#modalStatus").textContent = error.message || "Unable to create WarBoard."; } };
-    $$('[data-filter]').forEach(button => button.onclick = () => { filter = button.dataset.filter; $$('[data-filter]').forEach(b => b.classList.toggle('active', b === button)); render(); });
-    $("#search").oninput = render;
+    $("#monthFilter").onchange = event => { state.month = event.target.value; render(); };
+    $("#yearFilter").onchange = event => { state.year = event.target.value; render(); };
+    $$('[data-sort]').forEach(button => button.onclick = () => { state.sort = button.dataset.sort; $$('[data-sort]').forEach(b => b.classList.toggle('active', b === button)); render(); });
+    $("#boardForm").onsubmit = async event => {
+      event.preventDefault();
+      const data = {id:dateSlug($("#eventDate").value),title:$("#eventName").value.trim(),headline:$("#eventHeadline").value.trim(),date:$("#eventDate").value.trim(),location:$("#eventLocation").value.trim()};
+      $("#eventSlug").value = data.id;
+      try{ const html = customizeTemplate(await loadTemplate(), data); closeModal(); downloadHtml(html, data.id + '.html'); }
+      catch(error){ $("#modalStatus").textContent = error.message || "Unable to create WarBoard."; }
+    };
+    populateFilters();
     render();
   </script>
 </body>
