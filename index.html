@@ -12,6 +12,8 @@
     .top{grid-template-columns:minmax(320px,1fr) auto;align-items:center}
     .topRight{display:flex;align-items:end;justify-content:flex-end;gap:10px;flex-wrap:wrap}
     .filterPanel{align-items:end;flex-wrap:nowrap}
+    .topControls .iconAction{width:42px;height:42px}
+    .topControls .iconAction svg{width:21px;height:21px}
     .iconAction[hidden]{display:none}
     .iconAction.danger{background:rgba(182,74,83,.22);border-color:rgba(182,74,83,.82);color:#ffc2c7}
     .iconAction.danger:hover{background:rgba(182,74,83,.34);border-color:#e46670;color:#fff}
@@ -27,28 +29,27 @@
     .eventCheck input:focus-visible + .eventCheckBox{outline:2px solid rgba(221,186,90,.75);outline-offset:2px}
     .eventCheck input:checked + .eventCheckBox{background:var(--red);border-color:#e46670;box-shadow:0 0 0 3px rgba(182,74,83,.2)}
     .eventCheck input:checked + .eventCheckBox:after{opacity:1;transform:rotate(-45deg) scale(1)}
-    .grid{grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:16px}
-    .card{min-height:338px;padding:0;grid-template-rows:minmax(136px,1fr) minmax(150px,1fr);gap:0;overflow:hidden;cursor:pointer}
-    .cardHero{position:relative;min-height:142px;padding:18px 18px 12px 58px;border-bottom:1px solid rgba(244,241,234,.1);display:grid;align-content:start;gap:4px}
-    .cardHero .eventCheck{position:absolute;left:18px;top:18px}
-    .cardHero .badge{position:absolute;right:16px;top:18px;font-size:11px;padding:4px 9px;background:rgba(20,20,17,.74)}
-    .cardCopy{min-width:0;max-width:calc(100% - 86px)}
+    .grid{grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px}
+    .card{min-height:306px;padding:0;grid-template-rows:minmax(136px,1fr) minmax(136px,1fr);gap:0;overflow:hidden;cursor:pointer}
+    .cardHero{position:relative;min-height:136px;padding:19px 58px 12px 20px;border-bottom:1px solid rgba(244,241,234,.1);display:grid;align-content:start;gap:6px}
+    .cardHero .eventCheck{position:absolute;right:18px;top:18px}
+    .cardCopy{min-width:0;max-width:100%}
     .cardEventTitle,.cardEventHeadline{font-family:"Bahnschrift SemiCondensed",Bahnschrift,"Segoe UI",sans-serif;color:var(--amber);letter-spacing:0}
     .card .cardEventTitle{font-size:36px;line-height:.92;margin:0;color:var(--amber);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .cardEventHeadline{font-size:29px;line-height:.96;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .cardEventDate{margin-top:4px;color:var(--text);font-size:16px;font-weight:900;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .cardEventLocation{color:#d3c7b7;font-size:15px;font-style:italic;font-weight:700;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .kpiSnapshot{padding:10px 12px 12px;display:grid;align-items:stretch;min-height:154px;background:linear-gradient(180deg,rgba(244,241,234,.018),rgba(0,0,0,.12))}
+    .cardEventHeadline{font-size:29px;line-height:1;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cardEventDate{margin-top:8px;color:var(--text);font-size:16px;font-weight:900;line-height:1.08;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cardEventLocation{margin-top:2px;color:#d3c7b7;font-size:15px;font-style:italic;font-weight:700;line-height:1.12;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .kpiSnapshot{padding:7px 8px 8px;display:grid;align-items:stretch;min-height:136px;background:linear-gradient(180deg,rgba(244,241,234,.018),rgba(0,0,0,.12))}
     .kpiSnapshot.loading{place-items:center;color:var(--muted);font-size:13px;font-weight:800}
-    .eventKpis{display:grid;grid-template-columns:70px repeat(4,minmax(0,1fr));align-self:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#11110f}
+    .eventKpis{display:grid;grid-template-columns:58px repeat(4,minmax(0,1fr));align-self:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#11110f}
     .eventKpis .kpiHeaderRow,.eventKpis .betKpiGroup{display:contents}
     .eventKpis .kpiCorner,.eventKpis .kpiColHead,.eventKpis .betKpiTitle,.eventKpis .kpi{border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0}
     .eventKpis .kpiColHead:last-child,.eventKpis .betKpiGroup .kpi:last-child{border-right:0}
-    .eventKpis .kpiCorner,.eventKpis .kpiColHead{min-height:22px;display:grid;place-items:center;padding:2px 4px;background:#12120f;color:var(--muted);font-size:8px;line-height:.95;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
-    .eventKpis .betKpiTitle{display:grid;place-items:center;min-height:45px;padding:3px 6px;background:linear-gradient(90deg,rgba(221,186,90,.16),rgba(221,186,90,.045));color:var(--amber);font-family:"Bahnschrift SemiCondensed",Bahnschrift,"Segoe UI",sans-serif;font-size:15px;line-height:1;font-weight:900;text-align:center}
-    .eventKpis .kpi{min-height:45px;padding:2px 4px;background:transparent;display:grid;place-items:center;text-align:center}
+    .eventKpis .kpiCorner,.eventKpis .kpiColHead{min-height:18px;display:grid;place-items:center;padding:1px 3px;background:#12120f;color:var(--muted);font-size:7.4px;line-height:.92;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+    .eventKpis .betKpiTitle{display:grid;place-items:center;min-height:34px;padding:1px 4px;background:linear-gradient(90deg,rgba(221,186,90,.16),rgba(221,186,90,.045));color:var(--amber);font-family:"Bahnschrift SemiCondensed",Bahnschrift,"Segoe UI",sans-serif;font-size:13.8px;line-height:.96;font-weight:900;text-align:center}
+    .eventKpis .kpi{min-height:34px;padding:1px 3px;background:transparent;display:grid;place-items:center;text-align:center}
     .eventKpis .betKpiGroup.last .betKpiTitle,.eventKpis .betKpiGroup.last .kpi{border-bottom:0}
-    .eventKpis .kpi b{font-family:"Bahnschrift SemiCondensed",Bahnschrift,"Segoe UI",sans-serif;font-size:18px;line-height:.92}
+    .eventKpis .kpi b{font-family:"Bahnschrift SemiCondensed",Bahnschrift,"Segoe UI",sans-serif;font-size:16.6px;line-height:.9}
     .eventKpis .kpi b.kpiPositive{color:var(--green);text-shadow:0 0 14px rgba(46,158,93,.18)}
     .eventKpis .kpi b.kpiNegative{color:var(--red);text-shadow:0 0 14px rgba(182,74,83,.2)}
     .eventKpis .kpiRecord{color:#777167;font-size:.68em;font-style:normal;font-weight:900}
@@ -112,7 +113,6 @@
       $("#yearFilter").value = state.year;
     }
     function card(event){
-      const badgeClass = event.status === "current" ? "badge current" : "badge";
       const selected = state.selected.has(event.id);
       const snapshot = event.snapshot || {};
       const title = snapshot.name || event.title;
@@ -120,7 +120,7 @@
       const dateLine = snapshot.dateLine || event.date;
       const location = snapshot.location || event.location;
       let html = '<article class="card cardLink ' + (event.status === "current" ? "current " : "") + (selected ? "selected" : "") + '" data-id="' + esc(event.id) + '" data-href="' + esc(event.href || '#') + '" role="link" tabindex="0" aria-label="Open ' + esc(event.title) + '">';
-      html += '<div class="cardHero"><label class="eventCheck" title="Select WarBoard"><input type="checkbox" class="eventSelect" data-id="' + esc(event.id) + '" aria-label="Select ' + esc(event.title) + '"' + (selected ? " checked" : "") + '><span class="eventCheckBox" aria-hidden="true"></span></label><span class="' + badgeClass + '">' + esc(event.type || event.status) + '</span><div class="cardCopy"><h2 class="cardEventTitle" data-card-event-title>' + esc(title) + '</h2><div class="cardEventHeadline" data-card-event-headline>' + esc(headline) + '</div><div class="cardEventDate" data-card-event-date>' + esc(dateLine) + '</div><div class="cardEventLocation" data-card-event-location>' + esc(location) + '</div></div></div>';
+      html += '<div class="cardHero"><label class="eventCheck" title="Select WarBoard"><input type="checkbox" class="eventSelect" data-id="' + esc(event.id) + '" aria-label="Select ' + esc(event.title) + '"' + (selected ? " checked" : "") + '><span class="eventCheckBox" aria-hidden="true"></span></label><div class="cardCopy"><h2 class="cardEventTitle" data-card-event-title>' + esc(title) + '</h2><div class="cardEventHeadline" data-card-event-headline>' + esc(headline) + '</div><div class="cardEventDate" data-card-event-date>' + esc(dateLine) + '</div><div class="cardEventLocation" data-card-event-location>' + esc(location) + '</div></div></div>';
       html += '<div class="kpiSnapshot ' + (snapshot.kpisHtml ? "" : "loading") + '" data-kpi-snapshot>' + (snapshot.kpisHtml ? '<div class="eventKpis">' + snapshot.kpisHtml + '</div>' : 'Loading KPI snapshot...') + '</div>';
       return html + '</article>';
     }
