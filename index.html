@@ -27,8 +27,33 @@
     .eventCheck input:focus-visible + .eventCheckBox{outline:2px solid rgba(221,186,90,.75);outline-offset:2px}
     .eventCheck input:checked + .eventCheckBox{background:var(--red);border-color:#e46670;box-shadow:0 0 0 3px rgba(182,74,83,.2)}
     .eventCheck input:checked + .eventCheckBox:after{opacity:1;transform:rotate(-45deg) scale(1)}
+    .grid{grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:16px}
+    .card{min-height:338px;padding:0;grid-template-rows:minmax(136px,1fr) minmax(150px,1fr);gap:0;overflow:hidden;cursor:pointer}
+    .cardHero{position:relative;min-height:142px;padding:18px 18px 12px 58px;border-bottom:1px solid rgba(244,241,234,.1);display:grid;align-content:start;gap:4px}
+    .cardHero .eventCheck{position:absolute;left:18px;top:18px}
+    .cardHero .badge{position:absolute;right:16px;top:18px;font-size:11px;padding:4px 9px;background:rgba(20,20,17,.74)}
+    .cardCopy{min-width:0;max-width:calc(100% - 86px)}
+    .cardEventTitle,.cardEventHeadline{font-family:"Bahnschrift SemiCondensed",Bahnschrift,"Segoe UI",sans-serif;color:var(--amber);letter-spacing:0}
+    .card .cardEventTitle{font-size:36px;line-height:.92;margin:0;color:var(--amber);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cardEventHeadline{font-size:29px;line-height:.96;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cardEventDate{margin-top:4px;color:var(--text);font-size:16px;font-weight:900;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .cardEventLocation{color:#d3c7b7;font-size:15px;font-style:italic;font-weight:700;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .kpiSnapshot{padding:10px 12px 12px;display:grid;align-items:stretch;min-height:154px;background:linear-gradient(180deg,rgba(244,241,234,.018),rgba(0,0,0,.12))}
+    .kpiSnapshot.loading{place-items:center;color:var(--muted);font-size:13px;font-weight:800}
+    .eventKpis{display:grid;grid-template-columns:70px repeat(4,minmax(0,1fr));align-self:stretch;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#11110f}
+    .eventKpis .kpiHeaderRow,.eventKpis .betKpiGroup{display:contents}
+    .eventKpis .kpiCorner,.eventKpis .kpiColHead,.eventKpis .betKpiTitle,.eventKpis .kpi{border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0}
+    .eventKpis .kpiColHead:last-child,.eventKpis .betKpiGroup .kpi:last-child{border-right:0}
+    .eventKpis .kpiCorner,.eventKpis .kpiColHead{min-height:22px;display:grid;place-items:center;padding:2px 4px;background:#12120f;color:var(--muted);font-size:8px;line-height:.95;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+    .eventKpis .betKpiTitle{display:grid;place-items:center;min-height:45px;padding:3px 6px;background:linear-gradient(90deg,rgba(221,186,90,.16),rgba(221,186,90,.045));color:var(--amber);font-family:"Bahnschrift SemiCondensed",Bahnschrift,"Segoe UI",sans-serif;font-size:15px;line-height:1;font-weight:900;text-align:center}
+    .eventKpis .kpi{min-height:45px;padding:2px 4px;background:transparent;display:grid;place-items:center;text-align:center}
+    .eventKpis .betKpiGroup.last .betKpiTitle,.eventKpis .betKpiGroup.last .kpi{border-bottom:0}
+    .eventKpis .kpi b{font-family:"Bahnschrift SemiCondensed",Bahnschrift,"Segoe UI",sans-serif;font-size:18px;line-height:.92}
+    .eventKpis .kpi b.kpiPositive{color:var(--green);text-shadow:0 0 14px rgba(46,158,93,.18)}
+    .eventKpis .kpi b.kpiNegative{color:var(--red);text-shadow:0 0 14px rgba(182,74,83,.2)}
+    .eventKpis .kpiRecord{color:#777167;font-size:.68em;font-style:normal;font-weight:900}
     @media(max-width:980px){.top{grid-template-columns:1fr}.topRight{justify-content:flex-start}.filterPanel{justify-content:flex-start}}
-    @media(max-width:560px){.topRight{width:100%}.filterPanel{display:grid;grid-template-columns:1fr 1fr;width:100%}.topControls{width:100%;justify-content:flex-start}}
+    @media(max-width:560px){.topRight{width:100%}.filterPanel{display:grid;grid-template-columns:1fr 1fr;width:100%}.topControls{width:100%;justify-content:flex-start}.grid{grid-template-columns:1fr}.card .cardEventTitle{font-size:31px}.cardEventHeadline{font-size:24px}.cardCopy{max-width:100%;padding-right:74px}.eventKpis{grid-template-columns:58px repeat(4,minmax(0,1fr))}.eventKpis .kpi b{font-size:15px}}
   </style>
 </head>
 <body>
@@ -89,9 +114,14 @@
     function card(event){
       const badgeClass = event.status === "current" ? "badge current" : "badge";
       const selected = state.selected.has(event.id);
+      const snapshot = event.snapshot || {};
+      const title = snapshot.name || event.title;
+      const headline = snapshot.headline || event.headline;
+      const dateLine = snapshot.dateLine || event.date;
+      const location = snapshot.location || event.location;
       let html = '<article class="card cardLink ' + (event.status === "current" ? "current " : "") + (selected ? "selected" : "") + '" data-id="' + esc(event.id) + '" data-href="' + esc(event.href || '#') + '" role="link" tabindex="0" aria-label="Open ' + esc(event.title) + '">';
-      html += '<div class="cardHeader"><div class="cardTitleRow"><label class="eventCheck" title="Select WarBoard"><input type="checkbox" class="eventSelect" data-id="' + esc(event.id) + '" aria-label="Select ' + esc(event.title) + '"' + (selected ? " checked" : "") + '><span class="eventCheckBox" aria-hidden="true"></span></label><div><h2>' + esc(event.title) + '</h2><span class="eventHeadline">' + esc(event.headline) + '</span></div></div><span class="' + badgeClass + '">' + esc(event.type || event.status) + '</span></div>';
-      html += '<div class="meta"><div><strong>Date</strong> ' + esc(event.date) + '</div><div><strong>Location</strong> ' + esc(event.location) + '</div></div>';
+      html += '<div class="cardHero"><label class="eventCheck" title="Select WarBoard"><input type="checkbox" class="eventSelect" data-id="' + esc(event.id) + '" aria-label="Select ' + esc(event.title) + '"' + (selected ? " checked" : "") + '><span class="eventCheckBox" aria-hidden="true"></span></label><span class="' + badgeClass + '">' + esc(event.type || event.status) + '</span><div class="cardCopy"><h2 class="cardEventTitle" data-card-event-title>' + esc(title) + '</h2><div class="cardEventHeadline" data-card-event-headline>' + esc(headline) + '</div><div class="cardEventDate" data-card-event-date>' + esc(dateLine) + '</div><div class="cardEventLocation" data-card-event-location>' + esc(location) + '</div></div></div>';
+      html += '<div class="kpiSnapshot ' + (snapshot.kpisHtml ? "" : "loading") + '" data-kpi-snapshot>' + (snapshot.kpisHtml ? '<div class="eventKpis">' + snapshot.kpisHtml + '</div>' : 'Loading KPI snapshot...') + '</div>';
       return html + '</article>';
     }
     function render(){
@@ -107,6 +137,82 @@
         });
       $("#eventGrid").innerHTML = items.length ? items.map(card).join("") : '<div class="empty">No events match this view.</div>';
       updateDeleteButton();
+      items.forEach(loadEventSnapshot);
+    }
+    function findEventCard(event){
+      return $$(".card[data-id]").find(card => card.dataset.id === event.id);
+    }
+    function updateEventCardSnapshot(event){
+      const card = findEventCard(event);
+      if(!card || !event.snapshot) return;
+      const title = card.querySelector("[data-card-event-title]");
+      const headline = card.querySelector("[data-card-event-headline]");
+      const date = card.querySelector("[data-card-event-date]");
+      const location = card.querySelector("[data-card-event-location]");
+      const kpi = card.querySelector("[data-kpi-snapshot]");
+      if(title) title.textContent = event.snapshot.name || event.title;
+      if(headline) headline.textContent = event.snapshot.headline || event.headline;
+      if(date) date.textContent = event.snapshot.dateLine || event.date;
+      if(location) location.textContent = event.snapshot.location || event.location;
+      if(kpi && event.snapshot.kpisHtml){
+        kpi.classList.remove("loading");
+        kpi.innerHTML = '<div class="eventKpis">' + event.snapshot.kpisHtml + '</div>';
+      }
+    }
+    function waitForWarBoardSnapshot(iframe){
+      return new Promise((resolve, reject) => {
+        let tries = 0;
+        const timer = setInterval(() => {
+          tries++;
+          try{
+            const doc = iframe.contentDocument;
+            const kpis = doc?.querySelector("#kpis");
+            if(kpis && kpis.children.length){
+              clearInterval(timer);
+              resolve({
+                name:doc.querySelector("#eventTitle")?.textContent.trim() || "",
+                headline:doc.querySelector("#eventHeadline")?.textContent.trim() || "",
+                dateLine:doc.querySelector("#eventDateTime .eventDateFull")?.textContent.trim() || "",
+                location:doc.querySelector("#eventDateTime .eventLocationLine")?.textContent.trim() || "",
+                kpisHtml:kpis.innerHTML
+              });
+            }else if(tries > 80){
+              clearInterval(timer);
+              reject(new Error("KPI snapshot unavailable."));
+            }
+          }catch(error){
+            clearInterval(timer);
+            reject(error);
+          }
+        }, 50);
+      });
+    }
+    async function loadEventSnapshot(event){
+      if(event.snapshot || event.snapshotLoading || !event.href) return;
+      event.snapshotLoading = true;
+      const iframe = document.createElement("iframe");
+      iframe.src = event.href;
+      iframe.title = "";
+      iframe.tabIndex = -1;
+      iframe.setAttribute("aria-hidden","true");
+      iframe.style.cssText = "position:absolute;width:1px;height:1px;left:-9999px;top:-9999px;opacity:0;pointer-events:none;";
+      try{
+        const loaded = new Promise((resolve, reject) => {
+          iframe.onload = resolve;
+          iframe.onerror = () => reject(new Error("Unable to load WarBoard snapshot."));
+        });
+        document.body.appendChild(iframe);
+        await loaded;
+        event.snapshot = await waitForWarBoardSnapshot(iframe);
+        updateEventCardSnapshot(event);
+      }catch(error){
+        const card = findEventCard(event);
+        const kpi = card?.querySelector("[data-kpi-snapshot]");
+        if(kpi) kpi.textContent = "KPI snapshot unavailable.";
+      }finally{
+        event.snapshotLoading = false;
+        iframe.remove();
+      }
     }
     function updateDeleteButton(){
       const count = state.selected.size;
