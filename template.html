@@ -321,12 +321,14 @@
     let adminModeFallback = false;
     let bootstrapping = true;
     let githubToken = "";
+    let githubTokenUrlOpened = false;
     let githubSaveTimer = null;
     let githubSaveInFlight = false;
     let githubSaveQueued = false;
     const GITHUB_OWNER = "TannerJW22";
     const GITHUB_REPO = "ufc-event-portfolio";
     const GITHUB_BRANCH = "main";
+    const GITHUB_TOKEN_URL = "https://github.com/settings/personal-access-tokens";
     function isAdminMode(){
       try{ return adminModeFallback || localStorage.getItem(ADMIN_STORAGE_KEY) === "true"; }
       catch(error){ return adminModeFallback; }
@@ -1376,11 +1378,18 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       $("#githubSaveModal")?.classList.remove("open");
       const input = $("#githubTokenInput");
       if(input) input.value = "";
+      githubTokenUrlOpened = false;
       setGitHubSaveStatus("");
+    }
+    function openGitHubTokenUrl(){
+      if(githubTokenUrlOpened) return;
+      githubTokenUrlOpened = true;
+      window.open(GITHUB_TOKEN_URL, "_blank", "noopener,noreferrer");
     }
     function openGitHubSaveModal(message="Enter a GitHub token to save this WarBoard to GitHub."){
       const modal = $("#githubSaveModal");
       if(!modal) return;
+      openGitHubTokenUrl();
       setGitHubSaveStatus(message);
       modal.classList.add("open");
       setTimeout(()=>$("#githubTokenInput")?.focus(), 0);
