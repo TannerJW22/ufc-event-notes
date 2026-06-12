@@ -15,15 +15,13 @@
     .topControls .iconAction{width:42px;height:42px}
     .topControls .iconAction svg{width:21px;height:21px}
     .iconAction[hidden]{display:none}
-    .iconAction.danger{background:rgba(182,74,83,.22);border-color:rgba(182,74,83,.82);color:#ffc2c7}
-    .iconAction.danger:hover{background:rgba(182,74,83,.34);border-color:#e46670;color:#fff}
     .adminSwitch{position:relative;width:78px;height:42px;border:1px solid var(--line);border-radius:999px;background:#11110f;color:var(--muted);padding:0;display:inline-grid;grid-template-columns:1fr 1fr;align-items:center;overflow:hidden;transition:border-color .16s ease,background .16s ease,color .16s ease}
     .adminSwitch:hover{border-color:rgba(221,186,90,.72);color:var(--amber)}
     .adminSwitch[aria-checked="true"]{border-color:rgba(46,158,93,.82);background:rgba(46,158,93,.2);color:#d9ffe7}
     .adminSwitch .adminKnob{position:absolute;left:4px;top:4px;width:32px;height:32px;border-radius:999px;background:#2a2a26;border:1px solid rgba(244,241,234,.12);box-shadow:0 8px 18px rgba(0,0,0,.34);transition:transform .18s ease,background .18s ease,border-color .18s ease}
     .adminSwitch[aria-checked="true"] .adminKnob{transform:translateX(36px);background:var(--green);border-color:var(--green)}
     .adminSwitch svg{position:relative;z-index:1;width:17px;height:17px;justify-self:center;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
-    body:not(.admin-mode) #newBoard,body:not(.admin-mode) #deleteSelected,body:not(.admin-mode) .eventCheck{display:none!important}
+    body:not(.admin-mode) #newBoard,body:not(.admin-mode) .eventCheck{display:none!important}
     .cardLink{color:inherit;text-decoration:none;position:relative;transition:border-color .16s ease,background .16s ease,box-shadow .16s ease,transform .16s ease}
     .cardLink:hover,.cardLink:focus-visible{border-color:rgba(221,186,90,.86);background:linear-gradient(180deg,rgba(221,186,90,.12),var(--panel));box-shadow:inset 3px 0 0 var(--amber),0 12px 28px rgba(0,0,0,.28);outline:0;transform:translateY(-1px)}
     .cardLink:hover h2,.cardLink:focus-visible h2{color:var(--amber)}
@@ -72,7 +70,6 @@
         <div class="topControls">
           <button class="adminSwitch" id="adminSwitch" type="button" role="switch" aria-checked="false" title="Read-only mode" aria-label="Toggle admin mode"><span class="adminKnob" aria-hidden="true"></span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.7-1.5"/></svg></button>
           <button class="iconAction primary" id="newBoard" title="New WarBoard" aria-label="New WarBoard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button>
-          <button class="iconAction danger" id="deleteSelected" title="Delete selected WarBoards" aria-label="Delete selected WarBoards" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/></svg></button>
         </div>
         <div class="filterPanel" aria-label="Event filters and sorting">
           <div class="filterGroup"><select id="monthFilter" class="filterControl" aria-label="Filter by month"></select></div>
@@ -186,7 +183,6 @@
           return state.sort === "asc" ? ad - bd : bd - ad;
         });
       $("#eventGrid").innerHTML = items.length ? items.map(card).join("") : '<div class="empty">No events match this view.</div>';
-      updateDeleteButton();
       items.forEach(loadEventSnapshot);
     }
     function findEventCard(event){
@@ -264,100 +260,6 @@
         iframe.remove();
       }
     }
-    function updateDeleteButton(){
-      const count = state.selected.size;
-      const button = $("#deleteSelected");
-      button.hidden = !isAdminMode() || count === 0;
-      button.title = count === 1 ? "Delete selected WarBoard" : `Delete ${count} selected WarBoards`;
-      button.setAttribute("aria-label", button.title);
-    }
-    function selectedEvents(){
-      return builtInEvents.filter(event => state.selected.has(event.id));
-    }
-    function removeEventsFromView(ids){
-      for(const id of ids){
-        const index = builtInEvents.findIndex(event => event.id === id);
-        if(index > -1) builtInEvents.splice(index, 1);
-        state.selected.delete(id);
-      }
-      populateFilters();
-      render();
-    }
-    function pageFileName(event){
-      const href = String(event.href || "").replace(/^\.?\//, "");
-      if(!href.startsWith("events/") || !href.endsWith(".html") || href.includes("..")) return "";
-      return href.slice("events/".length);
-    }
-    function serializeEvents(events){
-      return 'const builtInEvents = [\n' + events.map(event => '      ' + JSON.stringify(event)).join(',\n') + '\n    ];';
-    }
-    function replaceBuiltInEventsSource(source, events){
-      const start = source.indexOf("const builtInEvents = [");
-      if(start < 0) throw new Error("Unable to find builtInEvents in index.html.");
-      const open = source.indexOf("[", start);
-      let depth = 0, quote = "", escaped = false;
-      for(let i = open; i < source.length; i++){
-        const ch = source[i];
-        if(quote){
-          if(escaped){ escaped = false; continue; }
-          if(ch === "\\"){ escaped = true; continue; }
-          if(ch === quote) quote = "";
-          continue;
-        }
-        if(ch === '"' || ch === "'" || ch === "`"){ quote = ch; continue; }
-        if(ch === "[") depth++;
-        if(ch === "]"){
-          depth--;
-          if(depth === 0){
-            const semi = source.indexOf(";", i);
-            if(semi < 0) throw new Error("Unable to finish builtInEvents replacement.");
-            return source.slice(0, start) + serializeEvents(events) + source.slice(semi + 1);
-          }
-        }
-      }
-      throw new Error("Unable to parse builtInEvents in index.html.");
-    }
-    async function persistDeletion(events){
-      if(!requireAdmin()) throw new Error("Admin mode is required to delete WarBoards.");
-      if(!window.showDirectoryPicker) throw new Error("This browser cannot permanently delete local files from a static page. Use Chrome or Edge and open the local/GitHub Pages URL.");
-      const remaining = builtInEvents.filter(event => !state.selected.has(event.id));
-      const root = await window.showDirectoryPicker({mode:"readwrite"});
-      const indexHandle = await root.getFileHandle("index.html");
-      const indexText = await (await indexHandle.getFile()).text();
-      const nextIndex = replaceBuiltInEventsSource(indexText, remaining);
-      const writable = await indexHandle.createWritable();
-      await writable.write(nextIndex);
-      await writable.close();
-      const removed = [];
-      const eventsDir = await root.getDirectoryHandle("events");
-      for(const event of events){
-        const fileName = pageFileName(event);
-        if(!fileName) continue;
-        try{
-          await eventsDir.removeEntry(fileName);
-          removed.push(fileName);
-        }catch(error){
-          if(error.name !== "NotFoundError") throw error;
-        }
-      }
-      return removed;
-    }
-    async function deleteSelectedEvents(){
-      if(!requireAdmin()) return;
-      const events = selectedEvents();
-      if(!events.length) return;
-      const ids = events.map(event => event.id);
-      const names = events.map(event => event.title).join(", ");
-      const confirmed = window.confirm(`Permanently delete ${events.length} selected WarBoard page${events.length === 1 ? "" : "s"}?\n\n${names}\n\nThis will update index.html and remove the matching page file${events.length === 1 ? "" : "s"} from the local folder you authorize next. This cannot be undone.`);
-      if(!confirmed) return;
-      try{
-        const removed = await persistDeletion(events);
-        removeEventsFromView(ids);
-        window.alert(`Deleted ${events.length} WarBoard${events.length === 1 ? "" : "s"} from this homepage and removed ${removed.length} page file${removed.length === 1 ? "" : "s"} from the selected folder.\n\nCommit and push those local changes to update GitHub Pages.`);
-      }catch(error){
-        window.alert(error.message || "Unable to delete the selected WarBoard pages.");
-      }
-    }
     async function loadTemplate(){ const response = await fetch('template.html', {cache:'no-store'}); if(!response.ok) throw new Error('Template unavailable'); return response.text(); }
     function customizeTemplate(html, event){
       let out = html;
@@ -369,7 +271,6 @@
     function downloadHtml(html, filename){ const blob = new Blob([html], {type:'text/html'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
     function closeModal(){ $("#boardModal").classList.remove("open"); $("#modalStatus").textContent = ""; }
     $("#newBoard").onclick = () => { if(requireAdmin()) $("#boardModal").classList.add("open"); };
-    $("#deleteSelected").onclick = deleteSelectedEvents;
     $$('[data-close]').forEach(button => button.onclick = closeModal);
     $("#boardModal").addEventListener('click', event => { if(event.target.id === 'boardModal') closeModal(); });
     $("#adminSwitch").onclick = () => { isAdminMode() ? setAdminMode(false) : openAdminModal(); };
@@ -396,7 +297,6 @@
       else state.selected.delete(id);
       const card = event.target.closest(".card");
       if(card) card.classList.toggle("selected", event.target.checked);
-      updateDeleteButton();
     });
     $("#eventGrid").addEventListener('click', event => {
       if(event.target.closest(".eventCheck")) return;
