@@ -1053,7 +1053,7 @@
     <form class="dialog" id="githubSaveForm">
       <div class="dialogHead"><h2>Save to GitHub</h2><button type="button" class="closeIcon" data-github-close title="Close" aria-label="Close"></button></div>
       <div class="dialogBody">
-        <div class="small">Enter a GitHub token with contents read/write access to `TannerJW22/ufc-event-portfolio`. The token is kept in memory for this browser tab only.</div>
+        <div class="small">Enter a GitHub token with contents read/write access to `TannerJW22/ufc-event-portfolio`. The token is saved in this browser profile so future saves can run without prompting.</div>
         <div class="field"><label>GitHub Token</label><input id="githubTokenInput" type="password" autocomplete="off" /></div>
         <div class="status" id="githubSaveStatus"></div>
       </div>
@@ -2456,9 +2456,13 @@
     const state = { selected: null, search: "", editingOdds: null, editingParlayId: null, scheduleCollapsed: false, scheduleEditing: false, detailTab: "portfolio", clipIndex: 0, analystReadOpen: {}, portfolioTabs: ["live","prefight","parlay"], portfolioStatusFilters: ["active","settled"], portfolioDraft: null };
     const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
     const ADMIN_STORAGE_KEY = "ufcEventPortfolioAdminUnlocked";
+    const GITHUB_TOKEN_STORAGE_KEY = "ufcEventPortfolioGithubToken";
     let adminModeFallback = false;
     let bootstrapping = true;
-    let githubToken = "";
+    let githubToken = (() => {
+      try{ return localStorage.getItem(GITHUB_TOKEN_STORAGE_KEY) || ""; }
+      catch(error){ return ""; }
+    })();
     let githubSaveTimer = null;
     let githubSaveInFlight = false;
     let githubSaveQueued = false;
@@ -3464,10 +3468,24 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       if(input) input.value = "";
       setGitHubSaveStatus("");
     }
+    function rememberGitHubToken(token){
+      githubToken = String(token || "").trim();
+      try{
+        if(githubToken) localStorage.setItem(GITHUB_TOKEN_STORAGE_KEY, githubToken);
+        else localStorage.removeItem(GITHUB_TOKEN_STORAGE_KEY);
+      }catch(error){}
+      return githubToken;
+    }
+    function clearGitHubToken(){
+      githubToken = "";
+      try{ localStorage.removeItem(GITHUB_TOKEN_STORAGE_KEY); }catch(error){}
+    }
     function activeGitHubToken(){
       const inputToken = $("#githubTokenInput")?.value.trim() || "";
-      if(inputToken) githubToken = inputToken;
-      return githubToken.trim();
+      if(inputToken) return rememberGitHubToken(inputToken);
+      if(githubToken.trim()) return githubToken.trim();
+      try{ return rememberGitHubToken(localStorage.getItem(GITHUB_TOKEN_STORAGE_KEY) || ""); }
+      catch(error){ return ""; }
     }
     function openGitHubSaveModal(message="Enter a GitHub token to save this WarBoard to GitHub."){
       if(activeGitHubToken()) return;
@@ -3566,7 +3584,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
         }while(githubSaveQueued);
         setTimeout(()=>{ if(!githubSaveQueued) closeGitHubSaveModal(); }, 900);
       }catch(error){
-        githubToken = "";
+        clearGitHubToken();
         openGitHubSaveModal(error.message || "Unable to save to GitHub. Re-enter a token and retry.");
       }finally{
         githubSaveInFlight = false;
