@@ -3497,7 +3497,6 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       catch(error){ return ""; }
     }
     function openGitHubSaveModal(message="Enter a GitHub token to save this WarBoard to GitHub."){
-      if(activeGitHubToken()) return;
       const modal = $("#githubSaveModal");
       if(!modal) return;
       setGitHubSaveStatus(message);
@@ -3602,10 +3601,6 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     function queueGitHubSave(){
       if(bootstrapping || !isAdminMode()) return;
       githubSaveQueued = true;
-      if(!activeGitHubToken()){
-        openGitHubSaveModal();
-        return;
-      }
       clearTimeout(githubSaveTimer);
       githubSaveTimer = setTimeout(publishGitHubSave, 650);
     }
