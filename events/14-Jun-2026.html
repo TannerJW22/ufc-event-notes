@@ -3464,7 +3464,13 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       if(input) input.value = "";
       setGitHubSaveStatus("");
     }
+    function activeGitHubToken(){
+      const inputToken = $("#githubTokenInput")?.value.trim() || "";
+      if(inputToken) githubToken = inputToken;
+      return githubToken.trim();
+    }
     function openGitHubSaveModal(message="Enter a GitHub token to save this WarBoard to GitHub."){
+      if(activeGitHubToken()) return;
       const modal = $("#githubSaveModal");
       if(!modal) return;
       setGitHubSaveStatus(message);
@@ -3541,7 +3547,8 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     }
     async function publishGitHubSave(){
       if(bootstrapping || !isAdminMode()) return;
-      if(!githubToken){
+      const token = activeGitHubToken();
+      if(!token){
         openGitHubSaveModal();
         return;
       }
@@ -3552,9 +3559,9 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
           githubSaveQueued = false;
           const path = currentGitHubPagePath();
           setGitHubSaveStatus(`Saving ${path} to GitHub...`);
-          const current = await fetchGitHubPage(githubToken, path);
+          const current = await fetchGitHubPage(token, path);
           const nextHtml = htmlWithEmbeddedEventData(current.html);
-          await commitGitHubPage(githubToken, path, nextHtml, current.sha);
+          await commitGitHubPage(token, path, nextHtml, current.sha);
           setGitHubSaveStatus("Saved to GitHub. GitHub Pages may take a moment to refresh.");
         }while(githubSaveQueued);
         setTimeout(()=>{ if(!githubSaveQueued) closeGitHubSaveModal(); }, 900);
@@ -3568,7 +3575,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     function queueGitHubSave(){
       if(bootstrapping || !isAdminMode()) return;
       githubSaveQueued = true;
-      if(!githubToken){
+      if(!activeGitHubToken()){
         openGitHubSaveModal();
         return;
       }
@@ -3581,8 +3588,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     $$(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("open");}));
     $("#githubSaveForm").onsubmit=e=>{
       e.preventDefault();
-      githubToken = $("#githubTokenInput").value.trim();
-      if(!githubToken){
+      if(!activeGitHubToken()){
         setGitHubSaveStatus("Enter a GitHub token to continue.");
         return;
       }
