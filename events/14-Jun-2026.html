@@ -3544,7 +3544,13 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
         }
       });
       if(response.status === 404) return {sha:null, html:"<!doctype html>\n" + document.documentElement.outerHTML};
-      if(!response.ok) throw new Error(`GitHub read failed (${response.status}).`);
+      if(!response.ok){
+        const details = await response.json().catch(()=>({}));
+        const error = new Error(details.message ? `GitHub read failed: ${details.message}` : `GitHub read failed (${response.status}).`);
+        error.status = response.status;
+        error.details = details;
+        throw error;
+      }
       const file = await response.json();
       return {sha:file.sha, html:base64ToUtf8(file.content)};
     }
@@ -3567,9 +3573,32 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       });
       if(!response.ok){
         const details = await response.json().catch(()=>({}));
-        throw new Error(details.message ? `GitHub save failed: ${details.message}` : `GitHub save failed (${response.status}).`);
+        const error = new Error(details.message ? `GitHub save failed: ${details.message}` : `GitHub save failed (${response.status}).`);
+        error.status = response.status;
+        error.details = details;
+        throw error;
       }
       return response.json();
+    }
+    function isGitHubAuthError(error){
+      return error?.status === 401 || error?.status === 403;
+    }
+    function isGitHubShaConflict(error){
+      const message = String(error?.message || "").toLowerCase();
+      return error?.status === 409 || (error?.status === 422 && message.includes("sha") && (message.includes("match") || message.includes("latest")));
+    }
+    async function saveGitHubPageWithRetry(token, path, attempts=3){
+      for(let attempt=1; attempt<=attempts; attempt++){
+        const current = await fetchGitHubPage(token, path);
+        const nextHtml = htmlWithEmbeddedEventData(current.html);
+        try{
+          await commitGitHubPage(token, path, nextHtml, current.sha);
+          return;
+        }catch(error){
+          if(!isGitHubShaConflict(error) || attempt === attempts) throw error;
+          setGitHubSaveStatus(`Remote changed while saving. Retrying (${attempt + 1}/${attempts})...`);
+        }
+      }
     }
     async function publishGitHubSave(){
       if(bootstrapping || !isAdminMode()) return;
@@ -3585,14 +3614,12 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
           githubSaveQueued = false;
           const path = currentGitHubPagePath();
           setGitHubSaveStatus(`Saving ${path} to GitHub...`);
-          const current = await fetchGitHubPage(token, path);
-          const nextHtml = htmlWithEmbeddedEventData(current.html);
-          await commitGitHubPage(token, path, nextHtml, current.sha);
+          await saveGitHubPageWithRetry(token, path);
           setGitHubSaveStatus("Saved to GitHub. GitHub Pages may take a moment to refresh.");
         }while(githubSaveQueued);
         setTimeout(()=>{ if(!githubSaveQueued) closeGitHubSaveModal(); }, 900);
       }catch(error){
-        clearGitHubToken();
+        if(isGitHubAuthError(error)) clearGitHubToken();
         openGitHubSaveModal(error.message || "Unable to save to GitHub. Re-enter a token and retry.");
       }finally{
         githubSaveInFlight = false;
