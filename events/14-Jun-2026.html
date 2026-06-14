@@ -105,7 +105,8 @@
     #betForm.portfolioDialog{height:min(760px,calc(100dvh - 24px))}#betForm .dialogBody{grid-template-rows:auto minmax(0,1fr)}#betForm .tableWrap{min-height:0}.portfolioTabBar{display:flex;gap:12px;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 10px;margin:0 0 -1px}.portfolioTabGroup,.portfolioStatusGroup{display:flex;gap:0;align-items:flex-end}.portfolioStatusGroup{margin-left:auto}.portfolioToggleTab{position:relative;top:1px;min-width:118px;min-height:38px;border:1px solid var(--line);border-bottom-color:var(--line);border-radius:7px 7px 0 0;background:#141411;color:var(--muted);padding:0 18px;font-weight:800;letter-spacing:.01em;overflow:hidden}.portfolioStatusGroup .portfolioToggleTab{min-width:106px}.portfolioToggleTab+.portfolioToggleTab{margin-left:-1px}.portfolioToggleTab::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(221,186,90,.19),rgba(221,186,90,.04));opacity:0;pointer-events:none}.portfolioToggleTab.active{border-color:rgba(221,186,90,.74);border-bottom-color:#161614;background:#161614;color:#d1b45c;box-shadow:inset 0 2px 0 rgba(221,186,90,.74)}.portfolioToggleTab.active::before{opacity:1}.portfolioToggleTab span{position:relative;z-index:1}
     select:not(.tagColorSelect){appearance:none;-webkit-appearance:none;padding-right:30px!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F4F1EA' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 10px center!important;background-size:15px 15px!important}
     @media(max-width:620px){.tagDialog .tagRows{grid-template-columns:1fr}.tagPillEditor{grid-template-columns:72px minmax(0,1fr) 52px;min-height:50px}.tagNameInput{font-size:15px!important}}
-  </style>
+.activeBetTable .activeBetBookCol{width:82px}.activeBetBook{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.portfolioTable col.bookCol{width:10%}.portfolioTable col.fightCol{width:22%}.portfolioTable col.betCol{width:32%}.portfolioTable col.stageCol{width:8%}.portfolioTable col.riskCol,.portfolioTable col.oddsCol,.portfolioTable col.deleteCol{width:6%}.portfolioTable col.resultCol{width:10%}.parlayTicketRow{grid-template-columns:minmax(220px,1fr) 130px 110px 110px}.parlayLegTable col.legBookCol{width:14%}.parlayLegTable col.legFightCol{width:24%}.parlayLegTable col.legBetCol{width:44%}.parlayLegTable col.legOddsCol{width:18%}.settingsTabs,.exposureTabs{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.settingsTabs{margin-bottom:14px}.settingsTab,.exposureTab{border:1px solid var(--line);border-radius:8px;background:#12120f;color:var(--muted);font-weight:900;padding:8px 12px}.settingsTab.active,.exposureTab.active{border-color:rgba(221,186,90,.72);background:var(--amberBg);color:var(--amber)}.sportsbookRows{display:grid;gap:10px}.activeBetsBox{padding-top:26px}.activeBetsBox .exposureTabs{margin:0 46px 12px 0}
+</style>
 </head>
 <body>
   <main class="app">
@@ -114,7 +115,7 @@
         <div class="eventTitle"><button type="button" class="eventHeading eventEditTrigger" id="editEvent" title="Edit event" aria-label="Edit event"><span class="eventTitleText" id="eventTitle">{Event Name}</span><span class="eventHeadline" id="eventHeadline">{Fighter Name} vs. {Fighter Name}</span></button></div>
         <div class="sub" id="eventDateTime"><div class="eventDateFull">{Event Date} @ {Prelims Time}</div><div class="eventLocationLine">{Event Location}</div></div>
       </div>
-      <div class="sideStack"><div class="agentUpdate" id="agentUpdate">Last Agent Update: Sunday, June 14, 2026</div><div class="metrics"><div class="kpis" id="kpis"></div><div class="topControls"><a class="topAction topIconAction homeAction" id="homeAction" href="../index.html" title="Home" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10.5V20h14v-9.5"/><path d="M9.5 20v-6h5v6"/></svg></a><button class="topAction topIconAction exportAction" id="exportEventData" title="Download event JSON" aria-label="Download event JSON"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></button><button class="topAction topIconAction githubAction" id="githubHandoff" type="button" title="GitHub handoff" aria-label="GitHub handoff"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.4 7.9 10.9.58.1.8-.25.8-.56v-2.15c-3.22.7-3.9-1.38-3.9-1.38-.53-1.34-1.3-1.7-1.3-1.7-1.06-.73.08-.72.08-.72 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.76.4-1.27.74-1.56-2.57-.29-5.27-1.29-5.27-5.73 0-1.27.45-2.3 1.2-3.12-.12-.3-.52-1.48.11-3.08 0 0 .98-.31 3.2 1.19A11.1 11.1 0 0 1 12 5.86c.99 0 1.98.13 2.91.39 2.22-1.5 3.2-1.19 3.2-1.19.63 1.6.23 2.78.11 3.08.75.82 1.2 1.85 1.2 3.12 0 4.45-2.7 5.43-5.28 5.72.42.36.79 1.08.79 2.18v3.23c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg><span class="dirtyBang" aria-hidden="true">!</span></button><button class="topAction topTextAction" id="openPortfolio">Portfolio</button><button class="topAction topTextAction tagsAction" id="openTags">Manage Tags</button><button class="topAction topIconAction resetAction" id="resetDataTop" title="Reset data" aria-label="Reset data"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 16h10l1-16"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button></div></div></div>
+      <div class="sideStack"><div class="agentUpdate" id="agentUpdate">Last Agent Update: Sunday, June 14, 2026</div><div class="metrics"><div class="kpis" id="kpis"></div><div class="topControls"><a class="topAction topIconAction homeAction" id="homeAction" href="../index.html" title="Home" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10.5V20h14v-9.5"/><path d="M9.5 20v-6h5v6"/></svg></a><button class="topAction topIconAction exportAction" id="exportEventData" title="Download event JSON" aria-label="Download event JSON"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></button><button class="topAction topIconAction githubAction" id="githubHandoff" type="button" title="GitHub handoff" aria-label="GitHub handoff"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.4 7.9 10.9.58.1.8-.25.8-.56v-2.15c-3.22.7-3.9-1.38-3.9-1.38-.53-1.34-1.3-1.7-1.3-1.7-1.06-.73.08-.72.08-.72 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.76.4-1.27.74-1.56-2.57-.29-5.27-1.29-5.27-5.73 0-1.27.45-2.3 1.2-3.12-.12-.3-.52-1.48.11-3.08 0 0 .98-.31 3.2 1.19A11.1 11.1 0 0 1 12 5.86c.99 0 1.98.13 2.91.39 2.22-1.5 3.2-1.19 3.2-1.19.63 1.6.23 2.78.11 3.08.75.82 1.2 1.85 1.2 3.12 0 4.45-2.7 5.43-5.28 5.72.42.36.79 1.08.79 2.18v3.23c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg><span class="dirtyBang" aria-hidden="true">!</span></button><button class="topAction topTextAction" id="openPortfolio">Portfolio</button><button class="topAction topTextAction tagsAction" id="openTags">Settings</button><button class="topAction topIconAction resetAction" id="resetDataTop" title="Reset data" aria-label="Reset data"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 16h10l1-16"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button></div></div></div>
     </section>
     <section class="toolbar">
       <input id="search" class="search" />
@@ -1005,6 +1006,7 @@
       "logic": "parlay-leg"
     }
   ],
+  "sportsbooks": [],
   "parlays": [
     {
       "id": "parlay-mqd5mlhm-1pizb",
@@ -1079,6 +1081,7 @@
     "selectedFightId": 1,
     "detailTab": "portfolio",
     "clipIndex": 0,
+    "exposureStage": "prefight",
     "analystReadOpen": {}
   },
   "researchDataVersion": "2026-06-14-analyst-research-restore-v1"
@@ -1099,8 +1102,8 @@
         <div class="portfolioTabBar" id="portfolioTabs" aria-label="Portfolio filters"></div>
         <div class="tableWrap">
           <table class="portfolioTable">
-            <colgroup><col class="fightCol"><col class="betCol"><col class="stageCol"><col class="riskCol"><col class="oddsCol"><col class="resultCol"><col class="deleteCol"></colgroup>
-            <thead><tr><th>Fight</th><th>Bet</th><th>Type</th><th>Risk</th><th>Odds</th><th>Result</th><th>Delete</th></tr></thead>
+            <colgroup><col class="bookCol"><col class="fightCol"><col class="betCol"><col class="stageCol"><col class="riskCol"><col class="oddsCol"><col class="resultCol"><col class="deleteCol"></colgroup>
+            <thead><tr><th>Book</th><th>Fight</th><th>Bet</th><th>Type</th><th>Risk</th><th>Odds</th><th>Result</th><th>Delete</th></tr></thead>
             <tbody id="portfolioRows"></tbody>
           </table>
         </div>
@@ -1113,9 +1116,9 @@
       <div class="dialogHead"><h2>Parlay Builder</h2><button type="button" class="closeIcon" data-close title="Close" aria-label="Close"></button></div>
       <div class="dialogBody">
         <div class="field"><label>Fights</label><div class="parlayFightList" id="parlayFightList"></div></div>
-        <div class="parlayTicketRow"><div class="field parlayDescriptionField"><label>Description</label><input id="parlayDescription" /></div><div class="field"><label>Risk</label><input id="parlayRisk" type="text" inputmode="numeric" data-currency /></div><div class="field"><label>Odds</label><input id="parlayOdds" type="text" inputmode="numeric" data-american-odds /></div></div>
+        <div class="parlayTicketRow"><div class="field parlayDescriptionField"><label>Description</label><input id="parlayDescription" /></div><div class="field"><label>Book</label><select id="parlayBook"></select></div><div class="field"><label>Risk</label><input id="parlayRisk" type="text" inputmode="numeric" data-currency /></div><div class="field"><label>Odds</label><input id="parlayOdds" type="text" inputmode="numeric" data-american-odds /></div></div>
         <div class="parlayMetaRow"><div class="field"><label>Type</label><select id="parlayStage"></select></div><div class="field"><label>Result</label><select id="parlayResult"></select></div></div>
-        <div class="field"><label>Legs</label><div class="tableWrap"><table class="portfolioTable parlayLegTable"><colgroup><col class="legFightCol"><col class="legBetCol"><col class="legOddsCol"></colgroup><thead><tr><th>Fight</th><th>Leg Description</th><th>Leg Odds (Optional)</th></tr></thead><tbody id="parlayLegRows"></tbody></table></div></div>
+        <div class="field"><label>Legs</label><div class="tableWrap"><table class="portfolioTable parlayLegTable"><colgroup><col class="legBookCol"><col class="legFightCol"><col class="legBetCol"><col class="legOddsCol"></colgroup><thead><tr><th>Book</th><th>Fight</th><th>Leg Description</th><th>Leg Odds (Optional)</th></tr></thead><tbody id="parlayLegRows"></tbody></table></div></div>
       </div>
       <div class="dialogActions"><button class="action primary">Save</button></div>
     </form>
@@ -1137,7 +1140,7 @@
         <div class="field"><label>Gameplan Thesis</label><textarea id="activeFightThesis"></textarea></div>
         <div class="tableWrap">
           <table class="portfolioTable">
-            <thead><tr><th>Bet</th><th>Type</th><th>Risk</th><th>Odds</th><th>Result</th><th>Delete</th></tr></thead>
+            <thead><tr><th>Book</th><th>Bet</th><th>Type</th><th>Risk</th><th>Odds</th><th>Result</th><th>Delete</th></tr></thead>
             <tbody id="activeBetRows"></tbody>
           </table>
         </div>
@@ -1170,11 +1173,13 @@
   </div>
   <div class="modal" id="tagModal" role="dialog" aria-modal="true">
     <form class="dialog tagDialog" id="tagForm">
-      <div class="dialogHead"><h2>Manage Tags</h2><button type="button" class="closeIcon" data-close title="Close" aria-label="Close"></button></div>
+      <div class="dialogHead"><h2>Settings</h2><button type="button" class="closeIcon" data-close title="Close" aria-label="Close"></button></div>
       <div class="dialogBody">
-        <div class="tagRows" id="tagRows"></div>
+        <div class="settingsTabs" id="settingsTabs" aria-label="Settings sections"></div>
+        <div class="settingsPanel" id="settingsTagsPanel"><div class="tagRows" id="tagRows"></div></div>
+        <div class="settingsPanel" id="settingsSportsbooksPanel"><div class="sportsbookRows" id="sportsbookRows"></div></div>
       </div>
-      <div class="dialogActions portfolioActions"><button type="button" class="action" id="addTagRow">Add Tag</button><button class="action primary">Save Tags</button></div>
+      <div class="dialogActions portfolioActions"><button type="button" class="action" id="addTagRow">Add Tag</button><button type="button" class="action" id="addSportsbookRow">Add Sportsbook</button><button class="action primary">Save Settings</button></div>
     </form>
   </div>
   <div class="modal" id="githubHandoffModal" role="dialog" aria-modal="true" aria-labelledby="githubHandoffTitle">
@@ -2665,8 +2670,9 @@
     let fights = hydrateFightList(pruneFightList(cloneData(seed)));
     let eventMeta = cloneData(defaultEventMeta);
     let tags = [];
+    let sportsbooks = [];
     let parlays = [];
-    const state = { selected: null, search: "", editingOdds: null, editingParlayId: null, scheduleCollapsed: false, scheduleEditing: false, detailTab: "portfolio", clipIndex: 0, analystReadOpen: {}, portfolioTabs: ["live","prefight","parlay"], portfolioStatusFilters: ["active","settled"], portfolioDraft: null };
+    const state = { selected: null, search: "", editingOdds: null, editingParlayId: null, scheduleCollapsed: false, scheduleEditing: false, detailTab: "portfolio", clipIndex: 0, analystReadOpen: {}, portfolioTabs: ["live","prefight","parlay"], portfolioStatusFilters: ["active","settled"], portfolioDraft: null, settingsTab: "tags", exposureStage: "prefight" };
     const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
     const ADMIN_STORAGE_KEY = "ufcEventPortfolioAdminUnlocked";
     const LOCAL_EVENT_STORAGE_PREFIX = "ufcEventPortfolioLocalData:";
@@ -2725,6 +2731,7 @@
     const save = () => { syncEmbeddedEventData(); persistLocalEventData(); };
     const saveEvent = () => save();
     const saveTags = () => save();
+    const saveSportsbooks = () => save();
     const saveParlays = () => save();
     const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const tagId = () => `tag-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;
@@ -2761,6 +2768,14 @@
     const normalizeTagLogic = logic => tagLogicChoices.some(c=>c.id===String(logic || "")) ? String(logic || "") : "";
     const normalizeTag = tag => ({ id:String(tag?.id || tagId()), name:String(tag?.name || "").trim(), color:normalizeTagColor(tag?.color), logic:normalizeTagLogic(tag?.logic) });
     const normalizeTags = () => { tags = (Array.isArray(tags) ? tags : []).map(normalizeTag).filter(t=>t.name); saveTags(); };
+    const normalizeBook = value => String(value || "").trim();
+    const normalizeSportsbooks = rows => [...new Set((Array.isArray(rows) ? rows : []).map(normalizeBook).filter(Boolean))];
+    const sportsbookOptions = selected => {
+      const current = normalizeBook(selected);
+      const options = ["", ...normalizeSportsbooks([...sportsbooks, current])];
+      return options.map(value=>`<option value="${esc(value)}" ${value===current ? "selected" : ""}>${esc(value || "-")}</option>`).join("");
+    };
+    const bookText = value => normalizeBook(value) || "-";
     const deprecatedTagIds = new Set(["tag-active-bet","tag-prefight","tag-live"]);
     const deprecatedAutoTagNames = new Set(["active bet","prefight","live"]);
     const seedLegacyTags = () => {
@@ -3001,7 +3016,7 @@
         const resultStatus = normalizeBetResultStatus(inferredStatus);
         const risk = parseCurrencyAmount(p?.risk);
         const market = p?.market ?? "-";
-        return {notes:String(p?.notes || ""),stage:normalizeBetStage(p?.stage),risk,market,result:betResultValue(risk, market, resultStatus),resultStatus};
+        return {book:normalizeBook(p?.book),notes:String(p?.notes || ""),stage:normalizeBetStage(p?.stage),risk,market,result:betResultValue(risk, market, resultStatus),resultStatus};
       }) : [];
       delete f["activeBet"];
       f.tagIds = Array.isArray(f.tagIds) ? f.tagIds.map(String) : [];
@@ -3023,7 +3038,7 @@
     const normalizeParlayLeg = leg => {
       const fightId = Number(leg?.fightId);
       if(!activeFightIds.has(fightId)) return null;
-      return {fightId, notes:String(leg?.notes || ""), market:leg?.market ?? "-"};
+      return {fightId, book:normalizeBook(leg?.book), notes:String(leg?.notes || ""), market:leg?.market ?? "-"};
     };
     const legacyParlayLegs = p => Array.isArray(p?.fightIds) ? p.fightIds.map(fightId => ({fightId, notes:"", market:"-"})) : [];
     const normalizeParlay = p => {
@@ -3037,6 +3052,7 @@
       return {
         id:String(p?.id || parlayId()),
         fightIds:legs.map(leg=>leg.fightId),
+        book:normalizeBook(p?.book),
         notes:String(p?.notes || ""),
         stage:normalizeBetStage(p?.stage),
         risk,
@@ -3101,7 +3117,7 @@
         savedAt:new Date().toISOString(),
         fights:localFightStateRows(),
         parlays:parlays.map(normalizeParlay).filter(localParlayHasContent),
-        uiState:{selectedFightId:state.selected,detailTab:state.detailTab,clipIndex:state.clipIndex,analystReadOpen:cloneData(state.analystReadOpen || {}),portfolioTabs:cloneData(state.portfolioTabs || []),portfolioStatusFilters:cloneData(state.portfolioStatusFilters || [])}
+        uiState:{selectedFightId:state.selected,detailTab:state.detailTab,clipIndex:state.clipIndex,exposureStage:normalizeBetStage(state.exposureStage),analystReadOpen:cloneData(state.analystReadOpen || {}),portfolioTabs:cloneData(state.portfolioTabs || []),portfolioStatusFilters:cloneData(state.portfolioStatusFilters || [])}
       };
       if(includeExportTimestamp) payload.exportedAt = new Date().toISOString();
       return payload;
@@ -3140,12 +3156,14 @@
       if(!payload) return false;
       eventMeta = normalizeEventMeta(payload.eventMeta || eventMeta);
       tags = Array.isArray(payload.tags) ? cloneData(payload.tags) : tags;
+      sportsbooks = Array.isArray(payload.sportsbooks) ? normalizeSportsbooks(payload.sportsbooks) : sportsbooks;
       fights = Array.isArray(payload.fights) ? hydrateFightList(pruneFightList(cloneData(payload.fights))) : fights;
       parlays = Array.isArray(payload.parlays) ? cloneData(payload.parlays) : parlays;
       if(payload.uiState && typeof payload.uiState === "object"){
         state.selected = Number(payload.uiState.selectedFightId) || state.selected;
         state.detailTab = payload.uiState.detailTab || state.detailTab;
         state.clipIndex = Number(payload.uiState.clipIndex) || 0;
+        state.exposureStage = normalizeBetStage(payload.uiState.exposureStage || state.exposureStage);
         state.analystReadOpen = payload.uiState.analystReadOpen && typeof payload.uiState.analystReadOpen === "object" ? cloneData(payload.uiState.analystReadOpen) : {};
       }
       fights.forEach(f=>normalizeFight(f));
@@ -3190,6 +3208,7 @@
         state.selected = Number(payload.uiState.selectedFightId) || state.selected;
         state.detailTab = payload.uiState.detailTab || state.detailTab;
         state.clipIndex = Number(payload.uiState.clipIndex) || 0;
+        state.exposureStage = normalizeBetStage(payload.uiState.exposureStage || state.exposureStage);
         state.analystReadOpen = payload.uiState.analystReadOpen && typeof payload.uiState.analystReadOpen === "object" ? cloneData(payload.uiState.analystReadOpen) : {};
         state.portfolioTabs = Array.isArray(payload.uiState.portfolioTabs) ? cloneData(payload.uiState.portfolioTabs) : state.portfolioTabs;
         state.portfolioStatusFilters = Array.isArray(payload.uiState.portfolioStatusFilters) ? cloneData(payload.uiState.portfolioStatusFilters) : state.portfolioStatusFilters;
@@ -3444,17 +3463,22 @@ function cardPills(f){
   return `${betTable}<div class="chips cardPills">${tagHtml}</div>`;
 }
 function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">No Exposure</div>'; }
-    const activeBetTableHtml = (rows, label="Exposure", betHeader="Bet") => rows ? `<table class="activeBetTable" aria-label="${esc(label)}"><thead><tr><th class="activeBetTypeCol" aria-label="Type"></th><th>${esc(betHeader)}</th><th class="activeBetRiskCol">Risk</th><th class="activeBetOddsCol">Odds</th></tr></thead><tbody>${rows}</tbody></table>` : "";
-    const straightExposureRows = f => (f.portfolio || []).filter(p=>p.notes || p.risk || p.market || p.result).map(p=>`<tr class="${betStatusClass(p.resultStatus)}"><td class="activeBetTypeCol">${betStageLabel(p.stage)}</td><td>${esc(p.notes || "-")}</td><td class="activeBetNum activeBetRiskCol">${money(p.risk)}</td><td class="activeBetNum activeBetOddsCol">${marketText(p.market)}</td></tr>`).join("");
-    const parlayLegExposureRows = f => parlayLegsForFight(f).map(({parlay,leg})=>`<tr class="${betStatusClass(parlay.resultStatus)} parlayLegRow"><td class="activeBetTypeCol">${betStageLabel(parlay.stage)}</td><td>${esc(leg.notes || parlay.notes || "Parlay Leg")}</td><td class="activeBetNum activeBetRiskCol">${money(parlay.risk)}</td><td class="activeBetNum activeBetOddsCol">${marketText(leg.market)}</td></tr>`).join("");
+    const exposureStageDefs = [{id:"prefight",label:"Prefight"},{id:"live",label:"Live"}];
+    const exposureStageValue = value => normalizeBetStage(value) === "live" ? "live" : "prefight";
+    const exposureStageActive = () => exposureStageValue(state.exposureStage);
+    const exposureTabsHtml = () => `<div class="exposureTabs" aria-label="Exposure filters">${exposureStageDefs.map(tab=>`<button type="button" class="exposureTab ${exposureStageActive()===tab.id ? "active" : ""}" data-exposure-stage="${esc(tab.id)}" aria-pressed="${exposureStageActive()===tab.id}">${esc(tab.label)}</button>`).join("")}</div>`;
+    const activeBetTableHtml = (rows, label="Exposure", betHeader="Bet") => rows ? `<table class="activeBetTable" aria-label="${esc(label)}"><thead><tr><th class="activeBetBookCol">Book</th><th>${esc(betHeader)}</th><th class="activeBetRiskCol">Risk</th><th class="activeBetOddsCol">Odds</th></tr></thead><tbody>${rows}</tbody></table>` : "";
+    const straightExposureRows = (f, stage=null) => (f.portfolio || []).filter(p=>(!stage || exposureStageValue(p.stage)===stage) && (p.notes || p.risk || p.market || p.result)).map(p=>`<tr class="${betStatusClass(p.resultStatus)}"><td class="activeBetBookCol activeBetBook" title="${esc(bookText(p.book))}">${esc(bookText(p.book))}</td><td>${esc(p.notes || "-")}</td><td class="activeBetNum activeBetRiskCol">${money(p.risk)}</td><td class="activeBetNum activeBetOddsCol">${marketText(p.market)}</td></tr>`).join("");
+    const parlayLegExposureRows = (f, stage=null) => parlayLegsForFight(f).filter(({parlay})=>!stage || exposureStageValue(parlay.stage)===stage).map(({parlay,leg})=>`<tr class="${betStatusClass(parlay.resultStatus)} parlayLegRow"><td class="activeBetBookCol activeBetBook" title="${esc(bookText(leg.book || parlay.book))}">${esc(bookText(leg.book || parlay.book))}</td><td>${esc(leg.notes || parlay.notes || "Parlay Leg")}</td><td class="activeBetNum activeBetRiskCol">${money(parlay.risk)}</td><td class="activeBetNum activeBetOddsCol">${marketText(leg.market)}</td></tr>`).join("");
     function activeBetTable(f){
       const rows = `${straightExposureRows(f)}${parlayLegExposureRows(f)}`;
       return activeBetTableHtml(rows);
     }
     const namedNoneBox = text => `<div class="noneBox">${esc(text)}</div>`;
     const activeBetsBlock = f => {
-      const straightTable = activeBetTableHtml(straightExposureRows(f), "Straight Exposure");
-      const parlayLegTable = activeBetTableHtml(parlayLegExposureRows(f), "Parlay Leg Exposure", "Parlay Leg");
+      const stage = exposureStageActive();
+      const straightTable = activeBetTableHtml(straightExposureRows(f, stage), "Straight Exposure");
+      const parlayLegTable = activeBetTableHtml(parlayLegExposureRows(f, stage), "Parlay Leg Exposure", "Parlay Leg");
       return straightTable || parlayLegTable ? `<div class="activeExposureStack">${straightTable}${parlayLegTable ? `<div class="activeParlayLegBlock">${parlayLegTable}</div>` : ""}</div>` : namedNoneBox("No Exposure");
     };
     const tagsStrip = f => {
@@ -3465,7 +3489,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       const thesis = String(f.betSummary || "").trim();
       return thesis ? `<p class="notes">${esc(thesis)}</p>` : namedNoneBox("No Gameplan Thesis");
     };
-    const portfolioTab = f => `<div class="portfolioTab">${tagsStrip(f)}<div class="portfolioContentGrid"><section class="workspaceBox activeBetsBox"><div class="workspaceBoxHeader"><h3 class="workspaceBoxTitle">Exposure</h3></div><button class="editBtn workspaceEdit" id="editActiveBets" title="Edit exposure" aria-label="Edit exposure">&#9998;</button>${activeBetsBlock(f)}</section><section class="workspaceBox thesisBox"><div class="workspaceBoxHeader"><h3 class="workspaceBoxTitle">Gameplan Thesis</h3></div><button class="editBtn workspaceEdit" id="editActiveBetsThesis" title="Edit gameplan thesis" aria-label="Edit gameplan thesis">&#9998;</button>${thesisBlock(f)}</section></div></div>`;
+    const portfolioTab = f => `<div class="portfolioTab">${tagsStrip(f)}<div class="portfolioContentGrid"><section class="workspaceBox activeBetsBox">${exposureTabsHtml()}<button class="editBtn workspaceEdit" id="editActiveBets" title="Edit exposure" aria-label="Edit exposure">&#9998;</button>${activeBetsBlock(f)}</section><section class="workspaceBox thesisBox"><div class="workspaceBoxHeader"><h3 class="workspaceBoxTitle">Gameplan Thesis</h3></div><button class="editBtn workspaceEdit" id="editActiveBetsThesis" title="Edit gameplan thesis" aria-label="Edit gameplan thesis">&#9998;</button>${thesisBlock(f)}</section></div></div>`;
     const analystTab = f => `<section class="workspaceBox analystTab">${analystReads(f)}</section>`;
     const youtubeVideoId = value => {
       const raw = String(value || "").trim();
@@ -3566,14 +3590,14 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       return `${tabs}${portfolioTab(f)}`;
     }
     function activeBetRowHtml(p={}){
-      return `<tr data-active-bet-row><td class="betCell" data-label="Bet"><input data-field="notes" value="${esc(p.notes||"")}" /></td><td class="numCell" data-label="Type"><select data-field="stage">${betStageOptions(p.stage)}</select></td><td class="numCell" data-label="Risk"><input data-field="risk" type="text" inputmode="numeric" data-currency value="${esc(currencyInputDisplay(p.risk))}" /></td><td class="numCell" data-label="Odds"><input data-field="market" type="text" inputmode="numeric" data-american-odds value="${esc(americanOddsDisplay(p.market))}" /></td><td class="numCell" data-label="Result"><select data-field="resultStatus">${betResultStatusOptions(p.resultStatus)}</select></td><td class="deleteCell" data-label="Delete"><button type="button" class="tagDelete" data-delete-active-bet title="Delete bet" aria-label="Delete bet">${iconTrash()}</button></td></tr>`;
+      return `<tr data-active-bet-row><td class="numCell" data-label="Book"><select data-field="book">${sportsbookOptions(p.book)}</select></td><td class="betCell" data-label="Bet"><input data-field="notes" value="${esc(p.notes||"")}" /></td><td class="numCell" data-label="Type"><select data-field="stage">${betStageOptions(p.stage)}</select></td><td class="numCell" data-label="Risk"><input data-field="risk" type="text" inputmode="numeric" data-currency value="${esc(currencyInputDisplay(p.risk))}" /></td><td class="numCell" data-label="Odds"><input data-field="market" type="text" inputmode="numeric" data-american-odds value="${esc(americanOddsDisplay(p.market))}" /></td><td class="numCell" data-label="Result"><select data-field="resultStatus">${betResultStatusOptions(p.resultStatus)}</select></td><td class="deleteCell" data-label="Delete"><button type="button" class="tagDelete" data-delete-active-bet title="Delete bet" aria-label="Delete bet">${iconTrash()}</button></td></tr>`;
     }
     function wireActiveBetDeletes(){
       $$("[data-delete-active-bet]").forEach(b=>b.onclick=()=>{ if(!requireAdmin()) return; b.closest("tr").remove(); if(!$("#activeBetRows").children.length) renderActiveBetRows({portfolio:[]}); });
     }
     function renderActiveBetRows(f){
       const rows = (f.portfolio || []).map(p => activeBetRowHtml(p));
-      $("#activeBetRows").innerHTML = rows.join("") || `<tr><td colspan="6" class="small">No active bets. Use Add Straight Bet to create one.</td></tr>`;
+      $("#activeBetRows").innerHTML = rows.join("") || `<tr><td colspan="7" class="small">No active bets. Use Add Straight Bet to create one.</td></tr>`;
       wireActiveBetDeletes();
       wireAmericanOddsInputs();
       wireCurrencyInputs();
@@ -3581,7 +3605,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     function portfolioRowHtml(fightId, p={}){
       const selectedId = Number(fightId) || state.selected;
       const options = fights.map(f=>`<option value="${f.id}" ${f.id===selectedId?"selected":""}>${esc(fightOptionText(f))}</option>`).join("");
-      return `<tr data-portfolio-row><td class="fightCell" data-label="Fight"><select data-field="fightId">${options}</select></td><td class="betCell" data-label="Bet"><input data-field="notes" value="${esc(p.notes||"")}" /></td><td class="numCell" data-label="Type"><select data-field="stage">${betStageOptions(p.stage)}</select></td><td class="numCell" data-label="Risk"><input data-field="risk" type="text" inputmode="numeric" data-currency value="${esc(currencyInputDisplay(p.risk))}" /></td><td class="numCell" data-label="Odds"><input data-field="market" type="text" inputmode="numeric" data-american-odds value="${esc(americanOddsDisplay(p.market))}" /></td><td class="numCell" data-label="Result"><select data-field="resultStatus">${betResultStatusOptions(p.resultStatus)}</select></td><td class="deleteCell" data-label="Delete"><button type="button" class="tagDelete" data-delete-row title="Delete bet" aria-label="Delete bet">${iconTrash()}</button></td></tr>`;
+      return `<tr data-portfolio-row><td class="numCell" data-label="Book"><select data-field="book">${sportsbookOptions(p.book)}</select></td><td class="fightCell" data-label="Fight"><select data-field="fightId">${options}</select></td><td class="betCell" data-label="Bet"><input data-field="notes" value="${esc(p.notes||"")}" /></td><td class="numCell" data-label="Type"><select data-field="stage">${betStageOptions(p.stage)}</select></td><td class="numCell" data-label="Risk"><input data-field="risk" type="text" inputmode="numeric" data-currency value="${esc(currencyInputDisplay(p.risk))}" /></td><td class="numCell" data-label="Odds"><input data-field="market" type="text" inputmode="numeric" data-american-odds value="${esc(americanOddsDisplay(p.market))}" /></td><td class="numCell" data-label="Result"><select data-field="resultStatus">${betResultStatusOptions(p.resultStatus)}</select></td><td class="deleteCell" data-label="Delete"><button type="button" class="tagDelete" data-delete-row title="Delete bet" aria-label="Delete bet">${iconTrash()}</button></td></tr>`;
     }
     const portfolioTabDefs = [
       {id:"prefight",label:"Prefight"},
@@ -3662,7 +3686,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     };
     function parlayRowHtml(p={}){
       const normalized = normalizeParlay(p);
-      return `<tr data-parlay-row data-parlay-id="${esc(normalized.id)}" data-fight-ids="${esc(normalized.fightIds.join(","))}"><td class="fightCell" data-label="Fights"><button type="button" class="parlayFightButton" data-edit-parlay>${esc(parlayFightSummary(normalized.fightIds))}</button></td><td class="betCell" data-label="Bet"><input data-field="notes" value="${esc(normalized.notes)}" /></td><td class="numCell" data-label="Type"><select data-field="stage">${betStageOptions(normalized.stage)}</select></td><td class="numCell" data-label="Risk"><input data-field="risk" type="text" inputmode="numeric" data-currency value="${esc(currencyInputDisplay(normalized.risk))}" /></td><td class="numCell" data-label="Odds"><input data-field="market" type="text" inputmode="numeric" data-american-odds value="${esc(americanOddsDisplay(normalized.market))}" /></td><td class="numCell" data-label="Result"><select data-field="resultStatus">${betResultStatusOptions(normalized.resultStatus)}</select></td><td class="deleteCell" data-label="Delete"><button type="button" class="tagDelete" data-delete-parlay title="Delete parlay" aria-label="Delete parlay">${iconTrash()}</button></td></tr>`;
+      return `<tr data-parlay-row data-parlay-id="${esc(normalized.id)}" data-fight-ids="${esc(normalized.fightIds.join(","))}"><td class="numCell" data-label="Book"><select data-field="book">${sportsbookOptions(normalized.book)}</select></td><td class="fightCell" data-label="Fights"><button type="button" class="parlayFightButton" data-edit-parlay>${esc(parlayFightSummary(normalized.fightIds))}</button></td><td class="betCell" data-label="Bet"><input data-field="notes" value="${esc(normalized.notes)}" /></td><td class="numCell" data-label="Type"><select data-field="stage">${betStageOptions(normalized.stage)}</select></td><td class="numCell" data-label="Risk"><input data-field="risk" type="text" inputmode="numeric" data-currency value="${esc(currencyInputDisplay(normalized.risk))}" /></td><td class="numCell" data-label="Odds"><input data-field="market" type="text" inputmode="numeric" data-american-odds value="${esc(americanOddsDisplay(normalized.market))}" /></td><td class="numCell" data-label="Result"><select data-field="resultStatus">${betResultStatusOptions(normalized.resultStatus)}</select></td><td class="deleteCell" data-label="Delete"><button type="button" class="tagDelete" data-delete-parlay title="Delete parlay" aria-label="Delete parlay">${iconTrash()}</button></td></tr>`;
     }
     function collectPortfolioDraft(){
       const straights = $$("[data-portfolio-row]").map(row => ({
@@ -3791,6 +3815,30 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       $("#tagRows").innerHTML = `${manualHtml}${autoHtml}`;
       wireTagRows();
     }
+    const settingsTabDefs = [{id:"tags",label:"Tags"},{id:"sportsbooks",label:"Sportsbooks"}];
+    const settingsTabValue = value => settingsTabDefs.some(tab=>tab.id===value) ? value : "tags";
+    function renderSettingsTabs(){
+      state.settingsTab = settingsTabValue(state.settingsTab);
+      $("#settingsTabs").innerHTML = settingsTabDefs.map(tab=>`<button type="button" class="settingsTab ${state.settingsTab===tab.id ? "active" : ""}" data-settings-tab="${esc(tab.id)}" aria-pressed="${state.settingsTab===tab.id}">${esc(tab.label)}</button>`).join("");
+      $("#settingsTagsPanel").hidden = state.settingsTab !== "tags";
+      $("#settingsSportsbooksPanel").hidden = state.settingsTab !== "sportsbooks";
+      $$("[data-settings-tab]").forEach(button=>button.onclick=()=>{ state.settingsTab = settingsTabValue(button.dataset.settingsTab); renderSettingsTabs(); });
+    }
+    const sportsbookRowHtml = value => `<div class="tagRow" data-sportsbook-row><div class="tagPillEditor"><span class="tagActions"><button type="button" class="tagDelete" data-delete-sportsbook title="Delete sportsbook" aria-label="Delete sportsbook">${iconTrash()}</button></span><input class="tagNameInput" type="text" data-sportsbook-field value="${esc(value || "")}" placeholder="Sportsbook" /></div></div>`;
+    function wireSportsbookRows(){
+      $$("[data-delete-sportsbook]").forEach(button=>button.onclick=()=>{ if(!requireAdmin()) return; button.closest("[data-sportsbook-row]")?.remove(); if(!$("#sportsbookRows").querySelector("[data-sportsbook-row]")) $("#sportsbookRows").innerHTML = '<div class="tagEmpty" data-sportsbook-empty>No sportsbooks yet. Use Add Sportsbook to create one.</div>'; });
+    }
+    function renderSportsbookRows(){
+      sportsbooks = normalizeSportsbooks(sportsbooks);
+      $("#sportsbookRows").innerHTML = sportsbooks.length ? sportsbooks.map(sportsbookRowHtml).join("") : '<div class="tagEmpty" data-sportsbook-empty>No sportsbooks yet. Use Add Sportsbook to create one.</div>';
+      wireSportsbookRows();
+    }
+    const collectSportsbooks = () => normalizeSportsbooks($$("[data-sportsbook-row]").map(row=>row.querySelector("[data-sportsbook-field]")?.value));
+    function renderSettings(){
+      renderSettingsTabs();
+      renderTagRows();
+      renderSportsbookRows();
+    }
     function selectOptions(choices, current){
       const selected = String(current || "");
       const options = choices.includes(selected) ? choices : [selected, ...choices].filter(Boolean);
@@ -3845,6 +3893,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       const editActiveBets = $("#editActiveBets"); if(editActiveBets) editActiveBets.onclick=openActiveBets;
       const editActiveBetsThesis = $("#editActiveBetsThesis"); if(editActiveBetsThesis) editActiveBetsThesis.onclick=openActiveBets;
       $("#editEvent").onclick=openEvent;
+      $$("[data-exposure-stage]").forEach(b=>b.onclick=()=>{ state.exposureStage = exposureStageValue(b.dataset.exposureStage); save(); render(); });
       $$("[data-tab]").forEach(b=>b.onclick=()=>{ if(!isAdminMode() && b.dataset.tab !== "portfolio") return; state.detailTab=b.dataset.tab;render();});
       $$("[data-clip]").forEach(b=>b.onclick=()=>{ const index=Number(b.dataset.clip); state.clipIndex=state.clipIndex===index ? null : index; render(); });
       wireAmericanOddsInputs();
@@ -3878,6 +3927,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       return normalizeParlay({
         ...existing,
         id,
+        book:normalizeBook(row.querySelector('[data-field="book"]').value),
         notes:row.querySelector('[data-field="notes"]').value,
         stage:normalizeBetStage(row.querySelector('[data-field="stage"]').value),
         risk:parseCurrencyAmount(row.querySelector('[data-field="risk"]').value),
@@ -3896,11 +3946,11 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
         const input = row.querySelector('[data-field="legMarket"]');
         const parsed = commit ? commitAmericanOddsInput(input) : parseAmericanOdds(input?.value);
         const market = parsed === null ? "-" : parsed;
-        return {fightId:Number(row.dataset.fightId),notes:row.querySelector('[data-field="legNotes"]')?.value.trim() || "",market};
+        return {fightId:Number(row.dataset.fightId),book:normalizeBook(row.querySelector('[data-field="legBook"]')?.value),notes:row.querySelector('[data-field="legNotes"]')?.value.trim() || "",market};
       }).filter(leg=>activeFightIds.has(leg.fightId));
     }
     function parlayLegRowHtml(f, leg={}){
-      return `<tr data-parlay-leg-row data-fight-id="${f.id}"><td class="fightCell" data-label="Fight">${esc(fightOptionText(f))}</td><td class="betCell" data-label="Leg Description"><input data-field="legNotes" value="${esc(leg.notes || "")}" /></td><td class="numCell" data-label="Leg Odds"><input data-field="legMarket" type="text" inputmode="numeric" data-american-odds value="${esc(americanOddsDisplay(leg.market))}" /></td></tr>`;
+      return `<tr data-parlay-leg-row data-fight-id="${f.id}"><td class="numCell" data-label="Book"><select data-field="legBook">${sportsbookOptions(leg.book)}</select></td><td class="fightCell" data-label="Fight">${esc(fightOptionText(f))}</td><td class="betCell" data-label="Leg Description"><input data-field="legNotes" value="${esc(leg.notes || "")}" /></td><td class="numCell" data-label="Leg Odds"><input data-field="legMarket" type="text" inputmode="numeric" data-american-odds value="${esc(americanOddsDisplay(leg.market))}" /></td></tr>`;
     }
     function renderParlayLegRows(selectedIds=[], existingLegs=[]){
       const byFight = new Map(existingLegs.map(leg=>[Number(leg.fightId), leg]));
@@ -3908,7 +3958,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
         const f = fights.find(x=>Number(x.id)===id);
         return f ? parlayLegRowHtml(f, byFight.get(id) || {fightId:id,notes:"",market:"-"}) : "";
       }).join("");
-      $("#parlayLegRows").innerHTML = rows || '<tr class="parlayLegEmpty"><td colspan="3">Select fights to build parlay legs.</td></tr>';
+      $("#parlayLegRows").innerHTML = rows || '<tr class="parlayLegEmpty"><td colspan="4">Select fights to build parlay legs.</td></tr>';
       wireAmericanOddsInputs();
     }
     function wireParlayFightChecks(){
@@ -3918,11 +3968,12 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       if(!requireAdmin()) return;
       const draft = refreshPortfolioDraftFromDom();
       const existing = id ? (parlayDraftFromRow(id) || draft.parlays.find(p=>p.id===id)) : null;
-      const parlay = normalizeParlay(existing || {id:parlayId(),fightIds:[],notes:"",risk:0,market:"-",resultStatus:"active"});
+      const parlay = normalizeParlay(existing || {id:parlayId(),fightIds:[],book:"",notes:"",risk:0,market:"-",resultStatus:"active"});
       state.editingParlayId = parlay.id;
       renderParlayFightChecks(parlay.fightIds);
       renderParlayLegRows(parlay.fightIds, parlay.legs);
       $("#parlayDescription").value = parlay.notes;
+      $("#parlayBook").innerHTML = sportsbookOptions(parlay.book);
       $("#parlayStage").innerHTML = betStageOptions(parlay.stage);
       $("#parlayRisk").value = currencyInputDisplay(parlay.risk);
       $("#parlayOdds").value = americanOddsDisplay(parlay.market);
@@ -3937,7 +3988,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     function openFight(){ if(!requireAdmin()) return; const f=fights.find(x=>x.id===state.selected); normalizeTags(); $("#fightTitle").textContent=`${f.fighterA} vs ${f.fighterB}`; $("#fighterA").value=f.fighterA||""; $("#fighterB").value=f.fighterB||""; renderFightTagPills(f.tagIds); $("#fightModal").classList.add("open"); }
     function openEvent(){ if(!requireAdmin()) return; eventMeta=normalizeEventMeta(eventMeta); $("#eventName").value=eventMeta.name||""; $("#eventHeadlineInput").value=eventMeta.headline||""; $("#eventDay").value=eventMeta.day||""; $("#eventLocation").value=eventMeta.location||""; $("#eventModal").classList.add("open"); }
     function openAnalystReads(){ if(!requireAdmin()) return; const f=fights.find(x=>x.id===state.selected); $("#analystTitle").textContent=`Analyst Research | ${f.fighterA} vs ${f.fighterB}`; renderAnalystRows(f); $("#analystModal").classList.add("open"); }
-    function openTags(){ if(!requireAdmin()) return; normalizeTags(); renderTagRows(); $("#tagModal").classList.add("open"); }
+    function openTags(){ if(!requireAdmin()) return; normalizeTags(); sportsbooks = normalizeSportsbooks(sportsbooks); renderSettings(); $("#tagModal").classList.add("open"); }
     const eventJsonSlug = value => String(value || "ufc-event").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,90) || "ufc-event";
     function safeScriptJson(value){ return JSON.stringify(value, null, 2).replace(/</g,"\\u003c").replace(new RegExp("\\u2028","g"),"\\u2028").replace(new RegExp("\\u2029","g"),"\\u2029"); }
     function eventDataPayload(includeExportTimestamp=false){
@@ -3948,8 +3999,9 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
         agentUpdate:normalizeAgentUpdate($("#agentUpdate")?.textContent || ""),
         fights:cloneData(fights),
         tags:cloneData(tags),
+        sportsbooks:cloneData(normalizeSportsbooks(sportsbooks)),
         parlays:cloneData(parlays.map(p=>normalizeParlay(p))),
-        uiState:{selectedFightId:state.selected,detailTab:state.detailTab,clipIndex:state.clipIndex,analystReadOpen:cloneData(state.analystReadOpen || {})}
+        uiState:{selectedFightId:state.selected,detailTab:state.detailTab,clipIndex:state.clipIndex,exposureStage:normalizeBetStage(state.exposureStage),analystReadOpen:cloneData(state.analystReadOpen || {})}
       };
       if(includeExportTimestamp) payload.exportedAt = new Date().toISOString();
       return payload;
@@ -4015,15 +4067,16 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     $("#addPortfolioRow").onclick=()=>{ if(!requireAdmin()) return; const draft=refreshPortfolioDraftFromDom(); const stage=portfolioTabActive("live") && !portfolioTabActive("prefight") ? "live" : "prefight"; setPortfolioTabActive(stage, true); setPortfolioStatusFilterActive("active", true); draft.straights.push({fightId:state.selected,notes:"",stage,risk:0,market:null,result:0,resultStatus:"active"}); renderPortfolioRows(draft); };
     $("#addParlayRow").onclick=()=>{ if(!requireAdmin()) return; refreshPortfolioDraftFromDom(); setPortfolioTabActive("parlay", true); openParlayBuilder(); };
     $("#addActiveBetRow").onclick=()=>{ if(!requireAdmin()) return; if($("#activeBetRows .small")) $("#activeBetRows").innerHTML=""; $("#activeBetRows").insertAdjacentHTML("beforeend", activeBetRowHtml({})); wireActiveBetDeletes(); wireAmericanOddsInputs(); wireCurrencyInputs(); };
-    $("#addTagRow").onclick=()=>{ if(!requireAdmin()) return; const manualEmpty = $("#tagRows [data-manual-empty]"); if(manualEmpty) manualEmpty.remove(); const autoHeader = $("#tagRows .tagSectionTitle"); const html = tagRowHtml({name:"",color:"blue"}); if(autoHeader) autoHeader.insertAdjacentHTML("beforebegin", html); else $("#tagRows").insertAdjacentHTML("beforeend", html); wireTagRows(); };
+$("#addTagRow").onclick=()=>{ if(!requireAdmin()) return; state.settingsTab = "tags"; renderSettingsTabs(); const manualEmpty = $("#tagRows [data-manual-empty]"); if(manualEmpty) manualEmpty.remove(); const autoHeader = $("#tagRows .tagSectionTitle"); const html = tagRowHtml({name:"",color:"blue"}); if(autoHeader) autoHeader.insertAdjacentHTML("beforebegin", html); else $("#tagRows").insertAdjacentHTML("beforeend", html); wireTagRows(); };
+$("#addSportsbookRow").onclick=()=>{ if(!requireAdmin()) return; state.settingsTab = "sportsbooks"; renderSettingsTabs(); const empty = $("#sportsbookRows [data-sportsbook-empty]"); if(empty) empty.remove(); $("#sportsbookRows").insertAdjacentHTML("beforeend", sportsbookRowHtml("")); wireSportsbookRows(); const inputs = $$("#sportsbookRows [data-sportsbook-field]"); inputs[inputs.length - 1]?.focus(); };
 $("#betForm").onsubmit=e=>{e.preventDefault(); if(!requireAdmin()) return; const draft=refreshPortfolioDraftFromDom(); const invalidStraight=draft.straights.some(p=>Number.isNaN(p.market)); const invalidParlay=draft.parlays.map(normalizeParlay).some(p=>Number.isNaN(p.market) || p.legs.some(leg=>Number.isNaN(leg.market))); if(invalidStraight || invalidParlay){ alert("Odds must use American odds format, like +105 or -120."); return; } const entries=draft.straights.filter(p=>p.notes||p.risk||hasMarketValue(p.market)); fights.forEach(f=>f.portfolio=[]); entries.forEach(p=>{ const f=fights.find(x=>x.id===p.fightId); if(f) f.portfolio.push({notes:p.notes,stage:p.stage,risk:p.risk,market:p.market,result:p.result,resultStatus:p.resultStatus}); }); parlays=draft.parlays.map(normalizeParlay).filter(parlayHasContent); fights.forEach(refreshFightMeta); save(); saveParlays(); $("#betModal").classList.remove("open"); render();};
-$("#parlayForm").onsubmit=e=>{e.preventDefault(); if(!requireAdmin()) return; const market=commitAmericanOddsInput($("#parlayOdds")); const legs=readParlayLegRows(true); if(legs.length<2){ alert("Select at least two fights to build a parlay."); return; } if(!Number.isFinite(market)){ alert("Enter valid total parlay odds, like +250 or -120."); return; } if(legs.some(leg=>Number.isNaN(leg.market))){ alert("Leg Odds can be blank, or must use American odds format like +105 or -120."); return; } const draft=refreshPortfolioDraftFromDom(); const next=normalizeParlay({id:state.editingParlayId || parlayId(),legs,fightIds:legs.map(leg=>leg.fightId),notes:$("#parlayDescription").value.trim(),stage:$("#parlayStage").value,risk:parseCurrencyAmount($("#parlayRisk").value),market,resultStatus:$("#parlayResult").value}); const index=draft.parlays.findIndex(p=>p.id===next.id); if(index>=0) draft.parlays[index]=next; else draft.parlays.push(next); setPortfolioTabActive("parlay", true); setPortfolioStatusFilterActive(portfolioStatusGroup(next.resultStatus), true); renderPortfolioRows(draft); $("#parlayModal").classList.remove("open"); $("#betModal").classList.add("open");};
+$("#parlayForm").onsubmit=e=>{e.preventDefault(); if(!requireAdmin()) return; const market=commitAmericanOddsInput($("#parlayOdds")); const legs=readParlayLegRows(true); if(legs.length<2){ alert("Select at least two fights to build a parlay."); return; } if(!Number.isFinite(market)){ alert("Enter valid total parlay odds, like +250 or -120."); return; } if(legs.some(leg=>Number.isNaN(leg.market))){ alert("Leg Odds can be blank, or must use American odds format like +105 or -120."); return; } const draft=refreshPortfolioDraftFromDom(); const next=normalizeParlay({id:state.editingParlayId || parlayId(),legs,fightIds:legs.map(leg=>leg.fightId),book:normalizeBook($("#parlayBook").value),notes:$("#parlayDescription").value.trim(),stage:$("#parlayStage").value,risk:parseCurrencyAmount($("#parlayRisk").value),market,resultStatus:$("#parlayResult").value}); const index=draft.parlays.findIndex(p=>p.id===next.id); if(index>=0) draft.parlays[index]=next; else draft.parlays.push(next); setPortfolioTabActive("parlay", true); setPortfolioStatusFilterActive(portfolioStatusGroup(next.resultStatus), true); renderPortfolioRows(draft); $("#parlayModal").classList.remove("open"); $("#betModal").classList.add("open");};
     $("#oddsForm").onsubmit=e=>{e.preventDefault(); if(!requireAdmin()) return; const f=fights.find(x=>x.id===state.editingOdds.id), arr=state.editingOdds.side==="A"?f.fighterAOdds:f.fighterBOdds; const odds=commitAmericanOddsInput($("#oddsValue")); if(Number.isNaN(odds)){ alert("Odds must use American odds format, like +105 or -120."); return; } arr[state.editingOdds.index]=odds===null?"-":odds; save(); $("#oddsModal").classList.remove("open"); render();};
     $("#fightForm").onsubmit=e=>{e.preventDefault(); if(!requireAdmin()) return; const f=fights.find(x=>x.id===state.selected); f.fighterA=$("#fighterA").value.trim(); f.fighterB=$("#fighterB").value.trim(); f.tagIds=selectedFightTagIds(); save(); $("#fightModal").classList.remove("open"); render();};
 $("#activeBetForm").onsubmit=e=>{e.preventDefault(); if(!requireAdmin()) return; const f=fights.find(x=>x.id===state.selected); const rows=[]; let valid=true; $$("[data-active-bet-row]").forEach(row=>{ const notes=row.querySelector('[data-field="notes"]').value.trim(); const stage=normalizeBetStage(row.querySelector('[data-field="stage"]').value); const risk=parseCurrencyAmount(row.querySelector('[data-field="risk"]').value); const market=commitAmericanOddsInput(row.querySelector('[data-field="market"]')); const resultStatus=normalizeBetResultStatus(row.querySelector('[data-field="resultStatus"]').value); if(Number.isNaN(market)){valid=false; return;} if(notes||risk||market) rows.push({notes,stage,risk,market,result:betResultValue(risk,market,resultStatus),resultStatus}); }); if(!valid){ alert("Odds must use American odds format, like +105 or -120."); return; } f.betSummary=$("#activeFightThesis").value.trim(); f.portfolio=rows; refreshFightMeta(f); save(); $("#activeBetModal").classList.remove("open"); render();};
     const analystForm = $("#analystForm"); if(analystForm) analystForm.onsubmit=e=>{e.preventDefault(); if(!requireAdmin()) return; const f=fights.find(x=>x.id===state.selected); f.analystReads=$$("[data-analyst-row]").map((row,i)=>({name:analystReadLabel(i), summary:row.querySelector('[data-field="summary"]').value.trim(), notes:row.querySelector('[data-field="notes"]').value.trim()})); state.analystReadOpen[f.id]=[]; save(); $("#analystModal").classList.remove("open"); render();};
     $("#eventForm").onsubmit=e=>{e.preventDefault(); if(!requireAdmin()) return; eventMeta=normalizeEventMeta({...eventMeta,name:$("#eventName").value.trim(),headline:$("#eventHeadlineInput").value.trim(),day:$("#eventDay").value.trim(),location:$("#eventLocation").value.trim()}); saveEvent(); $("#eventModal").classList.remove("open"); render();};
-    $("#tagForm").onsubmit=e=>{e.preventDefault(); if(!requireAdmin()) return; const manual=[]; $$("[data-tag-row]:not([data-auto-tag])").forEach(row=>{ const name=row.querySelector('[data-tag-field="name"]').value.trim(); const color=row.querySelector('[data-tag-field="color"]').value; if(name) manual.push({id:row.dataset.tagId || tagId(), name, color:normalizeTagColor(color), logic:""}); }); const auto=tags.filter(t=>t.logic); tags=[...manual, ...auto].map(normalizeTag); const manualIds=new Set(tags.filter(t=>!t.logic).map(t=>t.id)); fights.forEach(f=>{ f.tagIds=(Array.isArray(f.tagIds)?f.tagIds:[]).filter(id=>manualIds.has(id)); }); saveTags(); save(); $("#tagModal").classList.remove("open"); render(); };
+$("#tagForm").onsubmit=e=>{e.preventDefault(); if(!requireAdmin()) return; const manual=[]; $$("[data-tag-row]:not([data-auto-tag])").forEach(row=>{ const name=row.querySelector('[data-tag-field="name"]').value.trim(); const color=row.querySelector('[data-tag-field="color"]').value; if(name) manual.push({id:row.dataset.tagId || tagId(), name, color:normalizeTagColor(color), logic:""}); }); const auto=tags.filter(t=>t.logic); tags=[...manual, ...auto].map(normalizeTag); sportsbooks=collectSportsbooks(); const manualIds=new Set(tags.filter(t=>!t.logic).map(t=>t.id)); fights.forEach(f=>{ f.tagIds=(Array.isArray(f.tagIds)?f.tagIds:[]).filter(id=>manualIds.has(id)); }); saveTags(); saveSportsbooks(); save(); $("#tagModal").classList.remove("open"); render(); };
     function cloneData(value){ return JSON.parse(JSON.stringify(value)); }
     const defaultTagState = () => defaultTags.map(({id,name,color,logic})=>({id,name,color,logic:logic || ""}));
     function closeOpenModals(){ $$(".modal.open").forEach(m=>m.classList.remove("open")); }
