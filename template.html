@@ -833,6 +833,7 @@
     const analystReadsForLocalState = f => Array.isArray(f.analystReads) ? analystHeaderLabels.map((_,i)=>normalizeAnalystRead(f.analystReads[i], i)) : [];
     const localFightStateRows = () => fights.map(f=>({
       id:Number(f.id),
+      completedAt:String(f.completedAt || ""),
       betSummary:String(f.betSummary || ""),
       portfolio:Array.isArray(f.portfolio) ? cloneData(f.portfolio) : [],
       analystReads:analystReadsForLocalState(f)
@@ -846,7 +847,7 @@
         savedAt:new Date().toISOString(),
         fights:localFightStateRows(),
         parlays:parlays.map(normalizeParlay).filter(localParlayHasContent),
-        uiState:{selectedFightId:state.selected,detailTab:state.detailTab,clipIndex:state.clipIndex,exposureStage:normalizeBetStage(state.exposureStage),analystReadOpen:cloneData(state.analystReadOpen || {}),portfolioTabs:cloneData(state.portfolioTabs || []),portfolioStatusFilters:cloneData(state.portfolioStatusFilters || [])}
+        uiState:{detailTab:state.detailTab,clipIndex:state.clipIndex,exposureStage:normalizeBetStage(state.exposureStage),analystReadOpen:cloneData(state.analystReadOpen || {}),portfolioTabs:cloneData(state.portfolioTabs || []),portfolioStatusFilters:cloneData(state.portfolioStatusFilters || [])}
       };
       if(includeExportTimestamp) payload.exportedAt = new Date().toISOString();
       return payload;
@@ -859,6 +860,7 @@
         savedAt:payload?.savedAt || payload?.exportedAt || "",
         fights:(Array.isArray(payload?.fights) ? payload.fights : []).map(f=>({
           id:Number(f.id),
+          completedAt:String(f.completedAt || ""),
           betSummary:String(f.betSummary || ""),
           portfolio:Array.isArray(f.portfolio) ? cloneData(f.portfolio) : [],
           analystReads:Array.isArray(f.analystReads) ? cloneData(f.analystReads) : []
@@ -895,7 +897,6 @@
       fights = Array.isArray(payload.fights) ? hydrateFightList(pruneFightList(cloneData(payload.fights))) : fights;
       parlays = Array.isArray(payload.parlays) ? cloneData(payload.parlays) : parlays;
       if(payload.uiState && typeof payload.uiState === "object"){
-        state.selected = Number(payload.uiState.selectedFightId) || state.selected;
         state.detailTab = payload.uiState.detailTab || state.detailTab;
         state.clipIndex = Number(payload.uiState.clipIndex) || 0;
         state.exposureStage = normalizeBetStage(payload.uiState.exposureStage || state.exposureStage);
@@ -911,12 +912,22 @@
     }
     function applyLocalStatePayload(payload){
       if(!payload) return false;
+      applyLocalScheduleState(payload);
       applyLocalPortfolioState(payload);
       applyLocalResearchState(payload);
       applyLocalUiState(payload);
       return true;
     }
     const localFightRowsById = payload => new Map((Array.isArray(payload?.fights) ? payload.fights : []).map(row=>[Number(row.id), row]));
+    function applyLocalScheduleState(payload){
+      const localByFight = localFightRowsById(payload);
+      fights.forEach(f=>{
+        const row = localByFight.get(Number(f.id));
+        f.completedAt = row ? String(row.completedAt || "") : "";
+        normalizeFight(f);
+      });
+      sortFightList(fights);
+    }
     function applyLocalPortfolioState(payload){
       const localByFight = localFightRowsById(payload);
       fights.forEach(f=>{
@@ -940,7 +951,6 @@
     }
     function applyLocalUiState(payload){
       if(payload.uiState && typeof payload.uiState === "object"){
-        state.selected = Number(payload.uiState.selectedFightId) || state.selected;
         state.detailTab = payload.uiState.detailTab || state.detailTab;
         state.clipIndex = Number(payload.uiState.clipIndex) || 0;
         state.exposureStage = normalizeBetStage(payload.uiState.exposureStage || state.exposureStage);
@@ -1674,7 +1684,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
       if(!completed && Number(state.selected) === Number(id)){
         state.selected = defaultActiveFight(fights.filter(x=>Number(x.id)!==Number(id)))?.id || null;
       }
-      save();
+      persistLocalEventData();
       render();
     }
         function applyPortfolioModalMode(){
@@ -1759,15 +1769,19 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     function safeScriptJson(value){ return JSON.stringify(value, null, 2).replace(/</g,"\\u003c").replace(new RegExp("\\u2028","g"),"\\u2028").replace(new RegExp("\\u2029","g"),"\\u2029"); }
     function eventDataPayload(includeExportTimestamp=false){
       fights.forEach(refreshFightMeta);
+      const eventFights = cloneData(fights).map(f=>{
+        delete f.completedAt;
+        return f;
+      });
       const payload = {
         schema:"ufc-event-portfolio-event-v1",
         eventMeta:normalizeEventMeta(eventMeta),
         agentUpdate:normalizeAgentUpdate($("#agentUpdate")?.textContent || ""),
-        fights:cloneData(fights),
+        fights:eventFights,
         tags:cloneData(tags),
         sportsbooks:cloneData(normalizeSportsbooks(sportsbooks)),
         parlays:cloneData(parlays.map(p=>normalizeParlay(p))),
-        uiState:{selectedFightId:state.selected,detailTab:state.detailTab,clipIndex:state.clipIndex,exposureStage:normalizeBetStage(state.exposureStage),analystReadOpen:cloneData(state.analystReadOpen || {})}
+        uiState:{detailTab:state.detailTab,clipIndex:state.clipIndex,exposureStage:normalizeBetStage(state.exposureStage),analystReadOpen:cloneData(state.analystReadOpen || {})}
       };
       if(includeExportTimestamp) payload.exportedAt = new Date().toISOString();
       return payload;
