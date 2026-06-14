@@ -3239,7 +3239,7 @@ function cardPills(f){
   return `${betTable}<div class="chips cardPills">${tagHtml}</div>`;
 }
 function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">No Exposure</div>'; }
-    const activeBetTableHtml = (rows, label="Exposure") => rows ? `<table class="activeBetTable" aria-label="${esc(label)}"><thead><tr><th class="activeBetTypeCol" aria-label="Type"></th><th>Bet</th><th class="activeBetRiskCol">Risk</th><th class="activeBetOddsCol">Odds</th></tr></thead><tbody>${rows}</tbody></table>` : "";
+    const activeBetTableHtml = (rows, label="Exposure", betHeader="Bet") => rows ? `<table class="activeBetTable" aria-label="${esc(label)}"><thead><tr><th class="activeBetTypeCol" aria-label="Type"></th><th>${esc(betHeader)}</th><th class="activeBetRiskCol">Risk</th><th class="activeBetOddsCol">Odds</th></tr></thead><tbody>${rows}</tbody></table>` : "";
     const straightExposureRows = f => (f.portfolio || []).filter(p=>p.notes || p.risk || p.market || p.result).map(p=>`<tr class="${betStatusClass(p.resultStatus)}"><td class="activeBetTypeCol">${betStageLabel(p.stage)}</td><td>${esc(p.notes || "-")}</td><td class="activeBetNum activeBetRiskCol">${money(p.risk)}</td><td class="activeBetNum activeBetOddsCol">${marketText(p.market)}</td></tr>`).join("");
     const parlayLegExposureRows = f => parlayLegsForFight(f).map(({parlay,leg})=>`<tr class="${betStatusClass(parlay.resultStatus)} parlayLegRow"><td class="activeBetTypeCol">${betStageLabel(parlay.stage)}</td><td>${esc(leg.notes || parlay.notes || "Parlay Leg")}</td><td class="activeBetNum activeBetRiskCol">${money(parlay.risk)}</td><td class="activeBetNum activeBetOddsCol">${marketText(leg.market)}</td></tr>`).join("");
     function activeBetTable(f){
@@ -3249,7 +3249,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     const namedNoneBox = text => `<div class="noneBox">${esc(text)}</div>`;
     const activeBetsBlock = f => {
       const straightTable = activeBetTableHtml(straightExposureRows(f), "Straight Exposure");
-      const parlayLegTable = activeBetTableHtml(parlayLegExposureRows(f), "Parlay Leg Exposure");
+      const parlayLegTable = activeBetTableHtml(parlayLegExposureRows(f), "Parlay Leg Exposure", "Parlay Leg");
       return straightTable || parlayLegTable ? `<div class="activeExposureStack">${straightTable}${parlayLegTable ? `<div class="activeParlayLegBlock">${parlayLegTable}</div>` : ""}</div>` : namedNoneBox("No Exposure");
     };
     const tagsStrip = f => {
