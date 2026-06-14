@@ -3507,7 +3507,7 @@
           const f = fights.find(x => Number(x.id) === Number(bet.fightId));
           if(!f) return;
           f.portfolio = Array.isArray(f.portfolio) ? f.portfolio : [];
-          f.portfolio.push({notes:bet.notes,stage:bet.stage,risk:bet.risk,market:bet.market,result:bet.result,resultStatus:bet.resultStatus});
+          f.portfolio.push({book:normalizeBook(bet.book),notes:bet.notes,stage:bet.stage,risk:bet.risk,market:bet.market,result:bet.result,resultStatus:bet.resultStatus});
         });
       }
     }
@@ -3915,6 +3915,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     function collectPortfolioDraft(){
       const straights = $$("[data-portfolio-row]").map(row => ({
         fightId:Number(row.querySelector('[data-field="fightId"]').value),
+        book:normalizeBook(row.querySelector('[data-field="book"]')?.value),
         notes:row.querySelector('[data-field="notes"]').value.trim(),
         stage:normalizeBetStage(row.querySelector('[data-field="stage"]').value),
         risk:parseCurrencyAmount(row.querySelector('[data-field="risk"]').value),
@@ -3929,6 +3930,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
         return {
           ...existing,
           id,
+          book:normalizeBook(row.querySelector('[data-field="book"]')?.value),
           notes:row.querySelector('[data-field="notes"]').value.trim(),
           stage:normalizeBetStage(row.querySelector('[data-field="stage"]').value),
           risk:parseCurrencyAmount(row.querySelector('[data-field="risk"]').value),
