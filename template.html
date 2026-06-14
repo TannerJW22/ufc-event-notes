@@ -97,7 +97,7 @@
     .kpi b{font-size:21px;line-height:.9}
     .topControls{order:-1;gap:6px;margin:0;grid-template-columns:34px 34px 34px minmax(86px,1fr) minmax(110px,1.2fr) 34px}
     .topAction{min-height:32px;padding:0 8px;font-size:12px}
-    .githubAction{position:relative;background:#2a2a26;border-color:#46453e;color:#a7a196}.githubAction:hover{background:#363630;border-color:#6b695f;color:#fff}.githubAction.dirty{background:#3a1519;border-color:rgba(224,116,124,.9);color:#fff}.githubAction.dirty:hover{background:#582027;border-color:#e0747c}.githubAction svg{fill:currentColor;stroke:none!important}.dirtyBang{position:absolute;right:3px;top:2px;display:none;place-items:center;width:12px;height:12px;border-radius:999px;background:#e0747c;color:#fff;font-size:9px;font-weight:900;line-height:1}.githubAction.dirty .dirtyBang{display:grid}.copyBlock{width:100%;min-height:74px;border:1px solid var(--line);border-radius:8px;background:#11110f;color:var(--text);padding:12px;text-align:left;font-size:15px;line-height:1.35;font-weight:800;white-space:normal}
+    .githubAction{position:relative;background:#2a2a26;border-color:#46453e;color:#a7a196}.githubAction:hover{background:#363630;border-color:#6b695f;color:#fff}.githubAction.dirty{background:#3a1519;border-color:rgba(224,116,124,.9);color:#fff}.githubAction.dirty:hover{background:#582027;border-color:#e0747c}.githubAction svg{fill:currentColor;stroke:none!important}.dirtyBang{position:absolute;right:3px;top:2px;display:none;place-items:center;width:12px;height:12px;border-radius:999px;background:#e0747c;color:#fff;font-size:9px;font-weight:900;line-height:1}.githubAction.dirty .dirtyBang{display:grid}.copyBlock{width:100%;min-height:178px;max-height:310px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:#11110f;color:var(--text);padding:12px;text-align:left;font-size:15px;line-height:1.35;font-weight:800;white-space:pre-wrap}
     #betForm.portfolioDialog{height:min(760px,calc(100dvh - 24px))}#betForm .dialogBody{grid-template-rows:auto minmax(0,1fr)}#betForm .tableWrap{min-height:0}.portfolioTabBar{display:flex;gap:12px;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 10px;margin:0 0 -1px}.portfolioTabGroup,.portfolioStatusGroup{display:flex;gap:0;align-items:flex-end}.portfolioStatusGroup{margin-left:auto}.portfolioToggleTab{position:relative;top:1px;min-width:118px;min-height:38px;border:1px solid var(--line);border-bottom-color:var(--line);border-radius:7px 7px 0 0;background:#141411;color:var(--muted);padding:0 18px;font-weight:800;letter-spacing:.01em;overflow:hidden}.portfolioStatusGroup .portfolioToggleTab{min-width:106px}.portfolioToggleTab+.portfolioToggleTab{margin-left:-1px}.portfolioToggleTab::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(221,186,90,.19),rgba(221,186,90,.04));opacity:0;pointer-events:none}.portfolioToggleTab.active{border-color:rgba(221,186,90,.74);border-bottom-color:#161614;background:#161614;color:#d1b45c;box-shadow:inset 0 2px 0 rgba(221,186,90,.74)}.portfolioToggleTab.active::before{opacity:1}.portfolioToggleTab span{position:relative;z-index:1}
     select:not(.tagColorSelect){appearance:none;-webkit-appearance:none;padding-right:30px!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F4F1EA' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 10px center!important;background-size:15px 15px!important}
     @media(max-width:620px){.tagDialog .tagRows{grid-template-columns:1fr}.tagPillEditor{grid-template-columns:72px minmax(0,1fr) 52px;min-height:50px}.tagNameInput{font-size:15px!important}}
@@ -223,7 +223,7 @@
       <div class="dialogHead"><h2 id="githubHandoffTitle">GitHub Handoff</h2><button type="button" class="closeIcon" data-github-handoff-close title="Close" aria-label="Close"></button></div>
       <div class="dialogBody">
         <div class="small">Copy this prompt into Codex when local edits should be pushed to GitHub.</div>
-        <button type="button" class="copyBlock" id="githubHandoffPrompt">I made changes to UFC Event Cards. Push all Chrome local storage data to Github.</button>
+        <button type="button" class="copyBlock" id="githubHandoffPrompt">UFC Event Portfolio local-save handoff.</button>
         <div class="status" id="githubHandoffStatus"></div>
       </div>
       <div class="dialogActions"><button type="button" class="action" data-github-handoff-close>Cancel</button><button type="button" class="action primary" id="copyGithubHandoff">Copy Text</button></div>
@@ -326,7 +326,30 @@
     const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
     const ADMIN_STORAGE_KEY = "ufcEventPortfolioAdminUnlocked";
     const LOCAL_EVENT_STORAGE_PREFIX = "ufcEventPortfolioLocalData:";
-    const GITHUB_HANDOFF_PROMPT = "I made changes to UFC Event Cards. Push all Chrome local storage data to Github.";
+    const GITHUB_HANDOFF_PROMPT = [
+      "UFC Event Portfolio local-save handoff.",
+      "",
+      "Objective: sync any unsaved WarBoard edits from the user's personal Chrome profile into the static GitHub event pages, then push the result.",
+      "",
+      "Source of truth:",
+      "- Live site: https://tannerjw22.github.io/ufc-event-portfolio/",
+      "- GitHub repo: https://github.com/TannerJW22/ufc-event-portfolio.git",
+      "- Local AgentX mirror: C:\\Users\\tanne\\OneDrive\\TWCE AgentX\\.agentx\\.metadata\\.automations\\ufc-event-portfolio\\github",
+      "- Event pages: events/*.html",
+      "- Event payload element: script[type=\"application/json\"]#eventDataStore",
+      "- Browser local data key prefix used by the app: ufcEventPortfolioLocalData:",
+      "",
+      "Required workflow:",
+      "1. Use the user's personal Chrome profile. Do not use a standalone automation browser profile or the in-app browser because those may not contain the user's local WarBoard edits.",
+      "2. For every event page in the repo under events/*.html, open the matching live URL in Chrome, for example https://tannerjw22.github.io/ufc-event-portfolio/events/14-Jun-2026.html.",
+      "3. Wait for the page to hydrate. Read document.querySelector('#eventDataStore').textContent from the loaded page. This hydrated DOM payload is the app-approved source for local unsaved edits.",
+      "4. Compare that JSON payload to the embedded #eventDataStore JSON in the matching repo HTML file. If they differ, replace only the JSON text inside that script tag. Preserve all HTML, CSS, and JS outside #eventDataStore.",
+      "5. Do not edit Markdown, docs, unrelated pages, or template logic unless the user explicitly asks.",
+      "6. Validate each changed payload has schema ufc-event-portfolio-event-v1. Run JavaScript syntax validation on changed HTML and run git diff --check.",
+      "7. Commit the changed event HTML files and push to origin main.",
+      "8. Copy the changed files back into the local AgentX mirror path above so local files match GitHub.",
+      "9. Report the commit hash and a payload summary for each updated event: event name, fight count, parlay count, and portfolio bet count."
+    ].join("\\n");
     let adminModeFallback = false;
     let bootstrapping = true;
     let embeddedBaselineSignature = "";
@@ -443,7 +466,7 @@
     };
     const normalizeAgentUpdate = value => {
       const prefix = "Last Agent Update:";
-      const raw = String(value || "").replace(/\s+\|\s*Source:.*$/i,"").replace(/\s+-\d{2}:\d{2}\b/,"").replace(prefix,"").trim();
+      const raw = String(value || "").replace(/\s+\|\s*Source:.*$/i,"").replace(/\s+-\d{2}:\d{2}\b/,"").replace(/\s*@\s*[a-z ]*rebuild\b/i,"").replace(prefix,"").trim();
       const existing = raw.match(/^([A-Za-z]+)\s*@\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*([ap])\.?m\.?$/i);
       if(existing) return `${prefix} ${existing[1]} @ ${Number(existing[2])}:${existing[3]}${existing[4].toLowerCase()}m`;
       const stamped = raw.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{1,2}):(\d{2})(?::\d{2})?\s*([ap])\.?m\.?$/i);
