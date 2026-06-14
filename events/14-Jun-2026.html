@@ -1236,13 +1236,13 @@
   }
 };
     const chronologicalFightIds = [
-  1,
-  2,
-  3,
-  4,
-  5,
+  7,
   6,
-  7
+  5,
+  4,
+  3,
+  2,
+  1
 ];
     const activeFightIds = new Set(chronologicalFightIds);
     const pruneFightList = list => list.filter(f => activeFightIds.has(f.id));
@@ -3316,7 +3316,18 @@
     function visible(){ return sortFightList(pruneFightList(fights.filter(f => !state.search || blob(f).includes(state.search.toLowerCase())))); }
     const isFightCompleted = f => Boolean(String(f.completedAt || "").trim());
     const scheduleCompletedTime = f => Date.parse(f.completedAt) || Number.MAX_SAFE_INTEGER;
+    const fightClockMinutes = value => {
+      const match = String(value || "").trim().match(/^(\d{1,2})(?::(\d{2}))?\s*([ap])m\b/i);
+      if(!match) return null;
+      let hour = Number(match[1]);
+      const minute = Number(match[2] || 0);
+      if(match[3].toLowerCase() === "p" && hour !== 12) hour += 12;
+      if(match[3].toLowerCase() === "a" && hour === 12) hour = 0;
+      return hour * 60 + minute;
+    };
     const scheduleBaseIndex = f => {
+      const minutes = fightClockMinutes(f.time);
+      if(Number.isFinite(minutes)) return minutes;
       const index = chronologicalFightIds.indexOf(Number(f.id));
       return index === -1 ? 999 : index;
     };
