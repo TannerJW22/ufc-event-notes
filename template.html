@@ -1323,7 +1323,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
         result:betResultValue(row.querySelector('[data-field="risk"]').value, row.querySelector('[data-field="market"]').value, row.querySelector('[data-field="resultStatus"]').value),
         resultStatus:normalizeBetResultStatus(row.querySelector('[data-field="resultStatus"]').value)
       }));
-      const existingParlays = new Map([...(state.portfolioDraft?.parlays || []), ...parlays].map(p=>[String(p?.id || ""), normalizeParlay(p)]));
+      const existingParlays = new Map([...parlays, ...(state.portfolioDraft?.parlays || [])].map(p=>[String(p?.id || ""), normalizeParlay(p)]));
       const parlayDrafts = $$("[data-parlay-row]").map(row => {
         const id = row.dataset.parlayId || parlayId();
         const existing = existingParlays.get(String(id)) || normalizeParlay({id,fightIds:String(row.dataset.fightIds || "").split(",").map(Number).filter(Boolean)});
