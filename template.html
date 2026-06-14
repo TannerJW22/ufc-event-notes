@@ -232,12 +232,22 @@
     </form>
   </div>
   <div class="modal" id="sourceChoiceModal" role="dialog" aria-modal="true" aria-labelledby="sourceChoiceTitle">
-    <div class="dialog">
-      <div class="dialogHead"><h2 id="sourceChoiceTitle">State Source</h2></div>
-      <div class="dialogBody resetChoiceGrid">
-        <button type="button" class="resetChoice" id="useGithubState"><span class="resetChoiceTitle">Use GitHub</span><span class="resetChoiceCopy" id="sourceChoiceGithubSummary">Display the current GitHub build and replace this browser's local working state.</span></button>
-        <button type="button" class="resetChoice" id="useLocalState"><span class="resetChoiceTitle">Use Local Storage</span><span class="resetChoiceCopy" id="sourceChoiceLocalSummary">Apply this browser's saved portfolio and manual tag state to the current GitHub build.</span></button>
+    <div class="dialog sourceChoiceDialog">
+      <div class="dialogHead"><h2 id="sourceChoiceTitle">New Build Loaded</h2></div>
+      <div class="dialogBody sourceChoiceBody">
+        <p class="sourceChoiceIntro">Choose whether the Portfolio and Analyst Research values should come from the new GitHub build or from this browser's saved local storage. These choices are independent.</p>
+        <section class="sourceChoiceSection" aria-labelledby="portfolioSourceTitle">
+          <h3 id="portfolioSourceTitle">Portfolio</h3>
+          <label class="sourceOption"><input type="radio" name="portfolioSource" value="github" checked><span><strong>Use GitHub build</strong><small id="portfolioGithubStats">-</small></span></label>
+          <label class="sourceOption"><input type="radio" name="portfolioSource" value="local"><span><strong>Preserve local storage</strong><small id="portfolioLocalStats">-</small></span></label>
+        </section>
+        <section class="sourceChoiceSection" aria-labelledby="researchSourceTitle">
+          <h3 id="researchSourceTitle">Analyst Research</h3>
+          <label class="sourceOption"><input type="radio" name="researchSource" value="github" checked><span><strong>Use GitHub build</strong><small id="researchGithubStats">-</small></span></label>
+          <label class="sourceOption"><input type="radio" name="researchSource" value="local"><span><strong>Preserve local storage</strong><small id="researchLocalStats">-</small></span></label>
+        </section>
       </div>
+      <div class="dialogActions"><button type="button" class="action primary" id="applySourceChoice">Apply Choices</button></div>
     </div>
   </div>
   <script>
@@ -338,6 +348,7 @@
     const ADMIN_STORAGE_KEY = "ufcEventPortfolioAdminUnlocked";
     const LOCAL_EVENT_STORAGE_PREFIX = "ufcEventPortfolioLocalData:";
     const LOCAL_EVENT_STORAGE_SCHEMA = "ufc-event-portfolio-local-v2";
+    const LOCAL_SOURCE_LOGIC_VERSION = "portfolio-research-source-choice-v1";
     const GITHUB_HANDOFF_PROMPT = [
       "UFC Event Portfolio local-save handoff.",
       "",
@@ -481,7 +492,8 @@
     };
     const normalizeAgentUpdate = value => {
       const prefix = "Last Agent Update:";
-      const raw = String(value || "").replace(/\s+\|\s*Source:.*$/i,"").replace(/\s+-\d{2}:\d{2}\b/,"").replace(/\s*@\s*[a-z ]*rebuild\b/i,"").replace(prefix,"").trim();
+      const cleaned = String(value || "").split(/\r?\n/)[0].replace(/\s+\|\s*(?:Source|Build|Build Comment|Comment|Commit|Pushed):.*$/i,"").replace(/\s+\((?:build|commit|push)[^)]*\)\s*$/i,"").replace(/\s+-\d{2}:\d{2}\b/,"").replace(/\s*@\s*[a-z ]*rebuild\b/i,"");
+      const raw = cleaned.replace(prefix,"").trim();
       const existing = raw.match(/^([A-Za-z]+)\s*@\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*([ap])\.?m\.?$/i);
       if(existing) return `${prefix} ${existing[1]} @ ${Number(existing[2])}:${existing[3]}${existing[4].toLowerCase()}m`;
       const stamped = raw.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{1,2}):(\d{2})(?::\d{2})?\s*([ap])\.?m\.?$/i);
@@ -718,6 +730,10 @@
       delete normalized.exportedAt;
       return JSON.stringify(normalized);
     }
+    function sourceBaselineSignature(payload, logicVersion=LOCAL_SOURCE_LOGIC_VERSION){
+      const dataSignature = eventDataSignature(payload);
+      return dataSignature ? `${logicVersion}|${dataSignature}` : "";
+    }
     function localStateSignature(payload){
       if(!payload) return "";
       const normalized = cloneData(payload);
@@ -729,12 +745,12 @@
       const normalized = normalizeParlay(p);
       return normalized.notes || normalized.risk || hasMarketValue(normalized.market) || normalized.legs.some(leg=>leg.notes || hasMarketValue(leg.market));
     };
-    const manualTagsForLocalState = () => (Array.isArray(tags) ? tags : []).map(normalizeTag).filter(t=>t.name && !t.logic);
+    const analystReadsForLocalState = f => Array.isArray(f.analystReads) ? analystHeaderLabels.map((_,i)=>normalizeAnalystRead(f.analystReads[i], i)) : [];
     const localFightStateRows = () => fights.map(f=>({
       id:Number(f.id),
       betSummary:String(f.betSummary || ""),
       portfolio:Array.isArray(f.portfolio) ? cloneData(f.portfolio) : [],
-      tagIds:Array.isArray(f.tagIds) ? f.tagIds.map(String).filter(id => { const tag = tagById(id); return tag && !tag.logic; }) : []
+      analystReads:analystReadsForLocalState(f)
     }));
     function localStatePayload(includeExportTimestamp=false){
       fights.forEach(refreshFightMeta);
@@ -744,7 +760,6 @@
         sourceEvent:eventStorageId(),
         savedAt:new Date().toISOString(),
         fights:localFightStateRows(),
-        manualTags:manualTagsForLocalState(),
         parlays:parlays.map(normalizeParlay).filter(localParlayHasContent),
         uiState:{selectedFightId:state.selected,detailTab:state.detailTab,clipIndex:state.clipIndex,analystReadOpen:cloneData(state.analystReadOpen || {}),portfolioTabs:cloneData(state.portfolioTabs || []),portfolioStatusFilters:cloneData(state.portfolioStatusFilters || [])}
       };
@@ -761,9 +776,8 @@
           id:Number(f.id),
           betSummary:String(f.betSummary || ""),
           portfolio:Array.isArray(f.portfolio) ? cloneData(f.portfolio) : [],
-          tagIds:Array.isArray(f.tagIds) ? f.tagIds.map(String) : []
+          analystReads:Array.isArray(f.analystReads) ? cloneData(f.analystReads) : []
         })),
-        manualTags:(Array.isArray(payload?.manualTags) ? payload.manualTags : Array.isArray(payload?.tags) ? payload.tags : []).map(normalizeTag).filter(t=>t.name && !t.logic),
         parlays:Array.isArray(payload?.parlays) ? cloneData(payload.parlays) : [],
         uiState:payload?.uiState && typeof payload.uiState === "object" ? cloneData(payload.uiState) : {}
       };
@@ -804,21 +818,34 @@
     }
     function applyLocalStatePayload(payload){
       if(!payload) return false;
-      const localManualTags = (Array.isArray(payload.manualTags) ? payload.manualTags : []).map(normalizeTag).filter(t=>t.name && !t.logic);
-      const autoTags = (Array.isArray(tags) ? tags : []).map(normalizeTag).filter(t=>t.logic);
-      tags = [...localManualTags, ...autoTags];
-      normalizeTags();
-      syncAutoTagDefaults();
-      const manualTagIds = new Set(tags.filter(t=>!t.logic).map(t=>t.id));
-      const localByFight = new Map((Array.isArray(payload.fights) ? payload.fights : []).map(row=>[Number(row.id), row]));
+      applyLocalPortfolioState(payload);
+      applyLocalResearchState(payload);
+      applyLocalUiState(payload);
+      return true;
+    }
+    const localFightRowsById = payload => new Map((Array.isArray(payload?.fights) ? payload.fights : []).map(row=>[Number(row.id), row]));
+    function applyLocalPortfolioState(payload){
+      const localByFight = localFightRowsById(payload);
       fights.forEach(f=>{
         const row = localByFight.get(Number(f.id));
         f.betSummary = row ? String(row.betSummary || "") : "";
         f.portfolio = row && Array.isArray(row.portfolio) ? cloneData(row.portfolio) : [];
-        f.tagIds = row && Array.isArray(row.tagIds) ? row.tagIds.map(String).filter(id=>manualTagIds.has(id)) : [];
         normalizeFight(f);
       });
       parlays = Array.isArray(payload.parlays) ? cloneData(payload.parlays).map(normalizeParlay).filter(localParlayHasContent) : [];
+      normalizeParlays();
+      sortFightList(fights);
+    }
+    function applyLocalResearchState(payload){
+      const localByFight = new Map((Array.isArray(payload.fights) ? payload.fights : []).map(row=>[Number(row.id), row]));
+      fights.forEach(f=>{
+        const row = localByFight.get(Number(f.id));
+        f.analystReads = row && Array.isArray(row.analystReads) ? analystHeaderLabels.map((_,i)=>normalizeAnalystRead(row.analystReads[i], i)) : [];
+        normalizeFight(f);
+      });
+      sortFightList(fights);
+    }
+    function applyLocalUiState(payload){
       if(payload.uiState && typeof payload.uiState === "object"){
         state.selected = Number(payload.uiState.selectedFightId) || state.selected;
         state.detailTab = payload.uiState.detailTab || state.detailTab;
@@ -827,41 +854,45 @@
         state.portfolioTabs = Array.isArray(payload.uiState.portfolioTabs) ? cloneData(payload.uiState.portfolioTabs) : state.portfolioTabs;
         state.portfolioStatusFilters = Array.isArray(payload.uiState.portfolioStatusFilters) ? cloneData(payload.uiState.portfolioStatusFilters) : state.portfolioStatusFilters;
       }
-      normalizeParlays();
-      sortFightList(fights);
-      return true;
     }
     function applyEmbeddedEventData(){ return applyEventDataPayload(readEmbeddedEventData()); }
     function applyLocalEventData(){ return applyLocalStatePayload(readLocalEventData()); }
-    function sourceChoiceCounts(payload){
+    function sourceChoiceStats(payload){
       const rows = Array.isArray(payload?.fights) ? payload.fights : [];
+      const parlayRows = Array.isArray(payload?.parlays) ? payload.parlays.map(normalizeParlay).filter(localParlayHasContent) : [];
+      const researchRows = rows.map(row=>Array.isArray(row.analystReads) ? row.analystReads : []);
+      const researchNotes = researchRows.reduce((sum,reads)=>sum + reads.filter(read=>String(read?.summary || read?.notes || "").trim()).length, 0);
       return {
         straights:rows.reduce((sum,row)=>sum + (Array.isArray(row.portfolio) ? row.portfolio.length : 0), 0),
-        taggedFights:rows.filter(row=>Array.isArray(row.tagIds) && row.tagIds.length).length,
-        manualTags:(Array.isArray(payload?.manualTags) ? payload.manualTags : []).length,
-        parlays:Array.isArray(payload?.parlays) ? payload.parlays.length : 0
+        parlays:parlayRows.length,
+        parlayLegs:parlayRows.reduce((sum,parlay)=>sum + parlay.legs.length, 0),
+        theses:rows.filter(row=>String(row.betSummary || "").trim()).length,
+        researchNotes,
+        researchFights:rows.filter(row=>(Array.isArray(row.analystReads) ? row.analystReads : []).some(read=>String(read?.summary || read?.notes || "").trim())).length
       };
     }
+    const currentSourceChoicePayload = () => ({fights:cloneData(fights), parlays:cloneData(parlays.map(p=>normalizeParlay(p)))});
+    const sourceChoiceRadioValue = name => $(`input[name="${name}"]:checked`)?.value || "github";
+    const portfolioStatsText = stats => `${stats.straights + stats.parlays} bets (${stats.straights} straight, ${stats.parlays} parlays), ${stats.parlayLegs} parlay legs, ${stats.theses} theses`;
+    const researchStatsText = stats => `${stats.researchNotes} research notes across ${stats.researchFights} fights`;
+    const setSourceChoiceStats = (id, text) => { const node = $(id); if(node) node.textContent = text; };
     function openSourceChoiceModal(){
       if(!pendingSourceChoice) return;
-      const localCounts = sourceChoiceCounts(pendingSourceChoice.localPayload);
-      const githubSummary = $("#sourceChoiceGithubSummary");
-      const localSummary = $("#sourceChoiceLocalSummary");
-      if(githubSummary) githubSummary.textContent = `Use the current GitHub build now: ${fights.length} fights, current odds, current research, and current video sources.`;
-      if(localSummary) localSummary.textContent = `Apply saved local work: ${localCounts.straights} straight bets, ${localCounts.parlays} parlays, ${localCounts.manualTags} manual tags, and ${localCounts.taggedFights} tagged fights.`;
+      const githubStats = sourceChoiceStats(currentSourceChoicePayload());
+      const localStats = sourceChoiceStats(pendingSourceChoice.localPayload);
+      setSourceChoiceStats("#portfolioGithubStats", portfolioStatsText(githubStats));
+      setSourceChoiceStats("#portfolioLocalStats", portfolioStatsText(localStats));
+      setSourceChoiceStats("#researchGithubStats", researchStatsText(githubStats));
+      setSourceChoiceStats("#researchLocalStats", researchStatsText(localStats));
+      $$('input[name="portfolioSource"][value="github"],input[name="researchSource"][value="github"]').forEach(input=>{ input.checked = true; });
       $("#sourceChoiceModal")?.classList.add("open");
     }
     function closeSourceChoiceModal(){ $("#sourceChoiceModal")?.classList.remove("open"); }
-    function chooseGithubState(){
-      pendingSourceChoice = null;
-      persistLocalEventData();
-      closeSourceChoiceModal();
-      updateGithubHandoffState();
-    }
-    function chooseLocalState(){
+    function applySourceChoice(){
       const payload = pendingSourceChoice?.localPayload;
       pendingSourceChoice = null;
-      if(payload) applyLocalStatePayload(payload);
+      if(payload && sourceChoiceRadioValue("portfolioSource") === "local") applyLocalPortfolioState(payload);
+      if(payload && sourceChoiceRadioValue("researchSource") === "local") applyLocalResearchState(payload);
       render();
       syncEmbeddedEventData();
       persistLocalEventData();
@@ -882,7 +913,8 @@
         const match = html.match(/<script type="application\/json" id="eventDataStore">([\s\S]*?)<\/script>/);
         if(!match) return;
         const nextPayload = JSON.parse(match[1]);
-        const nextSignature = eventDataSignature(nextPayload);
+        const versionMatch = html.match(/const LOCAL_SOURCE_LOGIC_VERSION = "([^"]+)"/);
+        const nextSignature = sourceBaselineSignature(nextPayload, versionMatch ? versionMatch[1] : LOCAL_SOURCE_LOGIC_VERSION);
         if(nextSignature && nextSignature !== embeddedBaselineSignature) location.reload();
       }catch(error){
         console.warn("Unable to check for fresh GitHub build.", error);
@@ -933,7 +965,7 @@
     sortFightList(fights);
     normalizeParlays();
     const embeddedBaselinePayload = readEmbeddedEventData();
-    embeddedBaselineSignature = eventDataSignature(embeddedBaselinePayload);
+    embeddedBaselineSignature = sourceBaselineSignature(embeddedBaselinePayload);
     const localBaselinePayload = readLocalEventData();
     const hydratedFromEmbeddedData = applyEventDataPayload(embeddedBaselinePayload);
     const localNeedsSourceChoice = !!localBaselinePayload && hydratedFromEmbeddedData && !localSourceMatchesGithub(localBaselinePayload);
@@ -1626,8 +1658,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     $("#githubHandoffPrompt").onclick=copyGithubHandoffPrompt;
     $("#copyGithubHandoff").onclick=copyGithubHandoffPrompt;
     $("#githubHandoffForm").onsubmit=e=>e.preventDefault();
-    $("#useGithubState").onclick=chooseGithubState;
-    $("#useLocalState").onclick=chooseLocalState;
+    $("#applySourceChoice").onclick=applySourceChoice;
     $$(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m && m.id !== "sourceChoiceModal")m.classList.remove("open");}));
     $("#addPortfolioRow").onclick=()=>{ if(!requireAdmin()) return; const draft=refreshPortfolioDraftFromDom(); const stage=portfolioTabActive("live") && !portfolioTabActive("prefight") ? "live" : "prefight"; setPortfolioTabActive(stage, true); setPortfolioStatusFilterActive("active", true); draft.straights.push({fightId:state.selected,notes:"",stage,risk:0,market:null,result:0,resultStatus:"active"}); renderPortfolioRows(draft); };
     $("#addParlayRow").onclick=()=>{ if(!requireAdmin()) return; refreshPortfolioDraftFromDom(); setPortfolioTabActive("parlay", true); openParlayBuilder(); };
