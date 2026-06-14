@@ -114,6 +114,8 @@
     @media(max-width:820px){.app{width:calc(100% - 16px);padding-top:6px}.top{grid-template-columns:1fr;grid-template-areas:"main" "side";gap:8px;align-items:start;justify-items:center;min-height:0;margin-bottom:10px;padding:2px 0 0}.topMain{width:100%;min-height:0;display:grid;grid-template-rows:auto auto;gap:6px;align-content:start;justify-items:center;transform:none;padding-left:0;text-align:center}.eventTitle{width:100%;justify-content:center}.eventHeading,.eventEditTrigger{max-width:100%;text-align:center}.eventEditTrigger{padding:3px 4px;margin:0 auto}.eventTitleText{font-size:clamp(30px,9.2vw,34px);line-height:.94;margin-bottom:2px;white-space:normal;text-align:center}.eventHeadline{font-size:clamp(27px,8vw,33px);line-height:.96;white-space:normal;text-align:center}.sub{width:100%;gap:2px;align-self:auto;justify-items:center;text-align:center}.eventDateFull{font-size:15.8px;line-height:1.15}.eventLocationLine{max-width:100%;font-size:14.2px;line-height:1.2}.sideStack{width:100%;max-width:430px;min-height:0;display:grid;grid-template-rows:auto auto;gap:6px;justify-self:center;align-content:start}.agentUpdate{justify-self:center;margin:0;text-align:center;font-size:11px}.metrics{width:100%;gap:8px;justify-self:center;margin:0}.topControls{order:-1;width:100%;justify-self:center;gap:5px;grid-template-columns:40px 40px 40px minmax(94px,1fr) minmax(94px,1fr) 40px}.topAction{min-height:38px;padding:0 7px;align-self:stretch;justify-self:stretch}.topAction svg{width:17px;height:17px}.kpis{width:100%;grid-template-columns:minmax(72px,.76fr) repeat(4,minmax(44px,1fr))}.kpiCorner,.kpiColHead{min-height:17px;padding:2px 3px;font-size:7.5px}.betKpiTitle{min-height:30px;padding:2px 4px;font-size:14px}.betKpiGroup .kpi{min-height:30px;padding:2px 3px}.kpi b{font-size:18px}.kpiRecord{font-size:.66em}body:not(.admin-mode) .topControls{width:auto;min-width:min(100%,230px);grid-template-columns:42px minmax(128px,180px);justify-content:center}}
     @media(max-width:420px){.topControls{grid-template-columns:38px 38px 38px minmax(82px,1fr) minmax(82px,1fr) 38px;gap:4px}.topAction{min-height:36px;padding:0 6px}.topAction.topTextAction{font-size:13.2px}.kpis{grid-template-columns:minmax(66px,.7fr) repeat(4,minmax(38px,1fr))}.betKpiTitle{font-size:13px}.kpi b{font-size:16px}.eventTitleText{font-size:clamp(28px,10vw,32px)}.eventHeadline{font-size:clamp(25px,9vw,30px)}body:not(.admin-mode) .topControls{min-width:min(100%,220px);grid-template-columns:40px minmax(124px,174px)}}
     @media(max-width:360px){.topControls{grid-template-columns:34px 34px 34px minmax(70px,1fr) minmax(70px,1fr) 34px;gap:3px}.topAction{min-height:34px;padding:0 4px}.topAction svg{width:16px;height:16px}.topAction.topTextAction{font-size:12.4px}.kpis{grid-template-columns:minmax(58px,.68fr) repeat(4,minmax(34px,1fr))}.kpiCorner,.kpiColHead{font-size:6.8px}.betKpiTitle{font-size:12px}.kpi b{font-size:15px}.eventLocationLine{font-size:13.5px}body:not(.admin-mode) .topControls{min-width:min(100%,210px);grid-template-columns:38px minmax(118px,168px)}}
+    .heroOddsGrid{grid-template-columns:repeat(5,minmax(58px,1fr));grid-template-rows:38px 76px 38px;background:linear-gradient(90deg,rgba(240,206,93,.34),rgba(240,206,93,.20)) 0 0/100% 38px no-repeat,linear-gradient(90deg,rgba(67,207,229,.34),rgba(67,207,229,.20)) 0 100%/100% 38px no-repeat,#12120f}.heroOddsHead{display:grid;grid-template-rows:1fr auto 1fr;align-items:center;justify-items:center;gap:5px;padding:7px 6px;background:#12120f}.heroOddsHead,.heroOddsCell{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.heroOddsCell:nth-last-child(-n+5){border-bottom:0}.heroOddsStat{display:none}.oddsHeadLabel{color:var(--muted);font-size:14px;line-height:1;text-transform:uppercase;letter-spacing:.055em;font-weight:900}.oddsHeadStat{font-family:"Cascadia Mono",Consolas,monospace;color:#77736a;font-size:13px;line-height:1;font-weight:900}.oddsHeadStat.pos{color:#63d292}.oddsHeadStat.neg{color:#ff6b75}.miniOdds{grid-template-columns:30px repeat(5,minmax(0,1fr));grid-template-rows:30px 54px 30px;background:linear-gradient(90deg,rgba(240,206,93,.30),rgba(240,206,93,.18)) 0 0/100% 30px no-repeat,linear-gradient(90deg,rgba(67,207,229,.30),rgba(67,207,229,.18)) 0 100%/100% 30px no-repeat,#12120f}.miniOdds .oddsHead{display:grid;grid-template-rows:1fr auto 1fr;gap:2px;padding:5px 4px;background:#12120f}.miniOdds .oddsHeadLabel{font-size:10.5px;letter-spacing:.025em}.miniOdds .oddsHeadStat{font-size:9.8px}.miniOdds .num{font-size:11.4px}.miniOdds .oddsStat{display:none}
+    @media(max-width:820px){.heroLinkedOdds .heroOddsGrid{grid-template-columns:repeat(5,minmax(48px,1fr));grid-template-rows:36px 68px 36px}.heroLinkedOdds .heroOddsHead{padding:5px 4px;gap:4px}.heroLinkedOdds .oddsHeadLabel{font-size:10px;letter-spacing:.025em}.heroLinkedOdds .oddsHeadStat{font-size:11px}.heroLinkedOdds .heroOddsCell{font-size:13.3px}}
 </style>
 </head>
 <body>
@@ -3078,6 +3080,7 @@
       const rounded = Math.round(ev);
       return `${rounded > 0 ? "+" : ""}${rounded}%`;
     };
+    const statClass = (value, col) => col.stat === "ev" ? (String(value || "").startsWith("+") ? "pos" : String(value || "").startsWith("-") && value !== "-" ? "neg" : "") : "";
     const oddsMetaText = (f, col, side) => {
       const odds = side === "A" ? f.fighterAOdds : f.fighterBOdds;
       if(col.stat === "csc") return odds?.[0] === "-" ? "-" : `${odds?.[0] ?? "-"}`;
@@ -3637,25 +3640,32 @@
     }
     function oddsGrid(f, mini=false){
       const klass = mini ? "miniOdds" : "odds";
-      const head = `<div class="oh"></div>${visibleOddsColumns.map(col=>`<div class="oh">${esc(col.label)}</div>`).join("")}`;
       const cell = (f, col, side) => {
         const odds = side === "A" ? f.fighterAOdds : f.fighterBOdds;
         const value = odds?.[col.index];
         return `<div class="num ${cls(value)} ${mini ? sideClass(side) : ""}"><button class="oddsBtn" data-odds="${f.id}|${side}|${col.index}">${fmt(value)}</button></div>`;
       };
-      const stat = (f, col, side) => `<div class="oddsStat ${mini ? sideClass(side) : ""}">${esc(oddsMetaText(f, col, side))}</div>`;
+      const headCell = col => {
+        const top = oddsMetaText(f, col, "A");
+        const bottom = oddsMetaText(f, col, "B");
+        return `<div class="oh oddsHead"><span class="oddsHeadStat ${statClass(top, col)}">${esc(top)}</span><span class="oddsHeadLabel">${esc(col.label)}</span><span class="oddsHeadStat ${statClass(bottom, col)}">${esc(bottom)}</span></div>`;
+      };
+      const head = `<div class="oh"></div>${visibleOddsColumns.map(headCell).join("")}`;
       const side = (fighterKey, name) => `<div class="${mini ? `miniSide ${sideClass(fighterKey)}` : ""}" title="${esc(name)}">${esc(mini ? "" : name)}</div>`;
-      return `<div class="${klass}">${side("A",f.fighterA)}${visibleOddsColumns.map(col=>cell(f,col,"A")).join("")}${side("A",f.fighterA)}${visibleOddsColumns.map(col=>stat(f,col,"A")).join("")}${head}${side("B",f.fighterB)}${visibleOddsColumns.map(col=>stat(f,col,"B")).join("")}${side("B",f.fighterB)}${visibleOddsColumns.map(col=>cell(f,col,"B")).join("")}</div>`;
+      return `<div class="${klass}">${side("A",f.fighterA)}${visibleOddsColumns.map(col=>cell(f,col,"A")).join("")}${head}${side("B",f.fighterB)}${visibleOddsColumns.map(col=>cell(f,col,"B")).join("")}</div>`;
     }
     function heroOddsGrid(f){
-      const head = visibleOddsColumns.map(col=>`<div class="heroOddsHead">${esc(col.label)}</div>`).join("");
+      const head = visibleOddsColumns.map(col=>{
+        const top = oddsMetaText(f, col, "A");
+        const bottom = oddsMetaText(f, col, "B");
+        return `<div class="heroOddsHead"><span class="oddsHeadStat ${statClass(top, col)}">${esc(top)}</span><span class="oddsHeadLabel">${esc(col.label)}</span><span class="oddsHeadStat ${statClass(bottom, col)}">${esc(bottom)}</span></div>`;
+      }).join("");
       const cell = (col, fighterKey) => {
         const odds = fighterKey === "A" ? f.fighterAOdds : f.fighterBOdds;
         const value = odds?.[col.index];
         return `<div class="heroOddsCell ${cls(value)} ${sideClass(fighterKey)}"><button class="oddsBtn" data-odds="${f.id}|${fighterKey}|${col.index}">${fmt(value)}</button></div>`;
       };
-      const stat = (col, fighterKey) => `<div class="heroOddsStat ${sideClass(fighterKey)}">${esc(oddsMetaText(f, col, fighterKey))}</div>`;
-      return `<div class="heroOddsGrid">${visibleOddsColumns.map(col=>cell(col,"A")).join("")}${visibleOddsColumns.map(col=>stat(col,"A")).join("")}${head}${visibleOddsColumns.map(col=>stat(col,"B")).join("")}${visibleOddsColumns.map(col=>cell(col,"B")).join("")}</div>`;
+      return `<div class="heroOddsGrid">${visibleOddsColumns.map(col=>cell(col,"A")).join("")}${head}${visibleOddsColumns.map(col=>cell(col,"B")).join("")}</div>`;
     }
     function fightHero(f){
       return `<div class="hero heroLinkedOdds"><div class="heroPortrait heroPortraitA">${fighterIdentityHtml(f.fighterAPhoto, f.fighterA, "A")}</div>${heroOddsGrid(f)}<div class="heroPortrait heroPortraitB">${fighterIdentityHtml(f.fighterBPhoto, f.fighterB, "B")}</div></div>`;
