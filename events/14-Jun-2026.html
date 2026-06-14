@@ -4251,7 +4251,15 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     function persistLocalEventData(){
       if(bootstrapping) return;
       const payload = localStatePayload(false);
-      try{ localStorage.setItem(localEventStorageKey(), safeScriptJson(payload)); }
+      try{
+        const key = localEventStorageKey();
+        const existing = parseLocalEventDataText(localStorage.getItem(key));
+        if(existing && localStateSignature(existing) === localStateSignature(payload)){
+          updateGithubHandoffState();
+          return;
+        }
+        localStorage.setItem(key, safeScriptJson(payload));
+      }
       catch(error){ console.warn("Unable to persist local event data.", error); }
       updateGithubHandoffState();
     }
