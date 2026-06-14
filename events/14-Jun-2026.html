@@ -1083,6 +1083,15 @@
       <div class="dialogActions"><button type="button" class="action" data-github-handoff-close>Cancel</button><button type="button" class="action primary" id="copyGithubHandoff">Copy Text</button></div>
     </form>
   </div>
+  <div class="modal" id="sourceChoiceModal" role="dialog" aria-modal="true" aria-labelledby="sourceChoiceTitle">
+    <div class="dialog">
+      <div class="dialogHead"><h2 id="sourceChoiceTitle">State Source</h2></div>
+      <div class="dialogBody resetChoiceGrid">
+        <button type="button" class="resetChoice" id="useGithubState"><span class="resetChoiceTitle">Use GitHub</span><span class="resetChoiceCopy" id="sourceChoiceGithubSummary">Display the current GitHub build and replace this browser's local working state.</span></button>
+        <button type="button" class="resetChoice" id="useLocalState"><span class="resetChoiceTitle">Use Local Storage</span><span class="resetChoiceCopy" id="sourceChoiceLocalSummary">Apply this browser's saved portfolio and manual tag state to the current GitHub build.</span></button>
+      </div>
+    </div>
+  </div>
   <script>
     const oddsHeaders = ["AI CSc","AI Model","Kalshi","Novig","ACR","Sharp","Ref"];
     const blankOdds = ["-","-","-","-","-","-","-"];
@@ -2505,6 +2514,7 @@
     const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
     const ADMIN_STORAGE_KEY = "ufcEventPortfolioAdminUnlocked";
     const LOCAL_EVENT_STORAGE_PREFIX = "ufcEventPortfolioLocalData:";
+    const LOCAL_EVENT_STORAGE_SCHEMA = "ufc-event-portfolio-local-v2";
     const GITHUB_HANDOFF_PROMPT = [
       "UFC Event Portfolio local-save handoff.",
       "",
@@ -2533,6 +2543,7 @@
     let bootstrapping = true;
     let embeddedBaselineSignature = "";
     let localDataDirty = false;
+    let pendingSourceChoice = null;
     function isAdminMode(){
       try{ return adminModeFallback || localStorage.getItem(ADMIN_STORAGE_KEY) === "true"; }
       catch(error){ return adminModeFallback; }
@@ -2884,17 +2895,70 @@
       delete normalized.exportedAt;
       return JSON.stringify(normalized);
     }
+    function localStateSignature(payload){
+      if(!payload) return "";
+      const normalized = cloneData(payload);
+      delete normalized.exportedAt;
+      delete normalized.savedAt;
+      return JSON.stringify(normalized);
+    }
+    const localParlayHasContent = p => {
+      const normalized = normalizeParlay(p);
+      return normalized.notes || normalized.risk || hasMarketValue(normalized.market) || normalized.legs.some(leg=>leg.notes || hasMarketValue(leg.market));
+    };
+    const manualTagsForLocalState = () => (Array.isArray(tags) ? tags : []).map(normalizeTag).filter(t=>t.name && !t.logic);
+    const localFightStateRows = () => fights.map(f=>({
+      id:Number(f.id),
+      betSummary:String(f.betSummary || ""),
+      portfolio:Array.isArray(f.portfolio) ? cloneData(f.portfolio) : [],
+      tagIds:Array.isArray(f.tagIds) ? f.tagIds.map(String).filter(id => { const tag = tagById(id); return tag && !tag.logic; }) : []
+    }));
+    function localStatePayload(includeExportTimestamp=false){
+      fights.forEach(refreshFightMeta);
+      const payload = {
+        schema:LOCAL_EVENT_STORAGE_SCHEMA,
+        sourceSignature:embeddedBaselineSignature,
+        sourceEvent:eventStorageId(),
+        savedAt:new Date().toISOString(),
+        fights:localFightStateRows(),
+        manualTags:manualTagsForLocalState(),
+        parlays:parlays.map(normalizeParlay).filter(localParlayHasContent),
+        uiState:{selectedFightId:state.selected,detailTab:state.detailTab,clipIndex:state.clipIndex,analystReadOpen:cloneData(state.analystReadOpen || {}),portfolioTabs:cloneData(state.portfolioTabs || []),portfolioStatusFilters:cloneData(state.portfolioStatusFilters || [])}
+      };
+      if(includeExportTimestamp) payload.exportedAt = new Date().toISOString();
+      return payload;
+    }
+    function legacyEventPayloadToLocalState(payload){
+      return {
+        schema:LOCAL_EVENT_STORAGE_SCHEMA,
+        sourceSignature:String(payload?.sourceSignature || ""),
+        sourceEvent:eventStorageId(),
+        savedAt:payload?.savedAt || payload?.exportedAt || "",
+        fights:(Array.isArray(payload?.fights) ? payload.fights : []).map(f=>({
+          id:Number(f.id),
+          betSummary:String(f.betSummary || ""),
+          portfolio:Array.isArray(f.portfolio) ? cloneData(f.portfolio) : [],
+          tagIds:Array.isArray(f.tagIds) ? f.tagIds.map(String) : []
+        })),
+        manualTags:(Array.isArray(payload?.manualTags) ? payload.manualTags : Array.isArray(payload?.tags) ? payload.tags : []).map(normalizeTag).filter(t=>t.name && !t.logic),
+        parlays:Array.isArray(payload?.parlays) ? cloneData(payload.parlays) : [],
+        uiState:payload?.uiState && typeof payload.uiState === "object" ? cloneData(payload.uiState) : {}
+      };
+    }
     function readLocalEventData(){
       try{
         const raw = localStorage.getItem(localEventStorageKey());
         if(!raw) return null;
         const payload = JSON.parse(raw);
-        return payload && typeof payload === "object" && payload.schema === "ufc-event-portfolio-event-v1" ? payload : null;
+        if(payload && typeof payload === "object" && payload.schema === LOCAL_EVENT_STORAGE_SCHEMA) return payload;
+        if(payload && typeof payload === "object" && payload.schema === "ufc-event-portfolio-event-v1") return legacyEventPayloadToLocalState(payload);
+        return null;
       }catch(error){
         console.warn("Unable to parse local event data.", error);
         return null;
       }
     }
+    const localSourceMatchesGithub = payload => !!payload && String(payload.sourceSignature || "") === embeddedBaselineSignature;
     function applyEventDataPayload(payload){
       if(!payload) return false;
       eventMeta = normalizeEventMeta(payload.eventMeta || eventMeta);
@@ -2915,8 +2979,94 @@
       normalizeParlays();
       return true;
     }
+    function applyLocalStatePayload(payload){
+      if(!payload) return false;
+      const localManualTags = (Array.isArray(payload.manualTags) ? payload.manualTags : []).map(normalizeTag).filter(t=>t.name && !t.logic);
+      const autoTags = (Array.isArray(tags) ? tags : []).map(normalizeTag).filter(t=>t.logic);
+      tags = [...localManualTags, ...autoTags];
+      normalizeTags();
+      syncAutoTagDefaults();
+      const manualTagIds = new Set(tags.filter(t=>!t.logic).map(t=>t.id));
+      const localByFight = new Map((Array.isArray(payload.fights) ? payload.fights : []).map(row=>[Number(row.id), row]));
+      fights.forEach(f=>{
+        const row = localByFight.get(Number(f.id));
+        f.betSummary = row ? String(row.betSummary || "") : "";
+        f.portfolio = row && Array.isArray(row.portfolio) ? cloneData(row.portfolio) : [];
+        f.tagIds = row && Array.isArray(row.tagIds) ? row.tagIds.map(String).filter(id=>manualTagIds.has(id)) : [];
+        normalizeFight(f);
+      });
+      parlays = Array.isArray(payload.parlays) ? cloneData(payload.parlays).map(normalizeParlay).filter(localParlayHasContent) : [];
+      if(payload.uiState && typeof payload.uiState === "object"){
+        state.selected = Number(payload.uiState.selectedFightId) || state.selected;
+        state.detailTab = payload.uiState.detailTab || state.detailTab;
+        state.clipIndex = Number(payload.uiState.clipIndex) || 0;
+        state.analystReadOpen = payload.uiState.analystReadOpen && typeof payload.uiState.analystReadOpen === "object" ? cloneData(payload.uiState.analystReadOpen) : {};
+        state.portfolioTabs = Array.isArray(payload.uiState.portfolioTabs) ? cloneData(payload.uiState.portfolioTabs) : state.portfolioTabs;
+        state.portfolioStatusFilters = Array.isArray(payload.uiState.portfolioStatusFilters) ? cloneData(payload.uiState.portfolioStatusFilters) : state.portfolioStatusFilters;
+      }
+      normalizeParlays();
+      sortFightList(fights);
+      return true;
+    }
     function applyEmbeddedEventData(){ return applyEventDataPayload(readEmbeddedEventData()); }
-    function applyLocalEventData(){ return applyEventDataPayload(readLocalEventData()); }
+    function applyLocalEventData(){ return applyLocalStatePayload(readLocalEventData()); }
+    function sourceChoiceCounts(payload){
+      const rows = Array.isArray(payload?.fights) ? payload.fights : [];
+      return {
+        straights:rows.reduce((sum,row)=>sum + (Array.isArray(row.portfolio) ? row.portfolio.length : 0), 0),
+        taggedFights:rows.filter(row=>Array.isArray(row.tagIds) && row.tagIds.length).length,
+        manualTags:(Array.isArray(payload?.manualTags) ? payload.manualTags : []).length,
+        parlays:Array.isArray(payload?.parlays) ? payload.parlays.length : 0
+      };
+    }
+    function openSourceChoiceModal(){
+      if(!pendingSourceChoice) return;
+      const localCounts = sourceChoiceCounts(pendingSourceChoice.localPayload);
+      const githubSummary = $("#sourceChoiceGithubSummary");
+      const localSummary = $("#sourceChoiceLocalSummary");
+      if(githubSummary) githubSummary.textContent = `Use the current GitHub build now: ${fights.length} fights, current odds, current research, and current video sources.`;
+      if(localSummary) localSummary.textContent = `Apply saved local work: ${localCounts.straights} straight bets, ${localCounts.parlays} parlays, ${localCounts.manualTags} manual tags, and ${localCounts.taggedFights} tagged fights.`;
+      $("#sourceChoiceModal")?.classList.add("open");
+    }
+    function closeSourceChoiceModal(){ $("#sourceChoiceModal")?.classList.remove("open"); }
+    function chooseGithubState(){
+      pendingSourceChoice = null;
+      persistLocalEventData();
+      closeSourceChoiceModal();
+      updateGithubHandoffState();
+    }
+    function chooseLocalState(){
+      const payload = pendingSourceChoice?.localPayload;
+      pendingSourceChoice = null;
+      if(payload) applyLocalStatePayload(payload);
+      render();
+      syncEmbeddedEventData();
+      persistLocalEventData();
+      closeSourceChoiceModal();
+      updateGithubHandoffState();
+    }
+    let checkingForFreshBuild = false;
+    async function checkForFreshGithubBuild(){
+      if(checkingForFreshBuild || pendingSourceChoice || location.protocol === "file:") return;
+      if(!embeddedBaselineSignature) return;
+      checkingForFreshBuild = true;
+      try{
+        const url = new URL(location.href);
+        url.searchParams.set("_buildCheck", String(Date.now()));
+        const response = await fetch(url.toString(), {cache:"no-store"});
+        if(!response.ok) return;
+        const html = await response.text();
+        const match = html.match(/<script type="application\/json" id="eventDataStore">([\s\S]*?)<\/script>/);
+        if(!match) return;
+        const nextPayload = JSON.parse(match[1]);
+        const nextSignature = eventDataSignature(nextPayload);
+        if(nextSignature && nextSignature !== embeddedBaselineSignature) location.reload();
+      }catch(error){
+        console.warn("Unable to check for fresh GitHub build.", error);
+      }finally{
+        checkingForFreshBuild = false;
+      }
+    }
     function seedDemoAnalystReadsOnce(){
       const f = fights.find(x=>Number(x.id) === 1);
       if(f && !f.analystReads.length) f.analystReads = demoAnalystReads.map(r=>({...r}));
@@ -2961,8 +3111,11 @@
     normalizeParlays();
     const embeddedBaselinePayload = readEmbeddedEventData();
     embeddedBaselineSignature = eventDataSignature(embeddedBaselinePayload);
+    const localBaselinePayload = readLocalEventData();
     const hydratedFromEmbeddedData = applyEventDataPayload(embeddedBaselinePayload);
-    const hydratedFromLocalData = applyLocalEventData();
+    const localNeedsSourceChoice = !!localBaselinePayload && hydratedFromEmbeddedData && !localSourceMatchesGithub(localBaselinePayload);
+    const hydratedFromLocalData = localBaselinePayload && !localNeedsSourceChoice ? applyLocalStatePayload(localBaselinePayload) : false;
+    if(localNeedsSourceChoice) pendingSourceChoice = {localPayload:localBaselinePayload};
     if(!hydratedFromEmbeddedData && !hydratedFromLocalData){
       seedDemoAnalystReadsOnce();
       applyResearchDataFromDoc();
@@ -3607,7 +3760,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     }
     function updateGithubHandoffState(){
       const localPayload = readLocalEventData();
-      localDataDirty = !!localPayload && eventDataSignature(localPayload) !== embeddedBaselineSignature;
+      localDataDirty = !!localPayload && localStateSignature(localPayload) !== localStateSignature(localStatePayload(false));
       const button = $("#githubHandoff");
       if(button){
         button.classList.toggle("dirty", localDataDirty);
@@ -3618,7 +3771,7 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     }
     function persistLocalEventData(){
       if(bootstrapping) return;
-      const payload = eventDataPayload(false);
+      const payload = localStatePayload(false);
       try{ localStorage.setItem(localEventStorageKey(), safeScriptJson(payload)); }
       catch(error){ console.warn("Unable to persist local event data.", error); }
       updateGithubHandoffState();
@@ -3645,7 +3798,9 @@ function cardBetPlaceholder(){ return '<div class="noneBox cardBetPlaceholder">N
     $("#githubHandoffPrompt").onclick=copyGithubHandoffPrompt;
     $("#copyGithubHandoff").onclick=copyGithubHandoffPrompt;
     $("#githubHandoffForm").onsubmit=e=>e.preventDefault();
-    $$(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("open");}));
+    $("#useGithubState").onclick=chooseGithubState;
+    $("#useLocalState").onclick=chooseLocalState;
+    $$(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m && m.id !== "sourceChoiceModal")m.classList.remove("open");}));
     $("#addPortfolioRow").onclick=()=>{ if(!requireAdmin()) return; const draft=refreshPortfolioDraftFromDom(); const stage=portfolioTabActive("live") && !portfolioTabActive("prefight") ? "live" : "prefight"; setPortfolioTabActive(stage, true); setPortfolioStatusFilterActive("active", true); draft.straights.push({fightId:state.selected,notes:"",stage,risk:0,market:null,result:0,resultStatus:"active"}); renderPortfolioRows(draft); };
     $("#addParlayRow").onclick=()=>{ if(!requireAdmin()) return; refreshPortfolioDraftFromDom(); setPortfolioTabActive("parlay", true); openParlayBuilder(); };
     $("#addActiveBetRow").onclick=()=>{ if(!requireAdmin()) return; if($("#activeBetRows .small")) $("#activeBetRows").innerHTML=""; $("#activeBetRows").insertAdjacentHTML("beforeend", activeBetRowHtml({})); wireActiveBetDeletes(); wireAmericanOddsInputs(); wireCurrencyInputs(); };
@@ -3720,6 +3875,9 @@ $("#activeBetForm").onsubmit=e=>{e.preventDefault(); if(!requireAdmin()) return;
     syncEmbeddedEventData();
     bootstrapping = false;
     updateGithubHandoffState();
+    if(pendingSourceChoice) openSourceChoiceModal();
+    window.addEventListener("focus", checkForFreshGithubBuild);
+    document.addEventListener("visibilitychange",()=>{ if(!document.hidden) checkForFreshGithubBuild(); });
   </script>
 </body>
 </html>
