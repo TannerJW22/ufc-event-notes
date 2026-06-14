@@ -2796,7 +2796,10 @@
       window.alert("Admin mode is locked. Unlock admin mode from the homepage to edit.");
       return false;
     }
-    window.addEventListener("storage", event=>{ if(event.key === ADMIN_STORAGE_KEY){ applyAdminMode(); render(); } });
+    window.addEventListener("storage", event=>{
+      if(event.key === ADMIN_STORAGE_KEY){ applyAdminMode(); render(); return; }
+      if(event.key === localEventStorageKey()) applyExternalLocalEventData(event.newValue);
+    });
     applyAdminMode();
     let syncEmbeddedEventData = () => {};
     const save = () => { syncEmbeddedEventData(); persistLocalEventData(); };
@@ -3209,16 +3212,22 @@
         uiState:payload?.uiState && typeof payload.uiState === "object" ? cloneData(payload.uiState) : {}
       };
     }
-    function readLocalEventData(){
+    function parseLocalEventDataText(raw){
+      if(!raw) return null;
       try{
-        const raw = localStorage.getItem(localEventStorageKey());
-        if(!raw) return null;
         const payload = JSON.parse(raw);
         if(payload && typeof payload === "object" && payload.schema === LOCAL_EVENT_STORAGE_SCHEMA) return payload;
         if(payload && typeof payload === "object" && payload.schema === "ufc-event-portfolio-event-v1") return legacyEventPayloadToLocalState(payload);
         return null;
       }catch(error){
         console.warn("Unable to parse local event data.", error);
+        return null;
+      }
+    }
+    function readLocalEventData(){
+      try{ return parseLocalEventDataText(localStorage.getItem(localEventStorageKey())); }
+      catch(error){
+        console.warn("Unable to read local event data.", error);
         return null;
       }
     }
@@ -3287,6 +3296,20 @@
     }
     function applyEmbeddedEventData(){ return applyEventDataPayload(readEmbeddedEventData()); }
     function applyLocalEventData(){ return applyLocalStatePayload(readLocalEventData()); }
+    function applyExternalLocalEventData(raw){
+      const payload = parseLocalEventDataText(raw);
+      if(!payload) return false;
+      if(pendingSourceChoice){
+        pendingSourceChoice.localPayload = payload;
+        openSourceChoiceModal();
+        return true;
+      }
+      applyLocalStatePayload(payload);
+      render();
+      syncEmbeddedEventData();
+      updateGithubHandoffState();
+      return true;
+    }
     function sourceChoiceStats(payload){
       const rows = Array.isArray(payload?.fights) ? payload.fights : [];
       const parlayRows = Array.isArray(payload?.parlays) ? payload.parlays.map(normalizeParlay).filter(localParlayHasContent) : [];
